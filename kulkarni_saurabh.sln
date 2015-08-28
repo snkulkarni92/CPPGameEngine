@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{00ECC077-318E-4A02-BCF7-B5EEB760D1EA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{99233EC8-D4DA-4F0E-B9D4-46048A9CCC88}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D786DC25-2CAB-4005-8DA3-36AAA0475282}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
