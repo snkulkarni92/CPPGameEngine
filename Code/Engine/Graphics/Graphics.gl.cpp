@@ -11,7 +11,7 @@
 #include <string>
 #include <sstream>
 #include "../UserOutput/UserOutput.h"
-#include "../Windows/WindowsFunctions.h"
+#include "../../Externals/Windows/WindowsFunctions.h"
 #include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 
 // Static Data Initialization

@@ -155,21 +155,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resources\Game.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\big.ico" />
-    <Image Include="Resources\small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Resources\Resource.h" />
-    <ClInclude Include="Resources\targetver.h" />
     <ClInclude Include="WindowsFunctions.h" />
-    <ClInclude Include="WindowsCreate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WindowsFunctions.cpp" />
-    <ClCompile Include="WindowsCreate.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,7 +12,8 @@
 #include "Resources/Resource.h"
 // WindowsFunctions.h contains convenience functionality for Windows features;
 // in this example program we just use it to get error messages
-#include "WindowsFunctions.h"
+#include "../../Externals/Windows/WindowsFunctions.h"
+#include "../../Engine/Graphics/Graphics.h"
 
 // Static Data Initialization
 //===========================
@@ -447,7 +448,7 @@ bool UnregisterMainWindowClass( const HINSTANCE i_thisInstanceOfTheProgram )
 	}
 }
 
-bool WaitForMainWindowToClose( int& o_exitCode )
+bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 {
 	// Any time something happens that Windows cares about, it will send the main window a message.
 
@@ -458,6 +459,7 @@ bool WaitForMainWindowToClose( int& o_exitCode )
 	// (e.g. from an in-game menu)
 
 	// Enter an infinite loop that will continue until a quit message (WM_QUIT) is received from Windows
+	eae6320::Graphics::Initialize(s_mainWindow);
 	MSG message = { 0 };
 	do
 	{
@@ -504,8 +506,9 @@ bool WaitForMainWindowToClose( int& o_exitCode )
 			// it will always be OnMessageReceived()
 			DispatchMessage( &message );
 		}
+		eae6320::Graphics::Render();
 	} while ( message.message != WM_QUIT );
-
+	eae6320::Graphics::ShutDown();
 	// The exit code for the application is stored in the WPARAM of a WM_QUIT message
 	o_exitCode = static_cast<int>( message.wParam );
 

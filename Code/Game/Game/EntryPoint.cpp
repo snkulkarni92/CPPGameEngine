@@ -6,7 +6,7 @@ WinMain() is the function where Windows programs start execution
 // Header Files
 //=============
 
-#include "../../Engine/Windows/WindowsCreate.h"
+#include "WindowsCreate.h"
 // WindowsIncludes.h is a file I made that #includes the important windows.h file
 // along with any associated #defines that we want in order to get Windows functionality.
 // You should always only have a single way of #including windows.h that everything
