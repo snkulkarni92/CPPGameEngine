@@ -12,7 +12,7 @@
 #include "Resources/Resource.h"
 // WindowsFunctions.h contains convenience functionality for Windows features;
 // in this example program we just use it to get error messages
-#include "../../Externals/Windows/WindowsFunctions.h"
+#include "../../Engine/Windows/WindowsFunctions.h"
 #include "../../Engine/Graphics/Graphics.h"
 
 // Static Data Initialization
@@ -35,7 +35,7 @@ namespace
 	// If you don't change the name below from the default then
 	// your program could have problems when it is run at the same time on the same computer
 	// as one of your classmate's
-	const char* s_mainWindowClass_name = "[YOUR NAME HERE]'s Main Window Class";
+	const char* s_mainWindowClass_name = "Saurabh's Main Window Class";
 }
 
 // Main Function
@@ -134,7 +134,7 @@ HWND CreateMainWindowHandle( const HINSTANCE i_thisInstanceOfTheProgram, const i
 	{
 		// The window's "caption"
 		// (The text that is displayed in the title bar)
-		const char* windowCaption = "[YOUR NAME HERE]'s EAE6320 Game";
+		const char* windowCaption = "Saurabh's EAE6320 Game";
 		// The window's style
 		const DWORD windowStyle =
 			// "Overlapped" is basically the same as "top-level"

@@ -2,7 +2,7 @@
 
 #include "UserOutput.h"
 
-#include "../../Externals/Windows/Includes.h"
+#include "../Windows/Includes.h"
 namespace eae6320
 {
 	namespace UserOutput
