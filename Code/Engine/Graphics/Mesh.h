@@ -1,10 +1,11 @@
 #ifndef EAE6320_MESH_H
 #define EAE6320_MESH_H
 
+#include <cstdint>
 #if defined EAE6320_PLATFORM_GL
+#include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 #elif defined EAE6320_PLATFORM_D3D
 #include <d3d9.h>
 #include <d3dx9shader.h>
@@ -31,6 +32,7 @@ namespace eae6320
 			// A vertex array encapsulates both the vertex and index data as well as the vertex format
 			GLuint s_vertexArrayId /*= 0*/;
 #elif defined EAE6320_PLATFORM_D3D
+			
 			IDirect3DVertexDeclaration9* s_vertexDeclaration = NULL;
 			// The vertex buffer holds the data for each vertex
 			IDirect3DVertexBuffer9* s_vertexBuffer = NULL;
@@ -38,6 +40,24 @@ namespace eae6320
 			// (i.e. it defines the vertex connectivity)
 			IDirect3DIndexBuffer9* s_indexBuffer = NULL;
 #endif // Platform Check
+		
+		//Methods
+			Mesh();
+		public:
+			static Mesh * CreateMesh();
+			bool Initialize();
+			void Draw();
+			bool ShutDown();
+
+#if defined EAE6320_PLATFORM_GL
+			bool CreateVertexArray();
+#elif defined EAE6320_PLATFORM_D3D
+			static IDirect3DDevice9* s_direct3dDevice;
+			static void SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice);
+			static void ReleaseDirect3dDevice();
+			bool CreateVertexBuffer();
+			bool CreateIndexBuffer();
+#endif //Platform Check
 		};
 	}
 }

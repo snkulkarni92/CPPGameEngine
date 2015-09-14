@@ -5,12 +5,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{66980b96-fdd8-4df8-a29f-eb7dfca06c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Direct3D">
+      <UniqueIdentifier>{f00e3756-120b-45f0-9316-9994d4f3c913}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Graphics.d3d.cpp" />
-    <ClCompile Include="Graphics.gl.cpp" />
+    <ClCompile Include="Graphics.d3d.cpp">
+      <Filter>Direct3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.gl.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.d3d.cpp">
+      <Filter>Direct3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.gl.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Mesh.h" />
   </ItemGroup>
 </Project>
