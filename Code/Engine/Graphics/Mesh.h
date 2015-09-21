@@ -2,6 +2,8 @@
 #define EAE6320_MESH_H
 
 #include <cstdint>
+
+#include "../../Externals/Lua/Includes.h"
 #if defined EAE6320_PLATFORM_GL
 #include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 #include <gl/GL.h>
@@ -30,8 +32,16 @@ namespace eae6320
 			uint8_t b, g, r, a;	// Direct3D expects the byte layout of a color to be different from what you might expect
 #endif //Platform Check
 		};
+
+
+
 		class Mesh
 		{
+			int mVertexCount, mIndexCount;
+			sVertex * mVertexData;
+			uint32_t * mIndexData;
+
+
 #if defined EAE6320_PLATFORM_GL
 			// A vertex array encapsulates both the vertex and index data as well as the vertex format
 			GLuint s_vertexArrayId /*= 0*/;
@@ -45,6 +55,9 @@ namespace eae6320
 			IDirect3DIndexBuffer9* s_indexBuffer = NULL;
 #endif // Platform Check
 		
+
+
+
 		//Methods
 			Mesh();
 		public:
@@ -52,6 +65,9 @@ namespace eae6320
 			bool Initialize();
 			void Draw();
 			bool ShutDown();
+
+			bool LoadMesh(const char * i_path);
+			bool ProcessMeshData(lua_State& io_luaState);
 
 #if defined EAE6320_PLATFORM_GL
 			bool CreateVertexArray();
