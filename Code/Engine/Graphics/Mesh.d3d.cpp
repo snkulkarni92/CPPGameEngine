@@ -17,17 +17,9 @@ namespace eae6320
 		{
 			s_direct3dDevice = NULL;
 		}
-		Mesh::Mesh()
-		{
-			
-		}
-		Mesh * Mesh::CreateMesh()
-		{
-			return new Mesh();
-		}
 		bool Mesh::Initialize()
 		{
-			LoadMesh("data/square.msh");
+			
 
 			// Initialize the graphics objects
 			if (!CreateVertexBuffer())

@@ -11,17 +11,8 @@ namespace eae6320
 {
 	namespace Graphics
 	{
-		Mesh::Mesh()
-		{
-
-		}
-		Mesh * Mesh::CreateMesh()
-		{
-			return new Mesh();
-		}
 		bool Mesh::Initialize()
 		{
-			LoadMesh("data/square.msh");
 			if (!CreateVertexArray())
 			{
 				ShutDown();

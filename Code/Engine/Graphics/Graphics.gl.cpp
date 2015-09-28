@@ -23,8 +23,8 @@ namespace
 	HWND s_renderingWindow = NULL;
 	HDC s_deviceContext = NULL;
 	HGLRC s_openGlRenderingContext = NULL;
-	eae6320::Graphics::Mesh * s_mesh = NULL;
-
+	eae6320::Graphics::Mesh * s_mesh1 = NULL;
+	eae6320::Graphics::Mesh * s_mesh2 = NULL;
 	// OpenGL encapsulates a matching vertex shader and fragment shader into what it calls a "program".
 
 	GLuint s_programId = 0;
@@ -74,8 +74,17 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 		}
 	}
 
-	s_mesh = Mesh::CreateMesh();
-	s_mesh->Initialize();
+	s_mesh1 = Mesh::CreateMesh();
+	s_mesh2 = Mesh::CreateMesh();
+	
+	s_mesh1->LoadMesh("data/square.msh");
+	s_mesh2->LoadMesh("data/triangle.msh");
+
+	
+	if(!s_mesh1->Initialize())
+		goto OnError;
+	if(!s_mesh2->Initialize())
+		goto OnError;
 
 	if ( !CreateProgram() )
 	{
@@ -113,8 +122,9 @@ void eae6320::Graphics::Render()
 			glUseProgram( s_programId );
 			assert( glGetError() == GL_NO_ERROR );
 		}
-		s_mesh->Draw();
-		
+		s_mesh1->Draw();
+		s_mesh2->Draw();
+
 	}
 
 	// Everything has been drawn to the "back buffer", which is just an image in memory.
@@ -145,8 +155,18 @@ bool eae6320::Graphics::ShutDown()
 			}
 			s_programId = 0;
 		}
-
-		s_mesh->ShutDown();
+		if (s_mesh1)
+		{
+			s_mesh1->ShutDown();
+			delete s_mesh1;
+			s_mesh1 = NULL;
+		}
+		if (s_mesh2)
+		{
+			s_mesh2->ShutDown();
+			delete s_mesh2;
+			s_mesh2 = NULL;
+		}
 		if ( wglMakeCurrent( s_deviceContext, NULL ) != FALSE )
 		{
 			if ( wglDeleteContext( s_openGlRenderingContext ) == FALSE )

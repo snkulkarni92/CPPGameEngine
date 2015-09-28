@@ -19,7 +19,8 @@ namespace
 	HWND s_renderingWindow = NULL;
 	IDirect3D9* s_direct3dInterface = NULL;
 	IDirect3DDevice9* s_direct3dDevice = NULL;
-	eae6320::Graphics::Mesh * s_mesh = NULL;
+	eae6320::Graphics::Mesh * s_mesh1 = NULL;
+	eae6320::Graphics::Mesh * s_mesh2 = NULL;
 
 	// The vertex shader is a program that operates on vertices.
 	IDirect3DVertexShader9* s_vertexShader = NULL;
@@ -55,12 +56,19 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 	{
 		goto OnError;
 	}
-	s_mesh = Mesh::CreateMesh();
-	Mesh::SetDirect3dDevice(s_direct3dDevice); \
-		if (!s_mesh->Initialize())
-		{
-			goto OnError;
-		}
+	s_mesh1 = Mesh::CreateMesh();
+	s_mesh2 = Mesh::CreateMesh();
+	Mesh::SetDirect3dDevice(s_direct3dDevice);
+	s_mesh1->LoadMesh("data/square.msh");
+	s_mesh2->LoadMesh("data/triangle.msh");
+	if (!s_mesh1->Initialize())
+	{
+		goto OnError;
+	}
+	if (!s_mesh2->Initialize())
+	{
+		goto OnError;
+	}
 	if ( !LoadVertexShader() )
 	{
 		goto OnError;
@@ -112,7 +120,8 @@ void eae6320::Graphics::Render()
 				result = s_direct3dDevice->SetPixelShader( s_fragmentShader );
 				assert( SUCCEEDED( result ) );
 			}
-			s_mesh->Draw();
+			s_mesh1->Draw();
+			s_mesh2->Draw();
 		}
 		result = s_direct3dDevice->EndScene();
 		assert( SUCCEEDED( result ) );
@@ -150,9 +159,11 @@ bool eae6320::Graphics::ShutDown()
 				s_fragmentShader = NULL;
 			}
 
+			s_mesh1->ShutDown();
+			s_mesh2->ShutDown();
+			delete s_mesh1;
+			delete s_mesh2;
 
-			s_mesh->ShutDown();
-			delete s_mesh;
 			Mesh::ReleaseDirect3dDevice();
 			
 			s_direct3dDevice->Release();

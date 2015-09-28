@@ -13,7 +13,21 @@ namespace eae6320
 		bool LoadTableWithIndex(lua_State& io_luaState, const int index);
 		bool LoadValueWithIndex(lua_State& io_luaState, const int index);
 		sVertex GetVertexData(lua_State& io_luaState);
+		
 
+		Mesh::Mesh()
+		{
+
+			mVertexData = NULL;
+			mIndexData = NULL;
+			mVertexCount = 0;
+			mIndexCount = 0;
+		}
+
+		Mesh * Mesh::CreateMesh()
+		{
+			return new Mesh();
+		}
 		bool Mesh::ProcessMeshData(lua_State& io_luaState)
 		{
 			//// You will need to know how to load string and integer keys for this class:
