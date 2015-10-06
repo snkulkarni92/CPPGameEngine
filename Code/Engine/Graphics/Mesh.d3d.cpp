@@ -17,22 +17,26 @@ namespace eae6320
 		{
 			s_direct3dDevice = NULL;
 		}
-		bool Mesh::Initialize()
+		bool Mesh::Initialize(void * buffer)
 		{
-			
+			bool wereThereErrors = false;
 
 			// Initialize the graphics objects
 			if (!CreateVertexBuffer())
 			{
-				ShutDown();
-				return false;
+				wereThereErrors = true;
+				goto OnError;
 			}
 			if (!CreateIndexBuffer())
 			{
-				ShutDown();
-				return false;
+				wereThereErrors = true;
+				goto OnError;
 			}
-			return true;
+		OnError:
+			free(buffer);
+			if (wereThereErrors)
+				ShutDown();
+			return !wereThereErrors;
 		}
 		void Mesh::Draw()
 		{
@@ -74,10 +78,6 @@ namespace eae6320
 		bool Mesh::ShutDown()
 		{
 			bool wereThereErrors = false;
-			if (mVertexData)
-				delete mVertexData;
-			if (mIndexData)
-				delete mIndexData;
 			if (s_direct3dDevice)
 			{
 				if (s_vertexBuffer)
@@ -152,7 +152,7 @@ namespace eae6320
 				}
 				// Fill the buffer
 				{
-					for (int i = 0; i < mIndexCount; i++)
+					for (unsigned int i = 0; i < mIndexCount; i++)
 						indexData[i] = mIndexData[i];
 				}
 				// The buffer must be "unlocked" before it can be used
@@ -275,7 +275,7 @@ namespace eae6320
 					// To make white you should use (255, 255, 255), to make black (0, 0, 0).
 					// To make pure red you would use the max for R and nothing for G and B, so (1, 0, 0).
 					// Experiment with other values to see what happens!
-					for (int i = 0; i < mVertexCount; i++)
+					for (unsigned int i = 0; i < mVertexCount; i++)
 						vertexData[i] = mVertexData[i];
 				}
 				// The buffer must be "unlocked" before it can be used

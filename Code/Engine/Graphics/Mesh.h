@@ -3,7 +3,6 @@
 
 #include <cstdint>
 
-#include "../../Externals/Lua/Includes.h"
 #if defined EAE6320_PLATFORM_GL
 #include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 #include <gl/GL.h>
@@ -37,7 +36,7 @@ namespace eae6320
 
 		class Mesh
 		{
-			int mVertexCount, mIndexCount;
+			uint32_t mVertexCount, mIndexCount;
 			sVertex * mVertexData;
 			uint32_t * mIndexData;
 
@@ -62,12 +61,11 @@ namespace eae6320
 			Mesh();
 		public:
 			static Mesh * CreateMesh();
-			bool Initialize();
+			bool Initialize(void * buffer);
 			void Draw();
 			bool ShutDown();
 
-			bool LoadMesh(const char * i_path);
-			bool ProcessMeshData(lua_State& io_luaState);
+			void * LoadMesh(const char * i_path);
 
 #if defined EAE6320_PLATFORM_GL
 			bool CreateVertexArray();

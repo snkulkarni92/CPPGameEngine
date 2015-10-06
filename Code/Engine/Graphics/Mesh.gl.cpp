@@ -11,14 +11,17 @@ namespace eae6320
 {
 	namespace Graphics
 	{
-		bool Mesh::Initialize()
+		bool Mesh::Initialize(void * buffer)
 		{
+			bool wereThereErrors = false;
 			if (!CreateVertexArray())
 			{
-				ShutDown();
-				return false;
+				wereThereErrors = true;
 			}
-			return true;
+			free(buffer);
+			if (wereThereErrors)
+				ShutDown();
+			return !wereThereErrors;
 		}
 		void Mesh::Draw()
 		{
@@ -280,8 +283,6 @@ namespace eae6320
 
 		OnExit:
 			//Delete Index and vertexArray used to load data
-			delete mVertexData;
-			delete mIndexData;
 			// Delete the buffer object
 			// (the vertex array will hold a reference to it)
 			if (s_vertexArrayId != 0)
