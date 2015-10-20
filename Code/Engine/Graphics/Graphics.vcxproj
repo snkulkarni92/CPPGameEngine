@@ -48,11 +48,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Renderable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Renderable.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3B866650-DA3E-4589-A417-38A3DE60EDD5}</ProjectGuid>
@@ -142,7 +144,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Opengl32.lib;glu32.lib;Windows.lib;OpenGlExtensions.lib;UserOutput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Opengl32.lib;glu32.lib;Windows.lib;OpenGlExtensions.lib;UserOutput.lib;Math.lib%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
@@ -160,7 +162,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>d3dx9.lib;d3d9.lib;Windows.lib;UserOutput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;Windows.lib;UserOutput.lib;Math.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -184,7 +186,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Opengl32.lib;glu32.lib;Windows.lib;OpenGlExtensions.lib;UserOutput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Opengl32.lib;glu32.lib;Windows.lib;OpenGlExtensions.lib;UserOutput.lib;Math.lib%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4006,4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
@@ -206,7 +208,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>d3d9.lib;Windows.lib;d3dx9.lib;UserOutput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;Windows.lib;d3dx9.lib;UserOutput.lib;Math.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

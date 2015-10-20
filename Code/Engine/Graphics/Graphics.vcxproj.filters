@@ -28,10 +28,12 @@
     <ClCompile Include="Effect.gl.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="Renderable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="Renderable.h" />
   </ItemGroup>
 </Project>

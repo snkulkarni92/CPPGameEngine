@@ -11,16 +11,17 @@ namespace eae6320
 		{
 
 		}
-		bool Effect::Initialize(Context context)
+		bool Effect::Initialize()
 		{
 			if (!CreateProgram())
 			{
 				ShutDown();
 				return false;
 			}
+			positionOffset = glGetUniformLocation(s_programId, "g_position_offset");
 			return true;
 		}
-		void Effect::Bind(Context context)
+		void Effect::Bind()
 		{
 			// Set the vertex and fragment shaders
 			{
@@ -44,6 +45,10 @@ namespace eae6320
 				}
 				s_programId = 0;
 			}
+		}
+		void Effect::SetDrawCallUniforms(float * floatArray)
+		{
+			glUniform2fv(positionOffset, 1, floatArray);
 		}
 		bool Effect::CreateProgram()
 		{

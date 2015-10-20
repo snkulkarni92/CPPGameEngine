@@ -20,10 +20,6 @@ namespace eae6320
 			mIndexCount = 0;
 		}
 
-		Mesh * Mesh::CreateMesh()
-		{
-			return new Mesh();
-		}
 
 		void * Mesh::LoadMesh(const char * i_path)
 		{

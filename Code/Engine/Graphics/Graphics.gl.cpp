@@ -24,9 +24,9 @@ namespace
 	HWND s_renderingWindow = NULL;
 	HDC s_deviceContext = NULL;
 	HGLRC s_openGlRenderingContext = NULL;
-	eae6320::Graphics::Effect * s_effect = NULL;
+	/*eae6320::Graphics::Effect * s_effect = NULL;
 	eae6320::Graphics::Mesh * s_mesh1 = NULL;
-	eae6320::Graphics::Mesh * s_mesh2 = NULL;
+	eae6320::Graphics::Mesh * s_mesh2 = NULL;*/
 }
 
 // Helper Function Declarations
@@ -64,7 +64,7 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 		}
 	}
 
-	s_mesh1 = Mesh::CreateMesh();
+	/*s_mesh1 = Mesh::CreateMesh();
 	s_mesh2 = Mesh::CreateMesh();
 	void * buffer;
 	buffer = s_mesh1->LoadMesh("data/square.msh");
@@ -77,7 +77,7 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 	s_effect = new Effect();
 	Context context;
 	if (!s_effect->Initialize(context))
-		goto OnError;
+		goto OnError;*/
 	return true;
 
 OnError:
@@ -86,7 +86,7 @@ OnError:
 	return false;
 }
 
-void eae6320::Graphics::Render()
+void eae6320::Graphics::Render(eae6320::Graphics::Renderable ** i_RenderingList, const unsigned int i_RenderingListLength)
 {
 	// Every frame an entirely new image will be created.
 	// Before drawing anything, then, the previous image will be erased
@@ -104,10 +104,10 @@ void eae6320::Graphics::Render()
 
 	// The actual function calls that draw geometry
 	{
-		Context c;
-		s_effect->Bind(c);
-		s_mesh1->Draw();
-		s_mesh2->Draw();
+		for (unsigned int i = 0; i < i_RenderingListLength; i++)
+		{
+			i_RenderingList[i]->Draw();
+		}
 
 	}
 
@@ -126,7 +126,7 @@ bool eae6320::Graphics::ShutDown()
 
 	if ( s_openGlRenderingContext != NULL )
 	{
-		if (s_effect)
+		/*if (s_effect)
 		{
 			s_effect->ShutDown();
 			delete s_effect;
@@ -143,7 +143,7 @@ bool eae6320::Graphics::ShutDown()
 			s_mesh2->ShutDown();
 			delete s_mesh2;
 			s_mesh2 = NULL;
-		}
+		}*/
 		if ( wglMakeCurrent( s_deviceContext, NULL ) != FALSE )
 		{
 			if ( wglDeleteContext( s_openGlRenderingContext ) == FALSE )

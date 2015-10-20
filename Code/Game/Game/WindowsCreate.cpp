@@ -14,6 +14,9 @@
 // in this example program we just use it to get error messages
 #include "../../Engine/Windows/WindowsFunctions.h"
 #include "../../Engine/Graphics/Graphics.h"
+#include "../../Engine/Core/GameObject.h"
+#include "../../Engine/Time/Time.h"
+#include "../../Engine/UserInput/UserInput.h"
 
 // Static Data Initialization
 //===========================
@@ -460,6 +463,28 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 
 	// Enter an infinite loop that will continue until a quit message (WM_QUIT) is received from Windows
 	eae6320::Graphics::Initialize(s_mainWindow);
+
+	eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject * [3];
+	eae6320::Core::GameObject * object_tri1 = gameObjectList[0] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_tri2 = gameObjectList[1] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_rect = gameObjectList[2] = new eae6320::Core::GameObject();
+
+	object_tri1->Initialize("data/triangle.msh");
+	object_tri2->Initialize("data/triangle.msh");
+	object_rect->Initialize("data/rectangle.msh");
+
+	object_tri1->Position.x = 0.5f;
+	object_tri1->Position.y = 0.5f;
+	object_tri1->Update();
+	object_tri2->Position.x = -0.5f;
+	object_tri2->Position.y = -0.5f;
+	object_tri2->Update();
+
+	eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[3];
+	renderableList[0] = gameObjectList[0]->Renderable;
+	renderableList[1] = gameObjectList[1]->Renderable;
+	renderableList[2] = gameObjectList[2]->Renderable;
+
 	MSG message = { 0 };
 	do
 	{
@@ -480,6 +505,38 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 		}
 		if ( !hasWindowsSentAMessage )
 		{
+			eae6320::Time::OnNewFrame();
+			eae6320::Math::cVector offset(0.0f, 0.0f);
+			{
+				// Get the direction
+				{
+					if (eae6320::UserInput::IsKeyPressed(VK_LEFT))
+					{
+						offset.x -= 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed(VK_RIGHT))
+					{
+						offset.x += 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed(VK_UP))
+					{
+						offset.y += 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed(VK_DOWN))
+					{
+						offset.y -= 1.0f;
+					}
+				}
+				// Get the speed
+				const float unitsPerSecond = 1.0f;	// This is arbitrary
+				const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
+				// Normalize the offset
+				offset *= unitsToMove;
+			}
+			object_rect->Position += offset;
+			object_rect->Update();
+			eae6320::Graphics::Render(renderableList,3);
+
 			// Usually there will be no messages in the queue, and the game can run
 
 			// (This example program has nothing to do,
@@ -506,8 +563,15 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 			// it will always be OnMessageReceived()
 			DispatchMessage( &message );
 		}
-		eae6320::Graphics::Render();
 	} while ( message.message != WM_QUIT );
+	gameObjectList[0]->ShutDown();
+	gameObjectList[1]->ShutDown();
+	gameObjectList[2]->ShutDown();
+	delete gameObjectList[0];
+	delete gameObjectList[1];
+	delete gameObjectList[2];
+	delete renderableList;
+	delete gameObjectList;
 	eae6320::Graphics::ShutDown();
 	// The exit code for the application is stored in the WPARAM of a WM_QUIT message
 	o_exitCode = static_cast<int>( message.wParam );

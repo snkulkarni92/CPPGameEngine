@@ -9,6 +9,7 @@
 //=============
 
 #include "../Windows/Includes.h"
+#include "Renderable.h"
 
 // Interface
 //==========
@@ -18,7 +19,7 @@ namespace eae6320
 	namespace Graphics
 	{
 		bool Initialize( const HWND i_renderingWindow );
-		void Render();
+		void Render(Renderable ** i_renderingList, const unsigned int i_RenderingListLength);
 		bool ShutDown();
 	}
 }

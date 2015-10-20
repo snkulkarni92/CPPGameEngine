@@ -20,9 +20,9 @@ namespace
 	HWND s_renderingWindow = NULL;
 	IDirect3D9* s_direct3dInterface = NULL;
 	IDirect3DDevice9* s_direct3dDevice = NULL;
-	eae6320::Graphics::Effect * s_effect = NULL;
+	/*eae6320::Graphics::Effect * s_effect = NULL;
 	eae6320::Graphics::Mesh * s_mesh1 = NULL;
-	eae6320::Graphics::Mesh * s_mesh2 = NULL;
+	eae6320::Graphics::Mesh * s_mesh2 = NULL;*/
 	
 	
 }
@@ -54,12 +54,12 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 	{
 		goto OnError;
 	}
-	eae6320::Graphics::Context context;
-	context.s_direct3dDevice = s_direct3dDevice;
-	s_mesh1 = Mesh::CreateMesh();
+	/*s_mesh1 = Mesh::CreateMesh();
 	s_mesh2 = Mesh::CreateMesh();
+	*/
 	Mesh::SetDirect3dDevice(s_direct3dDevice);
-	void * buffer;
+	Effect::SetDirect3dDevice(s_direct3dDevice);
+	/*void * buffer;
 	buffer = s_mesh1->LoadMesh("data/square.msh");
 	if (!s_mesh1->Initialize(buffer))
 	{
@@ -72,10 +72,10 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 	}
 	
 	s_effect = new Effect();
-	if (!s_effect->Initialize(context))
+	if (!s_effect->Initialize())
 	{
 		goto OnError;
-	}
+	}*/
 	return true;
 
 OnError:
@@ -84,7 +84,7 @@ OnError:
 	return false;
 }
 
-void eae6320::Graphics::Render()
+void eae6320::Graphics::Render(eae6320::Graphics::Renderable ** i_RenderingList, const unsigned int i_RenderingListLength)
 {
 	// Every frame an entirely new image will be created.
 	// Before drawing anything, then, the previous image will be erased
@@ -111,12 +111,10 @@ void eae6320::Graphics::Render()
 		HRESULT result = s_direct3dDevice->BeginScene();
 		assert( SUCCEEDED( result ) );
 		{
-			Context context;
-			context.s_direct3dDevice = s_direct3dDevice;
-			s_effect->Bind(context);
-
-			s_mesh1->Draw();
-			s_mesh2->Draw();
+			for (unsigned int i = 0; i < i_RenderingListLength; i++)
+			{
+				i_RenderingList[i]->Draw();
+			}
 		}
 		result = s_direct3dDevice->EndScene();
 		assert( SUCCEEDED( result ) );
@@ -143,14 +141,15 @@ bool eae6320::Graphics::ShutDown()
 	{
 		if ( s_direct3dDevice )
 		{
-			s_effect->ShutDown();
+			/*s_effect->ShutDown();
 			delete s_effect;
 			s_mesh1->ShutDown();
 			s_mesh2->ShutDown();
 			delete s_mesh1;
-			delete s_mesh2;
+			delete s_mesh2;*/
 
 			Mesh::ReleaseDirect3dDevice();
+			Effect::ReleaseDirect3dDevice();
 			
 			s_direct3dDevice->Release();
 			s_direct3dDevice = NULL;

@@ -16,20 +16,12 @@ namespace eae6320
 {
 	namespace Graphics
 	{
-		struct Context
-		{
-#if defined EAE6320_PLATFORM_GL
-
-#elif defined EAE6320_PLATFORM_D3D
-			IDirect3DDevice9* s_direct3dDevice;
-#endif //Platform Check
-
-		};
 		class Effect
 		{
 #if defined EAE6320_PLATFORM_GL
 			// OpenGL encapsulates a matching vertex shader and fragment shader into what it calls a "program".
 			GLuint s_programId = 0;
+			GLint positionOffset = -1;
 #elif defined EAE6320_PLATFORM_D3D
 			// The vertex shader is a program that operates on vertices.
 			IDirect3DVertexShader9* s_vertexShader = NULL;
@@ -39,8 +31,9 @@ namespace eae6320
 
 		public:
 			Effect();
-			bool Initialize(Context context);
-			void Bind(Context context);
+			bool Initialize();
+			void Bind();
+			void SetDrawCallUniforms(float * floatArray);
 			void ShutDown();
 #if defined EAE6320_PLATFORM_GL
 
@@ -56,8 +49,13 @@ namespace eae6320
 			bool LoadFragmentShader(const GLuint i_programId);
 			bool LoadVertexShader(const GLuint i_programId);
 #elif defined EAE6320_PLATFORM_D3D
-			bool LoadFragmentShader(Context context);
-			bool LoadVertexShader(Context context);
+			static IDirect3DDevice9* s_direct3dDevice;
+			static void SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice);
+			static void ReleaseDirect3dDevice();
+			ID3DXConstantTable * vertexShaderConstantTable;
+			D3DXHANDLE positionHandle;
+			bool LoadFragmentShader();
+			bool LoadVertexShader();
 
 #endif //Platform Check
 		};

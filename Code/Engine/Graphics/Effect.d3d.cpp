@@ -8,17 +8,26 @@ namespace eae6320
 {
 	namespace Graphics
 	{
+		IDirect3DDevice9* Effect::s_direct3dDevice = NULL;
 		Effect::Effect()
 		{
 
 		}
-		bool Effect::Initialize(Context context)
+		void Effect::SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice)
 		{
-			if (!LoadVertexShader(context))
+			s_direct3dDevice = i_direct3dDevice;
+		}
+		void Effect::ReleaseDirect3dDevice()
+		{
+			s_direct3dDevice = NULL;
+		}
+		bool Effect::Initialize()
+		{
+			if (!LoadVertexShader())
 			{
 				goto OnError;
 			}
-			if (!LoadFragmentShader(context))
+			if (!LoadFragmentShader())
 			{
 				goto OnError;
 			}
@@ -28,15 +37,20 @@ namespace eae6320
 			return false;
 		}
 
-		void Effect::Bind(Context context)
+		void Effect::Bind()
 		{
 			// Set the shaders
 			{
-				HRESULT result = context.s_direct3dDevice->SetVertexShader(s_vertexShader);
+				HRESULT result = s_direct3dDevice->SetVertexShader(s_vertexShader);
 				assert(SUCCEEDED(result));
-				result = context.s_direct3dDevice->SetPixelShader(s_fragmentShader);
+				result = s_direct3dDevice->SetPixelShader(s_fragmentShader);
 				assert(SUCCEEDED(result));
 			}
+		}
+
+		void Effect::SetDrawCallUniforms(float * floatArray)
+		{
+			HRESULT result = vertexShaderConstantTable->SetFloatArray(s_direct3dDevice, positionHandle, floatArray, 2);
 		}
 
 		void Effect::ShutDown()
@@ -54,7 +68,7 @@ namespace eae6320
 			
 		}
 
-		bool Effect::LoadFragmentShader(Context context)
+		bool Effect::LoadFragmentShader()
 		{
 			// Load the source code from file and compile it
 			ID3DXBuffer* compiledShader;
@@ -102,7 +116,7 @@ namespace eae6320
 			// Create the fragment shader object
 			bool wereThereErrors = false;
 			{
-				HRESULT result = context.s_direct3dDevice->CreatePixelShader(reinterpret_cast<DWORD*>(compiledShader->GetBufferPointer()),
+				HRESULT result = s_direct3dDevice->CreatePixelShader(reinterpret_cast<DWORD*>(compiledShader->GetBufferPointer()),
 					&s_fragmentShader);
 				if (FAILED(result))
 				{
@@ -114,7 +128,7 @@ namespace eae6320
 			return !wereThereErrors;
 		}
 		
-		bool Effect::LoadVertexShader(Context context)
+		bool Effect::LoadVertexShader()
 		{
 			// Load the source code from file and compile it
 			ID3DXBuffer* compiledShader;
@@ -130,14 +144,18 @@ namespace eae6320
 				const char* profile = "vs_3_0";
 				const DWORD noFlags = 0;
 				ID3DXBuffer* errorMessages = NULL;
-				ID3DXConstantTable** noConstants = NULL;
+				//ID3DXConstantTable** offsetTable = NULL;
 				HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
-					&compiledShader, &errorMessages, noConstants);
+					&compiledShader, &errorMessages, &vertexShaderConstantTable);
 				if (SUCCEEDED(result))
 				{
 					if (errorMessages)
 					{
 						errorMessages->Release();
+					}
+					if (vertexShaderConstantTable)
+					{
+						positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
 					}
 				}
 				else
@@ -162,7 +180,7 @@ namespace eae6320
 			// Create the vertex shader object
 			bool wereThereErrors = false;
 			{
-				HRESULT result = context.s_direct3dDevice->CreateVertexShader(reinterpret_cast<DWORD*>(compiledShader->GetBufferPointer()),
+				HRESULT result = s_direct3dDevice->CreateVertexShader(reinterpret_cast<DWORD*>(compiledShader->GetBufferPointer()),
 					&s_vertexShader);
 				if (FAILED(result))
 				{

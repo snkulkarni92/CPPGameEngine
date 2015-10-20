@@ -58,9 +58,10 @@ namespace eae6320
 
 
 		//Methods
-			Mesh();
+			
 		public:
-			static Mesh * CreateMesh();
+			Mesh();
+			//static Mesh * CreateMesh();
 			bool Initialize(void * buffer);
 			void Draw();
 			bool ShutDown();
