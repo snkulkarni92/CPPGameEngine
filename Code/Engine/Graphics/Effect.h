@@ -18,6 +18,8 @@ namespace eae6320
 	{
 		class Effect
 		{
+			const char * vertexShaderPath;
+			const char * fragmentShaderPath;
 #if defined EAE6320_PLATFORM_GL
 			// OpenGL encapsulates a matching vertex shader and fragment shader into what it calls a "program".
 			GLuint s_programId = 0;
@@ -31,7 +33,8 @@ namespace eae6320
 
 		public:
 			Effect();
-			bool Initialize();
+			bool Initialize(void * buffer);
+			void * LoadEffect(const char * i_path);
 			void Bind();
 			void SetDrawCallUniforms(float * floatArray);
 			void ShutDown();

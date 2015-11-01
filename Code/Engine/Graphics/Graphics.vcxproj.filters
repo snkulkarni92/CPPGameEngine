@@ -29,6 +29,7 @@
       <Filter>OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />

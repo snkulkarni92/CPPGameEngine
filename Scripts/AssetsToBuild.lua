@@ -9,6 +9,13 @@ return
 		}
 	},
 	{
+		builder = "EffectBuilder.exe",
+		assets = 
+		{
+			{source = "shaders.effect", target = "shaders.bineffect"},
+		}
+	},
+	{
 		builder = "GenericBuilder.exe",
 		assets = 
 		{

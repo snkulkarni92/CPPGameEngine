@@ -12,7 +12,7 @@ namespace eae6320
 		{
 		public:
 			GameObject();
-			bool Initialize(const char * i_FilePath);
+			bool Initialize(const char * i_MeshPath, const char * i_EffectPath);
 			void Update();
 			void ShutDown();
 		public:

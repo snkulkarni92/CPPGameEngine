@@ -11,15 +11,19 @@ namespace eae6320
 		{
 
 		}
-		bool Effect::Initialize()
+		bool Effect::Initialize(void * buffer)
 		{
+			bool wereThereErrors = false;
 			if (!CreateProgram())
 			{
-				ShutDown();
-				return false;
+				wereThereErrors = true;
 			}
-			positionOffset = glGetUniformLocation(s_programId, "g_position_offset");
-			return true;
+			if (wereThereErrors)
+				ShutDown();
+			else
+				positionOffset = glGetUniformLocation(s_programId, "g_position_offset");
+			free(buffer);
+			return !wereThereErrors;
 		}
 		void Effect::Bind()
 		{
@@ -295,7 +299,7 @@ namespace eae6320
 				// Load the shader source code
 				size_t fileSize;
 				{
-					const char* sourceCodeFileName = "data/fragment.shader";
+					const char* sourceCodeFileName = fragmentShaderPath;
 					std::string errorMessage;
 					if (!LoadAndAllocateShaderProgram(sourceCodeFileName, shaderSource, fileSize, &errorMessage))
 					{
@@ -493,7 +497,7 @@ namespace eae6320
 				// Load the shader source code
 				size_t fileSize;
 				{
-					const char* sourceCodeFileName = "data/vertex.shader";
+					const char* sourceCodeFileName = vertexShaderPath;
 					std::string errorMessage;
 					if (!LoadAndAllocateShaderProgram(sourceCodeFileName, shaderSource, fileSize, &errorMessage))
 					{

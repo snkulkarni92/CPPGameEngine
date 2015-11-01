@@ -469,9 +469,9 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	eae6320::Core::GameObject * object_tri2 = gameObjectList[1] = new eae6320::Core::GameObject();
 	eae6320::Core::GameObject * object_rect = gameObjectList[2] = new eae6320::Core::GameObject();
 
-	object_tri1->Initialize("data/triangle.msh");
-	object_tri2->Initialize("data/triangle.msh");
-	object_rect->Initialize("data/rectangle.msh");
+	object_tri1->Initialize("data/triangle.msh", "data/shaders.bineffect");
+	object_tri2->Initialize("data/triangle.msh", "data/shaders.bineffect");
+	object_rect->Initialize("data/rectangle.msh", "data/shaders.bineffect");
 
 	object_tri1->Position.x = 0.5f;
 	object_tri1->Position.y = 0.5f;

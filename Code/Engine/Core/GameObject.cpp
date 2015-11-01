@@ -7,9 +7,9 @@ eae6320::Core::GameObject::GameObject()
 	Position.y = 0.0f;
 }
 
-bool eae6320::Core::GameObject::Initialize(const char * i_FilePath)
+bool eae6320::Core::GameObject::Initialize(const char * i_MeshPath, const char * i_EffectPath)
 {
-	if (!this->Renderable->Initialize(i_FilePath))
+	if (!this->Renderable->Initialize(i_MeshPath,i_EffectPath))
 	{
 		ShutDown();
 		return false;

@@ -21,20 +21,24 @@ namespace eae6320
 		{
 			s_direct3dDevice = NULL;
 		}
-		bool Effect::Initialize()
+		bool Effect::Initialize(void * buffer)
 		{
+			bool wereThereErrors = false;
 			if (!LoadVertexShader())
 			{
+				wereThereErrors = true;
 				goto OnError;
 			}
 			if (!LoadFragmentShader())
 			{
+				wereThereErrors = true;
 				goto OnError;
 			}
-			return true;
 		OnError:
-			ShutDown();
-			return false;
+			free(buffer);
+			if(wereThereErrors)
+				ShutDown();
+			return !wereThereErrors;
 		}
 
 		void Effect::Bind()
@@ -73,7 +77,7 @@ namespace eae6320
 			// Load the source code from file and compile it
 			ID3DXBuffer* compiledShader;
 			{
-				const char* sourceCodeFileName = "data/fragment.shader";
+				const char* sourceCodeFileName = fragmentShaderPath;
 				const D3DXMACRO defines[] =
 				{
 					{ "EAE6320_PLATFORM_D3D", "1" },
@@ -133,7 +137,7 @@ namespace eae6320
 			// Load the source code from file and compile it
 			ID3DXBuffer* compiledShader;
 			{
-				const char* sourceCodeFileName = "data/vertex.shader";
+				const char* sourceCodeFileName = vertexShaderPath;
 				const D3DXMACRO defines[] =
 				{
 					{ "EAE6320_PLATFORM_D3D", "1" },

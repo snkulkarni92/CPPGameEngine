@@ -12,7 +12,7 @@ namespace eae6320
 		{
 		public:
 			Renderable();
-			bool Initialize(const char * i_FilePath);
+			bool Initialize(const char * i_MeshPath, const char * i_EffectPath);
 			void Draw();
 			void ShutDown();
 

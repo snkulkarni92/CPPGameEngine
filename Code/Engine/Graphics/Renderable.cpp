@@ -6,16 +6,17 @@ eae6320::Graphics::Renderable::Renderable()
 	Effect = new eae6320::Graphics::Effect();
 }
 
-bool eae6320::Graphics::Renderable::Initialize(const char * i_FilePath)
+bool eae6320::Graphics::Renderable::Initialize(const char * i_MeshPath, const char * i_EffectPath)
 {
 	void * buffer;
-	buffer = this->Mesh->LoadMesh(i_FilePath);
+	buffer = this->Mesh->LoadMesh(i_MeshPath);
 	if (!this->Mesh->Initialize(buffer))
 	{
 		ShutDown();
 		return false;
 	}
-	if (!this->Effect->Initialize())
+	buffer = this->Effect->LoadEffect(i_EffectPath);
+	if (!this->Effect->Initialize(buffer))
 	{
 		ShutDown();
 		return false;
