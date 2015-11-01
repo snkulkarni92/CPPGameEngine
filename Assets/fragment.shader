@@ -35,6 +35,8 @@ void main(
 
 #elif defined( EAE6320_PLATFORM_GL )
 
+#version 330
+
 // This extension is required in order to specify explicit locations for shader inputs and outputs
 #extension GL_ARB_separate_shader_objects : require
 

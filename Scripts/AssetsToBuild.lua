@@ -16,11 +16,11 @@ return
 		}
 	},
 	{
-		builder = "GenericBuilder.exe",
+		builder = "ShaderBuilder.exe",
 		assets = 
 		{
-			{source = "vertex.shader", target = "vertex.shader"},
-			{source = "fragment.shader", target = "fragment.shader"},
+			{source = "vertex.shader", target = "vertex.shader", arguments = "vertex"},
+			{source = "fragment.shader", target = "fragment.shader", arguments = "fragment"},
 		}
 	},
 }

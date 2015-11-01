@@ -75,59 +75,82 @@ namespace eae6320
 		bool Effect::LoadFragmentShader()
 		{
 			// Load the source code from file and compile it
-			ID3DXBuffer* compiledShader;
+			//ID3DXBuffer* compiledShader;
+			//{
+			//	const char* sourceCodeFileName = fragmentShaderPath;
+			//	const D3DXMACRO defines[] =
+			//	{
+			//		{ "EAE6320_PLATFORM_D3D", "1" },
+			//		{ NULL, NULL }
+			//	};
+			//	ID3DXInclude* noIncludes = NULL;
+			//	const char* entryPoint = "main";
+			//	const char* profile = "ps_3_0";
+			//	const DWORD noFlags = 0;
+			//	ID3DXBuffer* errorMessages = NULL;
+			//	ID3DXConstantTable** noConstants = NULL;
+			//	HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
+			//		&compiledShader, &errorMessages, noConstants);
+			//	if (SUCCEEDED(result))
+			//	{
+			//		if (errorMessages)
+			//		{
+			//			errorMessages->Release();
+			//		}
+			//	}
+			//	else
+			//	{
+			//		if (errorMessages)
+			//		{
+			//			std::stringstream errorMessage;
+			//			errorMessage << "Direct3D failed to compile the fragment shader from the file " << sourceCodeFileName
+			//				<< ":\n" << reinterpret_cast<char*>(errorMessages->GetBufferPointer());
+			//			eae6320::UserOutput::Print(errorMessage.str());
+			//			errorMessages->Release();
+			//		}
+			//		else
+			//		{
+			//			std::stringstream errorMessage;
+			//			errorMessage << "Direct3D failed to compile the fragment shader from the file " << sourceCodeFileName;
+			//			eae6320::UserOutput::Print(errorMessage.str());
+			//		}
+			//		return false;
+			//	}
+			//}
+
+			//Open the shader file
+			FILE * iFile;
+			void * buffer;
+			size_t fileSize;
+
+			fopen_s(&iFile, fragmentShaderPath, "rb");
+			if (iFile != NULL)
 			{
-				const char* sourceCodeFileName = fragmentShaderPath;
-				const D3DXMACRO defines[] =
+				fseek(iFile, 0, SEEK_END);
+				fileSize = ftell(iFile);
+				rewind(iFile);
+
+				buffer = (void *)malloc(fileSize);
+
+				size_t result = fread(buffer, 1, fileSize, iFile);
+				if (result != fileSize)
 				{
-					{ "EAE6320_PLATFORM_D3D", "1" },
-					{ NULL, NULL }
-				};
-				ID3DXInclude* noIncludes = NULL;
-				const char* entryPoint = "main";
-				const char* profile = "ps_3_0";
-				const DWORD noFlags = 0;
-				ID3DXBuffer* errorMessages = NULL;
-				ID3DXConstantTable** noConstants = NULL;
-				HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
-					&compiledShader, &errorMessages, noConstants);
-				if (SUCCEEDED(result))
-				{
-					if (errorMessages)
-					{
-						errorMessages->Release();
-					}
-				}
-				else
-				{
-					if (errorMessages)
-					{
-						std::stringstream errorMessage;
-						errorMessage << "Direct3D failed to compile the fragment shader from the file " << sourceCodeFileName
-							<< ":\n" << reinterpret_cast<char*>(errorMessages->GetBufferPointer());
-						eae6320::UserOutput::Print(errorMessage.str());
-						errorMessages->Release();
-					}
-					else
-					{
-						std::stringstream errorMessage;
-						errorMessage << "Direct3D failed to compile the fragment shader from the file " << sourceCodeFileName;
-						eae6320::UserOutput::Print(errorMessage.str());
-					}
-					return false;
+					eae6320::UserOutput::Print("Error reading file");
+					free(buffer);
 				}
 			}
+
 			// Create the fragment shader object
 			bool wereThereErrors = false;
 			{
-				HRESULT result = s_direct3dDevice->CreatePixelShader(reinterpret_cast<DWORD*>(compiledShader->GetBufferPointer()),
+				HRESULT result = s_direct3dDevice->CreatePixelShader(reinterpret_cast<DWORD*>(buffer),
 					&s_fragmentShader);
 				if (FAILED(result))
 				{
 					eae6320::UserOutput::Print("Direct3D failed to create the fragment shader");
 					wereThereErrors = true;
 				}
-				compiledShader->Release();
+				free(buffer);
 			}
 			return !wereThereErrors;
 		}
@@ -135,63 +158,95 @@ namespace eae6320
 		bool Effect::LoadVertexShader()
 		{
 			// Load the source code from file and compile it
-			ID3DXBuffer* compiledShader;
+			//ID3DXBuffer* compiledShader;
+			//{
+			//	const char* sourceCodeFileName = vertexShaderPath;
+			//	const D3DXMACRO defines[] =
+			//	{
+			//		{ "EAE6320_PLATFORM_D3D", "1" },
+			//		{ NULL, NULL }
+			//	};
+			//	ID3DXInclude* noIncludes = NULL;
+			//	const char* entryPoint = "main";
+			//	const char* profile = "vs_3_0";
+			//	const DWORD noFlags = 0;
+			//	ID3DXBuffer* errorMessages = NULL;
+			//	//ID3DXConstantTable** offsetTable = NULL;
+			//	HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
+			//		&compiledShader, &errorMessages, &vertexShaderConstantTable);
+			//	if (SUCCEEDED(result))
+			//	{
+			//		if (errorMessages)
+			//		{
+			//			errorMessages->Release();
+			//		}
+			//		if (vertexShaderConstantTable)
+			//		{
+			//			positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
+			//		}
+			//	}
+			//	else
+			//	{
+			//		if (errorMessages)
+			//		{
+			//			std::stringstream errorMessage;
+			//			errorMessage << "Direct3D failed to compile the vertex shader from the file " << sourceCodeFileName
+			//				<< ":\n" << reinterpret_cast<char*>(errorMessages->GetBufferPointer());
+			//			eae6320::UserOutput::Print(errorMessage.str());
+			//			errorMessages->Release();
+			//		}
+			//		else
+			//		{
+			//			std::stringstream errorMessage;
+			//			errorMessage << "Direct3D failed to compile the vertex shader from the file " << sourceCodeFileName;
+			//			eae6320::UserOutput::Print(errorMessage.str());
+			//		}
+			//		return false;
+			//	}
+			//}
+
+			//Open the shader file
+			FILE * iFile;
+			void * buffer;
+			size_t fileSize;
+
+			fopen_s(&iFile, vertexShaderPath, "rb");
+			if (iFile != NULL)
 			{
-				const char* sourceCodeFileName = vertexShaderPath;
-				const D3DXMACRO defines[] =
+				fseek(iFile, 0, SEEK_END);
+				fileSize = ftell(iFile);
+				rewind(iFile);
+
+				buffer = (void *)malloc(fileSize);
+
+				size_t result = fread(buffer, 1, fileSize, iFile);
+				if (result != fileSize)
 				{
-					{ "EAE6320_PLATFORM_D3D", "1" },
-					{ NULL, NULL }
-				};
-				ID3DXInclude* noIncludes = NULL;
-				const char* entryPoint = "main";
-				const char* profile = "vs_3_0";
-				const DWORD noFlags = 0;
-				ID3DXBuffer* errorMessages = NULL;
-				//ID3DXConstantTable** offsetTable = NULL;
-				HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
-					&compiledShader, &errorMessages, &vertexShaderConstantTable);
-				if (SUCCEEDED(result))
-				{
-					if (errorMessages)
-					{
-						errorMessages->Release();
-					}
-					if (vertexShaderConstantTable)
-					{
-						positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
-					}
-				}
-				else
-				{
-					if (errorMessages)
-					{
-						std::stringstream errorMessage;
-						errorMessage << "Direct3D failed to compile the vertex shader from the file " << sourceCodeFileName
-							<< ":\n" << reinterpret_cast<char*>(errorMessages->GetBufferPointer());
-						eae6320::UserOutput::Print(errorMessage.str());
-						errorMessages->Release();
-					}
-					else
-					{
-						std::stringstream errorMessage;
-						errorMessage << "Direct3D failed to compile the vertex shader from the file " << sourceCodeFileName;
-						eae6320::UserOutput::Print(errorMessage.str());
-					}
-					return false;
+					eae6320::UserOutput::Print("Error reading file");
+					free(buffer);
 				}
 			}
+
 			// Create the vertex shader object
 			bool wereThereErrors = false;
 			{
-				HRESULT result = s_direct3dDevice->CreateVertexShader(reinterpret_cast<DWORD*>(compiledShader->GetBufferPointer()),
+				HRESULT result = s_direct3dDevice->CreateVertexShader(reinterpret_cast<DWORD*>(buffer),
 					&s_vertexShader);
 				if (FAILED(result))
 				{
 					eae6320::UserOutput::Print("Direct3D failed to create the vertex shader");
 					wereThereErrors = true;
 				}
-				compiledShader->Release();
+
+				//Get constant table
+				D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(buffer), &vertexShaderConstantTable);
+
+				if (vertexShaderConstantTable)
+				{
+					positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
+				}
+
+				free(buffer);
 			}
 			return !wereThereErrors;
 		}

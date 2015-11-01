@@ -330,11 +330,11 @@ namespace eae6320
 				}
 				// Set the source code into the shader
 				{
-					const GLsizei shaderSourceCount = 3;
+					const GLsizei shaderSourceCount = 1;
 					const GLchar* shaderSources[] =
 					{
-						"#version 330 // The version of GLSL to use must come first\n",
-						"#define EAE6320_PLATFORM_GL\n",
+						//"#version 330 // The version of GLSL to use must come first\n",
+						//"#define EAE6320_PLATFORM_GL\n",
 						reinterpret_cast<GLchar*>(shaderSource)
 					};
 					const GLint* sourcesAreNullTerminated = NULL;
@@ -528,11 +528,11 @@ namespace eae6320
 				}
 				// Set the source code into the shader
 				{
-					const GLsizei shaderSourceCount = 3;
+					const GLsizei shaderSourceCount = 1;
 					const GLchar* shaderSources[] =
 					{
-						"#version 330 // The version of GLSL to use must come first\n",
-						"#define EAE6320_PLATFORM_GL\n",
+						//"#version 330 // The version of GLSL to use must come first\n",
+						//"#define EAE6320_PLATFORM_GL\n",
 						reinterpret_cast<GLchar*>(shaderSource)
 					};
 					const GLint* sourcesAreNullTerminated = NULL;
