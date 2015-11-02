@@ -30,6 +30,7 @@
     </ClCompile>
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Graphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />

@@ -5,16 +5,14 @@
 
 #include <cassert>
 #include <cstdint>
-#include <cstdlib>
+#include <sstream>
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include <string>
-#include <sstream>
-#include "Mesh.h"
-#include "Effect.h"
+
+#include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 #include "../UserOutput/UserOutput.h"
 #include "../Windows/WindowsFunctions.h"
-#include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
 
 // Static Data Initialization
 //===========================
@@ -24,9 +22,6 @@ namespace
 	HWND s_renderingWindow = NULL;
 	HDC s_deviceContext = NULL;
 	HGLRC s_openGlRenderingContext = NULL;
-	/*eae6320::Graphics::Effect * s_effect = NULL;
-	eae6320::Graphics::Mesh * s_mesh1 = NULL;
-	eae6320::Graphics::Mesh * s_mesh2 = NULL;*/
 }
 
 // Helper Function Declarations
@@ -35,10 +30,6 @@ namespace
 namespace
 {
 	bool CreateRenderingContext();
-	
-	// This helper struct exists to be able to dynamically allocate memory to get "log info"
-	// which will automatically be freed when the struct goes out of scope
-	
 }
 
 // Interface
@@ -63,21 +54,6 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 			goto OnError;
 		}
 	}
-
-	/*s_mesh1 = Mesh::CreateMesh();
-	s_mesh2 = Mesh::CreateMesh();
-	void * buffer;
-	buffer = s_mesh1->LoadMesh("data/square.msh");
-	if(!s_mesh1->Initialize(buffer))
-		goto OnError;
-	buffer = s_mesh2->LoadMesh("data/triangle.msh");
-	if(!s_mesh2->Initialize(buffer))
-		goto OnError;
-
-	s_effect = new Effect();
-	Context context;
-	if (!s_effect->Initialize(context))
-		goto OnError;*/
 	return true;
 
 OnError:
@@ -86,64 +62,12 @@ OnError:
 	return false;
 }
 
-void eae6320::Graphics::Render(eae6320::Graphics::Renderable ** i_RenderingList, const unsigned int i_RenderingListLength)
-{
-	// Every frame an entirely new image will be created.
-	// Before drawing anything, then, the previous image will be erased
-	// by "clearing" the image buffer (filling it with a solid color)
-	{
-		// Black is usually used
-		glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
-		assert( glGetError() == GL_NO_ERROR );
-		// In addition to the color, "depth" and "stencil" can also be cleared,
-		// but for now we only care about color
-		const GLbitfield clearColor = GL_COLOR_BUFFER_BIT;
-		glClear( clearColor );
-		assert( glGetError() == GL_NO_ERROR );
-	}
-
-	// The actual function calls that draw geometry
-	{
-		for (unsigned int i = 0; i < i_RenderingListLength; i++)
-		{
-			i_RenderingList[i]->Draw();
-		}
-
-	}
-
-	// Everything has been drawn to the "back buffer", which is just an image in memory.
-	// In order to display it, the contents of the back buffer must be swapped with the "front buffer"
-	// (which is what the user sees)
-	{
-		BOOL result = SwapBuffers( s_deviceContext );
-		assert( result != FALSE );
-	}
-}
-
 bool eae6320::Graphics::ShutDown()
 {
 	bool wereThereErrors = false;
 
 	if ( s_openGlRenderingContext != NULL )
 	{
-		/*if (s_effect)
-		{
-			s_effect->ShutDown();
-			delete s_effect;
-			s_effect = NULL;
-		}
-		if (s_mesh1)
-		{
-			s_mesh1->ShutDown();
-			delete s_mesh1;
-			s_mesh1 = NULL;
-		}
-		if (s_mesh2)
-		{
-			s_mesh2->ShutDown();
-			delete s_mesh2;
-			s_mesh2 = NULL;
-		}*/
 		if ( wglMakeCurrent( s_deviceContext, NULL ) != FALSE )
 		{
 			if ( wglDeleteContext( s_openGlRenderingContext ) == FALSE )
@@ -172,6 +96,34 @@ bool eae6320::Graphics::ShutDown()
 	s_renderingWindow = NULL;
 
 	return !wereThereErrors;
+}
+
+void eae6320::Graphics::ClearFrame()
+{
+	// Every frame an entirely new image will be created.
+	// Before drawing anything, then, the previous image will be erased
+	// by "clearing" the image buffer (filling it with a solid color)
+	// Black is usually used
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	assert(glGetError() == GL_NO_ERROR);
+	// In addition to the color, "depth" and "stencil" can also be cleared,
+	// but for now we only care about color
+	const GLbitfield clearColor = GL_COLOR_BUFFER_BIT;
+	glClear(clearColor);
+	assert(glGetError() == GL_NO_ERROR);
+}
+
+void eae6320::Graphics::BeginFrame() { }
+
+void eae6320::Graphics::EndFrame() { }
+
+void eae6320::Graphics::DrawFrame()
+{
+	// Everything has been drawn to the "back buffer", which is just an image in memory.
+	// In order to display it, the contents of the back buffer must be swapped with the "front buffer"
+	// (which is what the user sees)
+	BOOL result = SwapBuffers(s_deviceContext);
+	assert(result != FALSE);
 }
 
 // Helper Function Declarations

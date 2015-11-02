@@ -21,6 +21,10 @@ return
 		{
 			{source = "vertex.shader", target = "vertex.shader", arguments = "vertex"},
 			{source = "fragment.shader", target = "fragment.shader", arguments = "fragment"},
+		},
+		dependencies = 
+		{
+			"shaders.inc",
 		}
 	},
 }

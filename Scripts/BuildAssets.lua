@@ -42,7 +42,7 @@ end
 
 -- EAE6320_TODO: I have shown the simplest parameters to BuildAsset() that are possible.
 -- You should definitely feel free to change these
-local function BuildAsset( i_builderFileName, i_sourcePath, i_targetPath, i_optionalArguments )
+local function BuildAsset( i_builderFileName, i_sourcePath, i_targetPath, i_optionalArguments, i_optionalDependencies )
 	-- Get the absolute paths to the source and target
 	-- EAE6320_TODO: I am assuming that the relative path of the source and target is the same,
 	-- but if this isn't true for you (i.e. you use different extensions)
@@ -90,6 +90,16 @@ local function BuildAsset( i_builderFileName, i_sourcePath, i_targetPath, i_opti
 				-- the builder may have changed which could cause different output
 				local lastWriteTime_builder = GetLastWriteTime( path_builder )
 				shouldTargetBeBuilt = lastWriteTime_builder > lastWriteTime_target
+				--If the dependencies were changed
+				if type(i_optionalDependencies) == "table" then
+				    for i,dependency in ipairs(i_optionalDependencies) do
+                        local lastWriteTime_dependency = GetLastWriteTime( s_AuthoredAssetDir .. dependency )
+                        if lastWriteTime_dependency > lastWriteTime_target then
+                            shouldTargetBeBuilt = true
+                        end
+                    end
+                end
+
 			end
 		else
 			shouldTargetBeBuilt = true;
@@ -108,9 +118,9 @@ local function BuildAsset( i_builderFileName, i_sourcePath, i_targetPath, i_opti
 			local arguments = "\"" .. path_source .. "\" \"" .. path_target .. "\""
 			-- If you create a mechanism so that some asset types could include extra arguments
 			-- you would concatenate them here, something like:
-            if i_optionalArguments ~= nil then
-    			arguments = arguments .. " " .. i_optionalArguments
-            end
+			if i_optionalArguments ~= nil then
+				arguments = arguments .. " " .. i_optionalArguments
+			end
 			-- IMPORTANT NOTE:
 			-- If you need to debug a builder you can put print statements here to
 			-- find out what the exact command line should be.
@@ -165,7 +175,7 @@ local function BuildAssets( i_assetsToBuild )
 	for i, assetType in ipairs(i_assetsToBuild) do
 		local builderName = assetType.builder
 		for i, asset in ipairs(assetType.assets) do
-			if not BuildAsset(builderName, asset.source, asset.target, asset.arguments) then
+			if not BuildAsset(builderName, asset.source, asset.target, asset.arguments, assetType.dependencies) then
 				wereThereErrors = true
 			end
 		end
