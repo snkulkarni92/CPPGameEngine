@@ -8,48 +8,10 @@
 // Platform-independant Uniform declaration
 uniform float2 g_position_offset;
 
-#if defined( EAE6320_PLATFORM_D3D )
-
 // Entry Point
 //============
 
-void main(
-
-	// Input
-	//======
-
-	in const float2 i_position : POSITION,
-	in const float4 i_color : COLOR,
-
-	// Output
-	//=======
-
-	out float4 o_position : POSITION,
-	out float4 o_color : COLOR
-
-	)
-
-#elif defined( EAE6320_PLATFORM_GL )
-
-
-// Input
-//======
-
-
-layout( location = 0 ) in vec2 i_position;
-layout( location = 1 ) in vec4 i_color;
-
-// Output
-//=======
-
-layout( location = 0 ) out vec4 o_color;
-
-// Entry Point
-//============
-
-void main()
-
-#endif
+#include "vertexMain.inc" // void main()
 
 {
 	// Calculate position

@@ -18,7 +18,8 @@
 // The version of GLSL to use must come first
 #version 330
 
-// This extension is required in order to specify explicit locations for shader inputs and outputs
+// This extension is required in order to specify 
+// explicit locations for shader inputs and outputs
 #extension GL_ARB_separate_shader_objects : require
 
 // Translate HLSL variable types to GLSL
@@ -26,6 +27,6 @@
 #define float3 vec3
 #define float4 vec4
 
-#define out_position gl_position
+#define out_position gl_Position
 
 #endif

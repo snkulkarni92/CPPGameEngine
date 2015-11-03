@@ -19,12 +19,26 @@ return
 		builder = "ShaderBuilder.exe",
 		assets = 
 		{
-			{source = "vertex.shader", target = "vertex.shader", arguments = "vertex"},
-			{source = "fragment.shader", target = "fragment.shader", arguments = "fragment"},
+			{
+				source = "vertex.shader", 
+				target = "vertex.shader", 
+				arguments = "vertex",
+				dependencies = 
+				{
+					"shaders.inc",
+					"vertexMain.inc",
+				},
+			},
+			{
+				source = "fragment.shader", 
+				target = "fragment.shader", 
+				arguments = "fragment",
+				dependencies = 
+				{
+					"shaders.inc",
+					"fragmentMain.inc"
+				},
+			},
 		},
-		dependencies = 
-		{
-			"shaders.inc",
-		}
 	},
 }

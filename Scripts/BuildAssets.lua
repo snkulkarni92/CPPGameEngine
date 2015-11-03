@@ -175,7 +175,7 @@ local function BuildAssets( i_assetsToBuild )
 	for i, assetType in ipairs(i_assetsToBuild) do
 		local builderName = assetType.builder
 		for i, asset in ipairs(assetType.assets) do
-			if not BuildAsset(builderName, asset.source, asset.target, asset.arguments, assetType.dependencies) then
+			if not BuildAsset(builderName, asset.source, asset.target, asset.arguments, asset.dependencies) then
 				wereThereErrors = true
 			end
 		end
