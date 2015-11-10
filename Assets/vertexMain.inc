@@ -10,7 +10,7 @@ void main(
 	// Input
 	//======
 
-	in const float2 i_position : POSITION,
+	in const float3 i_position : POSITION,
 	in const float4 i_color : COLOR,
 
 	// Output
@@ -27,7 +27,7 @@ void main(
 //======
 
 
-layout( location = 0 ) in vec2 i_position;
+layout( location = 0 ) in vec3 i_position;
 layout( location = 1 ) in vec4 i_color;
 
 // Output

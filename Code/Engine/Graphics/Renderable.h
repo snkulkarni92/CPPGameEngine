@@ -4,6 +4,8 @@
 #include "Mesh.h"
 #include "Effect.h"
 #include "../Math/cVector.h"
+#include "../Math/cMatrix_transformation.h"
+#include "../Math/cQuaternion.h"
 namespace eae6320
 {
 	namespace Graphics
@@ -16,11 +18,14 @@ namespace eae6320
 			void Draw();
 			void ShutDown();
 
-			void SetPositionOffset(Math::cVector i_Offset);
+			void SetTransformations(Math::cVector i_Position, Math::cQuaternion i_Orientation, Math::cVector i_CameraPosition, Math::cQuaternion i_CameraOrientation, float AspectRatio);
 		public:
 			Mesh * Mesh;
 			Effect * Effect;
 			Math::cVector Offset;
+			Math::cMatrix_transformation localToWorldTransformation;
+			Math::cMatrix_transformation worldToViewTransformation;
+			Math::cMatrix_transformation viewToScreenTransformation;
 		};
 	}
 }

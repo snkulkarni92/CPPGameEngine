@@ -28,6 +28,20 @@ eae6320::Math::cQuaternion eae6320::Math::cQuaternion::operator *( const cQuater
 		( m_w * i_rhs.m_z ) + ( m_z * i_rhs.m_w ) + ( ( m_x * i_rhs.m_y ) - ( m_y * i_rhs.m_x ) ) );
 }
 
+eae6320::Math::cQuaternion eae6320::Math::cQuaternion::operator *(const float i_rhs)
+{
+	return cQuaternion(m_w, i_rhs * m_x, i_rhs * m_y, i_rhs * m_z);
+}
+
+eae6320::Math::cQuaternion& eae6320::Math::cQuaternion::operator= (const cQuaternion &i_rhs)
+{
+	m_w = i_rhs.m_w;
+	m_x = i_rhs.m_x;
+	m_y = i_rhs.m_y;
+	m_z = i_rhs.m_z;
+	return *this;
+}
+
 // Inversion
 void eae6320::Math::cQuaternion::Invert()
 {

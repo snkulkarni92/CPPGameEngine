@@ -32,6 +32,9 @@ namespace eae6320
 
 			// Concatenation
 			cQuaternion operator *( const cQuaternion& i_rhs ) const;
+			cQuaternion operator *(const float i_rhs);
+
+			cQuaternion& operator =(const cQuaternion& i_rhs);
 
 			// Inversion
 			void Invert();

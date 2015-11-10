@@ -67,8 +67,8 @@ namespace eae6320
 				const unsigned int indexOfFirstVertexToRender = 0;
 				const unsigned int indexOfFirstIndexToUse = 0;
 				// We are drawing a square
-				const unsigned int vertexCountToRender = 4;	// How vertices from the vertex buffer will be used?
-				const unsigned int primitiveCountToRender = 2;	// How many triangles will be drawn?
+				const unsigned int vertexCountToRender = mVertexCount;	// How vertices from the vertex buffer will be used?
+				const unsigned int primitiveCountToRender = mIndexCount / 3;	// How many triangles will be drawn?
 				result = s_direct3dDevice->DrawIndexedPrimitive(primitiveType,
 					indexOfFirstVertexToRender, indexOfFirstVertexToRender, vertexCountToRender,
 					indexOfFirstIndexToUse, primitiveCountToRender);
@@ -196,14 +196,14 @@ namespace eae6320
 					// Stream 0
 
 					// POSITION
-					// 2 floats == 8 bytes
+					// 3 floats == 12 bytes
 					// Offset = 0
-					{ 0, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+					{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 
 					// COLOR0
 					// D3DCOLOR == 4 bytes
-					// Offset = 8
-					{ 0, 8, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+					// Offset = 12
+					{ 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
 
 					// The following marker signals the end of the vertex declaration
 					D3DDECL_END()

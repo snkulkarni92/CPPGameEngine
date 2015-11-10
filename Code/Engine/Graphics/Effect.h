@@ -12,6 +12,8 @@
 #include <d3dx9shader.h>
 #endif //Platform Check
 
+#include "../Math/cMatrix_transformation.h"
+
 namespace eae6320
 {
 	namespace Graphics
@@ -24,6 +26,9 @@ namespace eae6320
 			// OpenGL encapsulates a matching vertex shader and fragment shader into what it calls a "program".
 			GLuint s_programId = 0;
 			GLint positionOffset = -1;
+			GLint localToWorld = -1;
+			GLint worldToView = -1;
+			GLint viewToScreen = -1;
 #elif defined EAE6320_PLATFORM_D3D
 			// The vertex shader is a program that operates on vertices.
 			IDirect3DVertexShader9* s_vertexShader = NULL;
@@ -36,7 +41,7 @@ namespace eae6320
 			bool Initialize(void * buffer);
 			void * LoadEffect(const char * i_path);
 			void Bind();
-			void SetDrawCallUniforms(float * floatArray);
+			void SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3);
 			void ShutDown();
 #if defined EAE6320_PLATFORM_GL
 
@@ -57,6 +62,9 @@ namespace eae6320
 			static void ReleaseDirect3dDevice();
 			ID3DXConstantTable * vertexShaderConstantTable;
 			D3DXHANDLE positionHandle;
+			D3DXHANDLE localToWorld;
+			D3DXHANDLE worldToView;
+			D3DXHANDLE viewToScreen;
 			bool LoadFragmentShader();
 			bool LoadVertexShader();
 

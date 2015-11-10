@@ -17,9 +17,9 @@ bool eae6320::Core::GameObject::Initialize(const char * i_MeshPath, const char *
 	return true;
 }
 
-void eae6320::Core::GameObject::Update()
+void eae6320::Core::GameObject::Update(Camera * i_Camera)
 {
-	Renderable->SetPositionOffset(Position);
+	Renderable->SetTransformations(Position, Orientation, i_Camera->Position, i_Camera->Orientation, i_Camera->AspectRatio);
 }
 
 void eae6320::Core::GameObject::ShutDown()

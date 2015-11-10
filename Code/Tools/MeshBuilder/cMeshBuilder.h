@@ -18,7 +18,7 @@ namespace eae6320
 	public:
 		struct sVertex
 		{
-			float x, y;
+			float x, y, z;
 #if defined EAE6320_PLATFORM_GL
 			uint8_t r, g, b, a;
 #elif defined EAE6320_PLATFORM_D3D

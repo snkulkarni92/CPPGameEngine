@@ -15,8 +15,10 @@
 #include "../../Engine/Windows/WindowsFunctions.h"
 #include "../../Engine/Graphics/Graphics.h"
 #include "../../Engine/Core/GameObject.h"
+#include "../../Engine/Core/Camera.h"
 #include "../../Engine/Time/Time.h"
 #include "../../Engine/UserInput/UserInput.h"
+#include "../../Engine/Math/Functions.h"
 
 // Static Data Initialization
 //===========================
@@ -39,6 +41,9 @@ namespace
 	// your program could have problems when it is run at the same time on the same computer
 	// as one of your classmate's
 	const char* s_mainWindowClass_name = "Saurabh's Main Window Class";
+
+	const int desiredWidth = 800;
+	const int desiredHeight = 600;
 }
 
 // Main Function
@@ -199,8 +204,8 @@ HWND CreateMainWindowHandle( const HINSTANCE i_thisInstanceOfTheProgram, const i
 	{
 		// In a real game these values would come from an external source
 		// rather than be hard-coded
-		const int desiredWidth = 800;
-		const int desiredHeight = 600;
+		//const int desiredWidth = 800;
+		//const int desiredHeight = 600;
 
 		// Calculate how much of the window is coming from the "non-client area"
 		// (the borders and title bar)
@@ -464,27 +469,40 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	// Enter an infinite loop that will continue until a quit message (WM_QUIT) is received from Windows
 	eae6320::Graphics::Initialize(s_mainWindow);
 
-	eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject * [3];
-	eae6320::Core::GameObject * object_tri1 = gameObjectList[0] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_tri2 = gameObjectList[1] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_rect = gameObjectList[2] = new eae6320::Core::GameObject();
+	eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
+	Camera->AspectRatio = (float)desiredWidth / (float)desiredHeight;
 
-	object_tri1->Initialize("data/triangle.msh", "data/shaders.bineffect");
-	object_tri2->Initialize("data/triangle.msh", "data/shaders.bineffect");
-	object_rect->Initialize("data/rectangle.msh", "data/shaders.bineffect");
+	const int gameObjectCount = 2;
 
-	object_tri1->Position.x = 0.5f;
-	object_tri1->Position.y = 0.5f;
-	object_tri1->Update();
-	object_tri2->Position.x = -0.5f;
-	object_tri2->Position.y = -0.5f;
-	object_tri2->Update();
+	eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject * [gameObjectCount];
+	eae6320::Core::GameObject * object_cube = gameObjectList[0] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_plane = gameObjectList[1] = new eae6320::Core::GameObject();
 
-	eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[3];
-	renderableList[0] = gameObjectList[0]->Renderable;
-	renderableList[1] = gameObjectList[1]->Renderable;
-	renderableList[2] = gameObjectList[2]->Renderable;
+	object_cube->Initialize("data/pyramid.msh", "data/shaders.bineffect");
+	object_plane->Initialize("data/plane.msh", "data/shaders.bineffect");
 
+	//eae6320::Core::GameObject * object_tri1 = gameObjectList[0] = new eae6320::Core::GameObject();
+	//eae6320::Core::GameObject * object_tri2 = gameObjectList[1] = new eae6320::Core::GameObject();
+	//eae6320::Core::GameObject * object_rect = gameObjectList[2] = new eae6320::Core::GameObject();
+
+	//object_tri1->Initialize("data/triangle.msh", "data/shaders.bineffect");
+	//object_tri2->Initialize("data/triangle.msh", "data/shaders.bineffect");
+	//object_rect->Initialize("data/rectangle.msh", "data/shaders.bineffect");
+
+	//object_tri1->Position.x = 0.5f;
+	//object_tri1->Position.y = 0.5f;
+	//object_tri1->Update();
+	//object_tri2->Position.x = -0.5f;
+	//object_tri2->Position.y = -0.5f;
+	//object_tri2->Update();
+	Camera->Position.z = 10.0f;
+	object_plane->Position.y = -1.0f;
+	object_cube->Position.y = -1.0f;
+	//object_cube->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(90.0f), eae6320::Math::cVector(0, 0, 1));
+
+	eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[gameObjectCount];
+	for (int i = 0; i < gameObjectCount; i++)
+		renderableList[i] = gameObjectList[i]->Renderable;
 	MSG message = { 0 };
 	do
 	{
@@ -507,35 +525,66 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 		{
 			eae6320::Time::OnNewFrame();
 			eae6320::Math::cVector offset(0.0f, 0.0f);
+			eae6320::Math::cVector cameraOffset(0.0f, 0.0f, 0.0f);
+			eae6320::Math::cQuaternion unitRotationAroundY(eae6320::Math::ConvertDegreesToRadians(2.0f), eae6320::Math::cVector(0, -1, 0));
 			{
 				// Get the direction
 				{
-					if (eae6320::UserInput::IsKeyPressed(VK_LEFT))
+					if (eae6320::UserInput::IsKeyPressed('A'))
 					{
 						offset.x -= 1.0f;
 					}
-					if (eae6320::UserInput::IsKeyPressed(VK_RIGHT))
+					if (eae6320::UserInput::IsKeyPressed('D'))
 					{
 						offset.x += 1.0f;
 					}
-					if (eae6320::UserInput::IsKeyPressed(VK_UP))
+					if (eae6320::UserInput::IsKeyPressed('W'))
 					{
 						offset.y += 1.0f;
 					}
-					if (eae6320::UserInput::IsKeyPressed(VK_DOWN))
+					if (eae6320::UserInput::IsKeyPressed('S'))
 					{
 						offset.y -= 1.0f;
 					}
+					if (eae6320::UserInput::IsKeyPressed(VK_UP))
+					{
+						cameraOffset.z -= 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed(VK_LEFT))
+					{
+						cameraOffset.x -= 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed(VK_DOWN))
+					{
+						cameraOffset.z += 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed(VK_RIGHT))
+					{
+						cameraOffset.x += 1.0f;
+					}
+					if (eae6320::UserInput::IsKeyPressed('Q'))
+					{
+						object_cube->Orientation = object_cube->Orientation * unitRotationAroundY;
+					}
+					if (eae6320::UserInput::IsKeyPressed('E'))
+					{
+						object_cube->Orientation = object_cube->Orientation * ( unitRotationAroundY * -1);
+					}
 				}
 				// Get the speed
-				const float unitsPerSecond = 1.0f;	// This is arbitrary
+				const float unitsPerSecond = 3.0f;	// This is arbitrary
 				const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
 				// Normalize the offset
 				offset *= unitsToMove;
+				cameraOffset *= unitsToMove;
 			}
-			object_rect->Position += offset;
-			object_rect->Update();
-			eae6320::Graphics::Render(renderableList,3);
+			Camera->Position += cameraOffset;
+			//Camera->Orientation = Camera->Orientation * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(1.0f), eae6320::Math::cVector(0, 1, 0));
+			object_cube->Position += offset;
+			//object_cube->Orientation = object_cube->Orientation * unitRotationAroundY;
+			object_cube->Update(Camera);
+			object_plane->Update(Camera);
+			eae6320::Graphics::Render(renderableList, gameObjectCount);
 
 			// Usually there will be no messages in the queue, and the game can run
 
@@ -566,10 +615,10 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	} while ( message.message != WM_QUIT );
 	gameObjectList[0]->ShutDown();
 	gameObjectList[1]->ShutDown();
-	gameObjectList[2]->ShutDown();
+	//gameObjectList[2]->ShutDown();
 	delete gameObjectList[0];
 	delete gameObjectList[1];
-	delete gameObjectList[2];
+	//delete gameObjectList[2];
 	delete renderableList;
 	delete gameObjectList;
 	eae6320::Graphics::ShutDown();

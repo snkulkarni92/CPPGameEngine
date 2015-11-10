@@ -3,6 +3,8 @@
 
 #include "../Graphics/Renderable.h"
 #include "../Math/cVector.h"
+#include "../Math/cQuaternion.h"
+#include "Camera.h"
 
 namespace eae6320
 {
@@ -13,11 +15,12 @@ namespace eae6320
 		public:
 			GameObject();
 			bool Initialize(const char * i_MeshPath, const char * i_EffectPath);
-			void Update();
+			void Update(Camera * i_Camera);
 			void ShutDown();
 		public:
 			Graphics::Renderable * Renderable;
 			Math::cVector Position;
+			Math::cQuaternion Orientation;
 		};
 	}
 }

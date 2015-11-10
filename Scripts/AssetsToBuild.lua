@@ -4,8 +4,8 @@ return
 		builder = "MeshBuilder.exe",
 		assets = 
 		{
-			{source = "rectangle.msh", target = "rectangle.msh"},
-			{source = "triangle.msh", target = "triangle.msh"},
+			{source = "pyramid.msh", target = "pyramid.msh"},
+			{source = "plane.msh", target = "plane.msh"},
 		}
 	},
 	{

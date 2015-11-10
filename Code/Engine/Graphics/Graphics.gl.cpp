@@ -54,6 +54,11 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 			goto OnError;
 		}
 	}
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_CULL_FACE);
+	
 	return true;
 
 OnError:
@@ -106,11 +111,21 @@ void eae6320::Graphics::ClearFrame()
 	// Black is usually used
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	assert(glGetError() == GL_NO_ERROR);
+	glClearDepth(1.0f);
+	assert(glGetError() == GL_NO_ERROR);
 	// In addition to the color, "depth" and "stencil" can also be cleared,
 	// but for now we only care about color
-	const GLbitfield clearColor = GL_COLOR_BUFFER_BIT;
+	const GLbitfield clearColor = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
 	glClear(clearColor);
-	assert(glGetError() == GL_NO_ERROR);
+	//assert(glGetError() == GL_NO_ERROR);
+	const GLenum errorCode = glGetError();
+	if (errorCode != GL_NO_ERROR)
+	{
+		std::stringstream errorMessage;
+		errorMessage << "OpenGL failed to delete the vertex array: " <<
+			reinterpret_cast<const char*>(gluErrorString(errorCode));
+		UserOutput::Print(errorMessage.str());
+	}
 }
 
 void eae6320::Graphics::BeginFrame() { }
@@ -152,6 +167,7 @@ namespace
 					desiredPixelFormat.nSize = sizeof( PIXELFORMATDESCRIPTOR );
 					desiredPixelFormat.nVersion = 1;
 
+					desiredPixelFormat.cDepthBits = 16;
 					desiredPixelFormat.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
 					desiredPixelFormat.iPixelType = PFD_TYPE_RGBA;
 					desiredPixelFormat.cColorBits = 32;

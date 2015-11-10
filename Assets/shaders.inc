@@ -10,8 +10,13 @@
 #define vec2 float2
 #define vec3 float3
 #define vec4 float4
+#define mat2 float2x2
+#define mat3 float3x3
+#define mat4 float4x4
 
 #define out_position o_position
+
+#define Transform(i_vector, i_matrix) mul(i_vector, i_matrix)
 
 #elif defined( EAE6320_PLATFORM_GL )
 
@@ -26,7 +31,12 @@
 #define float2 vec2
 #define float3 vec3
 #define float4 vec4
+#define float2x2 mat2
+#define float3x3 mat3
+#define float4x4 mat4
 
 #define out_position gl_Position
+
+#define Transform(i_vector, i_matrix) i_vector * i_matrix
 
 #endif

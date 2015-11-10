@@ -233,6 +233,9 @@ eae6320::cMeshBuilder::sVertex GetVertexData(lua_State& io_luaState)
 		LoadValueWithIndex(io_luaState, 2);
 		vertex.y = (float)lua_tonumber(&io_luaState, -1);
 		lua_pop(&io_luaState, 1);
+		LoadValueWithIndex(io_luaState, 3);
+		vertex.z = (float)lua_tonumber(&io_luaState, -1);
+		lua_pop(&io_luaState, 1);
 		//Pop Position Table from stack
 		lua_pop(&io_luaState, 1);
 	}

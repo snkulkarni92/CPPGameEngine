@@ -52,9 +52,12 @@ namespace eae6320
 			}
 		}
 
-		void Effect::SetDrawCallUniforms(float * floatArray)
+		void Effect::SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3)
 		{
-			HRESULT result = vertexShaderConstantTable->SetFloatArray(s_direct3dDevice, positionHandle, floatArray, 2);
+			vertexShaderConstantTable->SetMatrixTranspose(s_direct3dDevice, localToWorld, reinterpret_cast<const D3DXMATRIX*>(&matrix1));
+			vertexShaderConstantTable->SetMatrixTranspose(s_direct3dDevice, worldToView, reinterpret_cast<const D3DXMATRIX*>(&matrix2));
+			vertexShaderConstantTable->SetMatrixTranspose(s_direct3dDevice, viewToScreen, reinterpret_cast<const D3DXMATRIX*>(&matrix3));
+			//HRESULT result = vertexShaderConstantTable->SetFloatArray(s_direct3dDevice, positionHandle, floatArray, 2);
 		}
 
 		void Effect::ShutDown()
@@ -243,7 +246,10 @@ namespace eae6320
 
 				if (vertexShaderConstantTable)
 				{
-					positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
+					//positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
+					localToWorld = vertexShaderConstantTable->GetConstantByName(NULL, "g_Local_To_World");
+					worldToView = vertexShaderConstantTable->GetConstantByName(NULL, "g_World_To_View");
+					viewToScreen = vertexShaderConstantTable->GetConstantByName(NULL, "g_View_To_Screen");
 				}
 
 				free(buffer);
