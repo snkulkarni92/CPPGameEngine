@@ -20,8 +20,18 @@ namespace eae6320
 	{
 		class Effect
 		{
+
+			enum RenderStates : uint8_t
+			{
+				ALPHA_TRANSPARENCY = 1 << 0,
+				DEPTH_TESTING = 1 << 1,
+				DEPTH_WRITING = 1 << 2,
+				FACE_CULLING = 1 << 3,
+			};
+
 			const char * vertexShaderPath;
 			const char * fragmentShaderPath;
+			uint8_t renderStates;
 #if defined EAE6320_PLATFORM_GL
 			// OpenGL encapsulates a matching vertex shader and fragment shader into what it calls a "program".
 			GLuint s_programId = 0;

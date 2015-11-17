@@ -5,6 +5,7 @@ return
 		assets = 
 		{
 			{source = "pyramid.msh", target = "pyramid.msh"},
+			{source = "cylinder.msh", target = "cylinder.msh"},
 			{source = "plane.msh", target = "plane.msh"},
 		}
 	},
@@ -12,7 +13,8 @@ return
 		builder = "EffectBuilder.exe",
 		assets = 
 		{
-			{source = "shaders.effect", target = "shaders.bineffect"},
+			{source = "opaque.effect", target = "opaque.bineffect"},
+			{source = "transparent.effect", target = "transparent.bineffect"},
 		}
 	},
 	{
@@ -30,8 +32,18 @@ return
 				},
 			},
 			{
-				source = "fragment.shader", 
-				target = "fragment.shader", 
+				source = "opaque.shader", 
+				target = "opaque.shader", 
+				arguments = "fragment",
+				dependencies = 
+				{
+					"shaders.inc",
+					"fragmentMain.inc"
+				},
+			},
+			{
+				source = "transparent.shader", 
+				target = "transparent.shader", 
 				arguments = "fragment",
 				dependencies = 
 				{

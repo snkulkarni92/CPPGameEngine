@@ -21,6 +21,14 @@ namespace eae6320
 
 	public:
 
+		enum RenderStates : uint8_t
+		{
+			ALPHA_TRANSPARENCY = 1 << 0,
+			DEPTH_TESTING = 1 << 1,
+			DEPTH_WRITING = 1 << 2,
+			FACE_CULLING = 1 << 3,
+		};
+
 		// Build
 		//------
 

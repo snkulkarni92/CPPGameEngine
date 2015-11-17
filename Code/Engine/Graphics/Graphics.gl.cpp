@@ -111,11 +111,13 @@ void eae6320::Graphics::ClearFrame()
 	// Black is usually used
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	assert(glGetError() == GL_NO_ERROR);
+	glDepthMask(GL_TRUE);
 	glClearDepth(1.0f);
 	assert(glGetError() == GL_NO_ERROR);
 	// In addition to the color, "depth" and "stencil" can also be cleared,
 	// but for now we only care about color
 	const GLbitfield clearColor = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+	
 	glClear(clearColor);
 	//assert(glGetError() == GL_NO_ERROR);
 	const GLenum errorCode = glGetError();

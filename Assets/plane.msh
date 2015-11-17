@@ -1,27 +1,43 @@
 return
 {
-	vertices = 
+	vertices =
 	{
 		{
-			position = { -5, 0, 5 },
-			color = { 0.2, 0.2, 0.2, 1}
+			position = { -5, -1.11022e-15, 5.01457 },
+			normal = { 0, 1, 2.22045e-16 },
+			tangent = { 1, -0, 0 },
+			bittangent = { 0, 2.22045e-16, -1 },
+			texcoord = { 0, 0 },
+			color = { 0, 0, 0, 0.216 },
 		},
 		{
-			position = { 5, 0, 5 },
-			color = { 0.2, 0.2, 0.2, 1}
+			position = { 5, -1.11022e-15, 5.01457 },
+			normal = { 0, 1, 2.22045e-16 },
+			tangent = { 1, -0, 0 },
+			bittangent = { 0, 2.22045e-16, -1 },
+			texcoord = { 1, 0 },
+			color = { 1, 1, 1, 1 },
 		},
 		{
-			position = { 5, 0, -5 },
-			color = { 0.2, 0.2, 0.2, 1}
+			position = { -5, 1.11022e-15, -4.98543 },
+			normal = { 0, 1, 2.22045e-16 },
+			tangent = { 1, -0, 0 },
+			bittangent = { 0, 2.22045e-16, -1 },
+			texcoord = { 0, 1 },
+			color = { 1, 1, 1, 0.216 },
 		},
 		{
-			position = { -5, 0, -5 },
-			color = { 0.2, 0.2, 0.2, 1}
+			position = { 5, 1.11022e-15, -4.98543 },
+			normal = { 0, 1, 2.22045e-16 },
+			tangent = { 1, -0, 0 },
+			bittangent = { 0, 2.22045e-16, -1 },
+			texcoord = { 1, 1 },
+			color = { 0, 0, 0, 0.216 },
 		},
 	},
-	indices = 
+	indices =
 	{
 		0, 1, 2,
-		0, 2, 3,
+		2, 1, 3,
 	}
 }

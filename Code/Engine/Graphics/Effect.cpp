@@ -32,6 +32,8 @@ void * eae6320::Graphics::Effect::LoadEffect(const char * i_path)
 		iPointer += strlen(vertexShaderPath) + 1;
 		fragmentShaderPath = iPointer;
 		iPointer += strlen(fragmentShaderPath) + 1;
+		renderStates = *reinterpret_cast<uint8_t *>(iPointer);
+		iPointer += sizeof(renderStates);
 		return buffer;
 	}
 	return NULL;

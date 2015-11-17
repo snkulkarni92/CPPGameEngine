@@ -37,7 +37,41 @@ namespace eae6320
 				glUseProgram(s_programId);
 				assert(glGetError() == GL_NO_ERROR);
 			}
-
+			if (renderStates & RenderStates::ALPHA_TRANSPARENCY)
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
+			else
+			{
+				glDisable(GL_BLEND);
+			}
+			if (renderStates & RenderStates::DEPTH_TESTING)
+			{
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_LEQUAL);
+			}
+			else
+			{
+				glDisable(GL_DEPTH_TEST);
+			}
+			if (renderStates & RenderStates::DEPTH_WRITING)
+			{
+				glDepthMask(GL_TRUE);
+			}
+			else
+			{
+				glDepthMask(GL_FALSE);
+			}
+			if (renderStates & RenderStates::FACE_CULLING)
+			{
+				glEnable(GL_CULL_FACE);
+				glFrontFace(GL_CCW);
+			}
+			else
+			{
+				glDisable(GL_CULL_FACE);
+			}
 		}
 		void Effect::ShutDown()
 		{

@@ -116,13 +116,43 @@ bool eae6320::cEffectBuilder::Build(const std::vector<std::string>&)
 		lua_gettable(luaState, -2);
 		const char * vertexShader = lua_tostring(luaState, -1);
 		fwrite(vertexShader, strlen(vertexShader) + 1, 1, oFile);
-		
 		lua_pop(luaState, 1);
+
 		lua_pushstring(luaState, "fragment");
 		lua_gettable(luaState, -2);
 		const char * fragmentShader = lua_tostring(luaState, -1);
 		fwrite(fragmentShader, strlen(fragmentShader) + 1, 1, oFile);
 		lua_pop(luaState, 1);
+		//MessageBox(NULL, "", NULL, MB_OK);
+		uint8_t renderStates = 0;
+		//int test;
+
+		lua_pushstring(luaState, "alphaTransparency");
+		lua_gettable(luaState, -2);
+		if(lua_toboolean(luaState, -1))
+			renderStates |= RenderStates::ALPHA_TRANSPARENCY;
+		lua_pop(luaState, 1);
+
+		lua_pushstring(luaState, "depthTesting");
+		lua_gettable(luaState, -2);
+		if (lua_toboolean(luaState, -1))
+			renderStates |= RenderStates::DEPTH_TESTING;
+		lua_pop(luaState, 1);
+
+		lua_pushstring(luaState, "depthWriting");
+		lua_gettable(luaState, -2);
+		if (lua_toboolean(luaState, -1))
+			renderStates |= RenderStates::DEPTH_WRITING;
+		lua_pop(luaState, 1);
+
+		lua_pushstring(luaState, "faceCulling");
+		lua_gettable(luaState, -2);
+		if (lua_toboolean(luaState, -1))
+			renderStates |= RenderStates::FACE_CULLING;
+		lua_pop(luaState, 1);
+		
+		fwrite(&renderStates, sizeof(renderStates), 1, oFile);
+
 		fclose(oFile);
 	}
 	// Pop the table

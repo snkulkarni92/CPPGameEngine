@@ -50,6 +50,41 @@ namespace eae6320
 				result = s_direct3dDevice->SetPixelShader(s_fragmentShader);
 				assert(SUCCEEDED(result));
 			}
+			if (renderStates & RenderStates::ALPHA_TRANSPARENCY)
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+				s_direct3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+				s_direct3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+			}
+			else
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+			}
+			if (renderStates & RenderStates::DEPTH_TESTING)
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+				s_direct3dDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+			}
+			else
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+			}
+			if (renderStates & RenderStates::DEPTH_WRITING)
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+			}
+			else
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+			}
+			if (renderStates & RenderStates::FACE_CULLING)
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+			}
+			else
+			{
+				s_direct3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+			}
 		}
 
 		void Effect::SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3)

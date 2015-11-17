@@ -1,0 +1,9 @@
+return
+{
+	vertex = "data/vertex.shader",
+	fragment = "data/opaque.shader",
+	alphaTransparency = false,
+	depthTesting = true,
+	depthWriting = true,
+	faceCulling = true,
+}
