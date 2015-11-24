@@ -94,7 +94,11 @@ namespace eae6320
 			vertexShaderConstantTable->SetMatrixTranspose(s_direct3dDevice, viewToScreen, reinterpret_cast<const D3DXMATRIX*>(&matrix3));
 			//HRESULT result = vertexShaderConstantTable->SetFloatArray(s_direct3dDevice, positionHandle, floatArray, 2);
 		}
-
+		void Effect::SetUniform(MatParameters * i_Uniform)
+		{
+			ID3DXConstantTable * constTable = (i_Uniform->shaderType == ShaderTypes::Fragment) ? fragmentShaderConstantTable : vertexShaderConstantTable;
+			constTable->SetFloatArray(s_direct3dDevice, i_Uniform->handle, i_Uniform->values, i_Uniform->valueCount);
+		}
 		void Effect::ShutDown()
 		{
 			if (s_vertexShader)
@@ -112,50 +116,6 @@ namespace eae6320
 
 		bool Effect::LoadFragmentShader()
 		{
-			// Load the source code from file and compile it
-			//ID3DXBuffer* compiledShader;
-			//{
-			//	const char* sourceCodeFileName = fragmentShaderPath;
-			//	const D3DXMACRO defines[] =
-			//	{
-			//		{ "EAE6320_PLATFORM_D3D", "1" },
-			//		{ NULL, NULL }
-			//	};
-			//	ID3DXInclude* noIncludes = NULL;
-			//	const char* entryPoint = "main";
-			//	const char* profile = "ps_3_0";
-			//	const DWORD noFlags = 0;
-			//	ID3DXBuffer* errorMessages = NULL;
-			//	ID3DXConstantTable** noConstants = NULL;
-			//	HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
-			//		&compiledShader, &errorMessages, noConstants);
-			//	if (SUCCEEDED(result))
-			//	{
-			//		if (errorMessages)
-			//		{
-			//			errorMessages->Release();
-			//		}
-			//	}
-			//	else
-			//	{
-			//		if (errorMessages)
-			//		{
-			//			std::stringstream errorMessage;
-			//			errorMessage << "Direct3D failed to compile the fragment shader from the file " << sourceCodeFileName
-			//				<< ":\n" << reinterpret_cast<char*>(errorMessages->GetBufferPointer());
-			//			eae6320::UserOutput::Print(errorMessage.str());
-			//			errorMessages->Release();
-			//		}
-			//		else
-			//		{
-			//			std::stringstream errorMessage;
-			//			errorMessage << "Direct3D failed to compile the fragment shader from the file " << sourceCodeFileName;
-			//			eae6320::UserOutput::Print(errorMessage.str());
-			//		}
-			//		return false;
-			//	}
-			//}
-
 			//Open the shader file
 			FILE * iFile;
 			void * buffer;
@@ -188,6 +148,10 @@ namespace eae6320
 					eae6320::UserOutput::Print("Direct3D failed to create the fragment shader");
 					wereThereErrors = true;
 				}
+
+				//Get constant table
+				D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(buffer), &fragmentShaderConstantTable);
+
 				free(buffer);
 			}
 			return !wereThereErrors;
@@ -195,57 +159,9 @@ namespace eae6320
 		
 		bool Effect::LoadVertexShader()
 		{
-			// Load the source code from file and compile it
-			//ID3DXBuffer* compiledShader;
-			//{
-			//	const char* sourceCodeFileName = vertexShaderPath;
-			//	const D3DXMACRO defines[] =
-			//	{
-			//		{ "EAE6320_PLATFORM_D3D", "1" },
-			//		{ NULL, NULL }
-			//	};
-			//	ID3DXInclude* noIncludes = NULL;
-			//	const char* entryPoint = "main";
-			//	const char* profile = "vs_3_0";
-			//	const DWORD noFlags = 0;
-			//	ID3DXBuffer* errorMessages = NULL;
-			//	//ID3DXConstantTable** offsetTable = NULL;
-			//	HRESULT result = D3DXCompileShaderFromFile(sourceCodeFileName, defines, noIncludes, entryPoint, profile, noFlags,
-			//		&compiledShader, &errorMessages, &vertexShaderConstantTable);
-			//	if (SUCCEEDED(result))
-			//	{
-			//		if (errorMessages)
-			//		{
-			//			errorMessages->Release();
-			//		}
-			//		if (vertexShaderConstantTable)
-			//		{
-			//			positionHandle = vertexShaderConstantTable->GetConstantByName(NULL, "g_position_offset");
-			//		}
-			//	}
-			//	else
-			//	{
-			//		if (errorMessages)
-			//		{
-			//			std::stringstream errorMessage;
-			//			errorMessage << "Direct3D failed to compile the vertex shader from the file " << sourceCodeFileName
-			//				<< ":\n" << reinterpret_cast<char*>(errorMessages->GetBufferPointer());
-			//			eae6320::UserOutput::Print(errorMessage.str());
-			//			errorMessages->Release();
-			//		}
-			//		else
-			//		{
-			//			std::stringstream errorMessage;
-			//			errorMessage << "Direct3D failed to compile the vertex shader from the file " << sourceCodeFileName;
-			//			eae6320::UserOutput::Print(errorMessage.str());
-			//		}
-			//		return false;
-			//	}
-			//}
-
 			//Open the shader file
 			FILE * iFile;
-			void * buffer;
+			void * buffer = NULL;
 			size_t fileSize;
 
 			fopen_s(&iFile, vertexShaderPath, "rb");
@@ -290,6 +206,11 @@ namespace eae6320
 				free(buffer);
 			}
 			return !wereThereErrors;
+		}
+		void Effect::GetUniform(const char * i_Name, MatParameters *o_Uniform)
+		{
+			ID3DXConstantTable * constTable = (o_Uniform->shaderType == ShaderTypes::Fragment) ? fragmentShaderConstantTable : vertexShaderConstantTable;
+			o_Uniform->handle = constTable->GetConstantByName(NULL, i_Name);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 #define _RENDERABLE_H
 
 #include "Mesh.h"
-#include "Effect.h"
+#include "Material.h"
 #include "../Math/cVector.h"
 #include "../Math/cMatrix_transformation.h"
 #include "../Math/cQuaternion.h"
@@ -21,7 +21,7 @@ namespace eae6320
 			void SetTransformations(Math::cVector i_Position, Math::cQuaternion i_Orientation, Math::cVector i_CameraPosition, Math::cQuaternion i_CameraOrientation, float AspectRatio);
 		public:
 			Mesh * Mesh;
-			Effect * Effect;
+			Material * Material;
 			Math::cVector Offset;
 			Math::cMatrix_transformation localToWorldTransformation;
 			Math::cMatrix_transformation worldToViewTransformation;

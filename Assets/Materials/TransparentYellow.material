@@ -1,0 +1,17 @@
+return
+{
+	effect = "data/transparent.bineffect",
+	uniforms = 
+	{
+		{
+			name = "g_MatColor",
+			value = {1, 1, 0},
+			shader = "fragment",
+		},
+		{
+			name = "g_Alpha",
+			value = {0.25},
+			shader = "fragment",
+		},
+	}
+}

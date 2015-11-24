@@ -42,12 +42,12 @@ end
 
 -- EAE6320_TODO: I have shown the simplest parameters to BuildAsset() that are possible.
 -- You should definitely feel free to change these
-local function BuildAsset( i_builderFileName, i_sourcePath, i_targetPath, i_optionalArguments, i_optionalDependencies )
+local function BuildAsset( i_builderFileName, i_folderPath, i_sourcePath, i_targetPath, i_optionalArguments, i_optionalDependencies )
 	-- Get the absolute paths to the source and target
 	-- EAE6320_TODO: I am assuming that the relative path of the source and target is the same,
 	-- but if this isn't true for you (i.e. you use different extensions)
 	-- then you will need to update this part
-	local path_source = s_AuthoredAssetDir .. i_sourcePath
+	local path_source = s_AuthoredAssetDir .. i_folderPath .. "\\" .. i_sourcePath
 	local path_target = s_BuiltAssetDir .. i_targetPath
 
 	-- If the source file doesn't exist then it can't be built
@@ -93,7 +93,7 @@ local function BuildAsset( i_builderFileName, i_sourcePath, i_targetPath, i_opti
 				--If the dependencies were changed
 				if type(i_optionalDependencies) == "table" then
 				    for i,dependency in ipairs(i_optionalDependencies) do
-                        local lastWriteTime_dependency = GetLastWriteTime( s_AuthoredAssetDir .. dependency )
+                        local lastWriteTime_dependency = GetLastWriteTime( s_AuthoredAssetDir .. i_folderPath .. "\\" .. dependency )
                         if lastWriteTime_dependency > lastWriteTime_target then
                             shouldTargetBeBuilt = true
                         end
@@ -175,7 +175,7 @@ local function BuildAssets( i_assetsToBuild )
 	for i, assetType in ipairs(i_assetsToBuild) do
 		local builderName = assetType.builder
 		for i, asset in ipairs(assetType.assets) do
-			if not BuildAsset(builderName, asset.source, asset.target, asset.arguments, asset.dependencies) then
+			if not BuildAsset(builderName, assetType.root, asset.source, asset.target, asset.arguments, asset.dependencies) then
 				wereThereErrors = true
 			end
 		end

@@ -1,15 +1,17 @@
 return
 {
 	{
+		root = "Meshes",
 		builder = "MeshBuilder.exe",
 		assets = 
 		{
 			{source = "pyramid.msh", target = "pyramid.msh"},
-			{source = "cylinder.msh", target = "cylinder.msh"},
+			{source = "sphere.msh", target = "sphere.msh"},
 			{source = "plane.msh", target = "plane.msh"},
 		}
 	},
 	{
+		root = "Effects",
 		builder = "EffectBuilder.exe",
 		assets = 
 		{
@@ -18,6 +20,19 @@ return
 		}
 	},
 	{
+		root = "Materials",
+		builder = "MaterialBuilder.exe",
+		assets = 
+		{
+			{source = "OpaqueDefault.material", target = "OpaqueDefault.material"},
+			{source = "OpaqueRed.material", target = "OpaqueRed.material"},
+			{source = "OpaqueBlue.material", target = "OpaqueBlue.material"},
+			{source = "TransparentGreen.material", target = "TransparentGreen.material"},
+			{source = "TransparentYellow.material", target = "TransparentYellow.material"},
+		}
+	},
+	{
+		root = "Shaders",
 		builder = "ShaderBuilder.exe",
 		assets = 
 		{

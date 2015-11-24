@@ -4,10 +4,10 @@
 eae6320::Graphics::Renderable::Renderable()
 {
 	Mesh = new eae6320::Graphics::Mesh();
-	Effect = new eae6320::Graphics::Effect();
+	Material = new eae6320::Graphics::Material();
 }
 
-bool eae6320::Graphics::Renderable::Initialize(const char * i_MeshPath, const char * i_EffectPath)
+bool eae6320::Graphics::Renderable::Initialize(const char * i_MeshPath, const char * i_MaterialPath)
 {
 	void * buffer;
 	buffer = this->Mesh->LoadMesh(i_MeshPath);
@@ -16,21 +16,16 @@ bool eae6320::Graphics::Renderable::Initialize(const char * i_MeshPath, const ch
 		ShutDown();
 		return false;
 	}
-	buffer = this->Effect->LoadEffect(i_EffectPath);
-	if (!this->Effect->Initialize(buffer))
-	{
-		ShutDown();
-		return false;
-	}
+	Material->Load(i_MaterialPath);
 	return true;
 }
 
 void eae6320::Graphics::Renderable::ShutDown()
 {
-	if (Effect)
+	if (Material)
 	{
-		Effect->ShutDown();
-		delete Effect;
+		Material->ShutDown();
+		delete Material;
 	}
 	if (Mesh)
 	{
@@ -41,8 +36,9 @@ void eae6320::Graphics::Renderable::ShutDown()
 
 void eae6320::Graphics::Renderable::Draw()
 {
-	Effect->Bind();
-	Effect->SetDrawCallUniforms(localToWorldTransformation, worldToViewTransformation, viewToScreenTransformation);
+	Material->Bind();
+	Material->SetUniforms();
+	Material->m_Effect->SetDrawCallUniforms(localToWorldTransformation, worldToViewTransformation, viewToScreenTransformation);
 	Mesh->Draw();
 }
 

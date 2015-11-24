@@ -5,6 +5,9 @@
 // Platform-specific setup
 #include "shaders.inc"
 
+//Uniform Declaration
+uniform float3 g_MatColor;
+
 // Entry Point
 //============
 
@@ -15,5 +18,6 @@
 	// (where color is represented by 4 floats representing "RGBA" == "Red/Green/Blue/Alpha")
 	{
 		o_color = i_color;
+		o_color.rgb *= g_MatColor;
 	}
 }

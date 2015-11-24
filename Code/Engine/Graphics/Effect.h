@@ -13,6 +13,7 @@
 #endif //Platform Check
 
 #include "../Math/cMatrix_transformation.h"
+#include "Includes.h"
 
 namespace eae6320
 {
@@ -20,7 +21,6 @@ namespace eae6320
 	{
 		class Effect
 		{
-
 			enum RenderStates : uint8_t
 			{
 				ALPHA_TRANSPARENCY = 1 << 0,
@@ -53,6 +53,8 @@ namespace eae6320
 			void Bind();
 			void SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3);
 			void ShutDown();
+			void GetUniform(const char * i_name, MatParameters *Uniform);
+			void SetUniform(MatParameters * Uniform);
 #if defined EAE6320_PLATFORM_GL
 
 			struct sLogInfo
@@ -71,12 +73,15 @@ namespace eae6320
 			static void SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice);
 			static void ReleaseDirect3dDevice();
 			ID3DXConstantTable * vertexShaderConstantTable;
+			ID3DXConstantTable * fragmentShaderConstantTable;
 			D3DXHANDLE positionHandle;
 			D3DXHANDLE localToWorld;
 			D3DXHANDLE worldToView;
 			D3DXHANDLE viewToScreen;
 			bool LoadFragmentShader();
 			bool LoadVertexShader();
+
+			
 
 #endif //Platform Check
 		};

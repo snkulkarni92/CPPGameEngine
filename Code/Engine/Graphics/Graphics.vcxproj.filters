@@ -31,6 +31,7 @@
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
@@ -38,5 +39,6 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="Includes.h" />
+    <ClInclude Include="Material.h" />
   </ItemGroup>
 </Project>

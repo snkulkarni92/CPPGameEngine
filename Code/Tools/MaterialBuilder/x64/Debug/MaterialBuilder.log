@@ -1,0 +1,4 @@
+﻿  EntryPoint.cpp
+  cMaterialBuilder.cpp
+  Generating Code...
+LINK : fatal error LNK1104: cannot open file 'BuilderHelper.lib'

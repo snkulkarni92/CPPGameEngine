@@ -11,6 +11,28 @@ namespace eae6320
 		{
 
 		}
+		void Effect::GetUniform(const char * i_Name, MatParameters * o_Uniform)
+		{
+			o_Uniform->handle = glGetUniformLocation(s_programId, i_Name);
+		}
+		void Effect::SetUniform(MatParameters * i_Uniform)
+		{
+			switch (i_Uniform->valueCount)
+			{
+			case 1:
+				glUniform1fv(i_Uniform->handle, 1, i_Uniform->values);
+				break;
+			case 2:
+				glUniform2fv(i_Uniform->handle, 1, i_Uniform->values);
+				break;
+			case 3:
+				glUniform3fv(i_Uniform->handle, 1, i_Uniform->values);
+				break;
+			case 4:
+				glUniform4fv(i_Uniform->handle, 1, i_Uniform->values);
+				break;
+			}
+		}
 		bool Effect::Initialize(void * buffer)
 		{
 			bool wereThereErrors = false;

@@ -472,28 +472,35 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
 	Camera->AspectRatio = (float)desiredWidth / (float)desiredHeight;
 
-	const int gameObjectCount = 4;
+	const int gameObjectCount = 6;
 
 	eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject * [gameObjectCount];
 	eae6320::Core::GameObject * object_cube = gameObjectList[0] = new eae6320::Core::GameObject();
 	eae6320::Core::GameObject * object_plane = gameObjectList[1] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_cylinder1 = gameObjectList[2] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_cylinder2 = gameObjectList[3] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_sphere1 = gameObjectList[2] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_sphere2 = gameObjectList[3] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_sphere3 = gameObjectList[4] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * object_sphere4 = gameObjectList[5] = new eae6320::Core::GameObject();
 
-	object_cube->Initialize("data/pyramid.msh", "data/opaque.bineffect");
-	object_plane->Initialize("data/plane.msh", "data/opaque.bineffect");
-	object_cylinder1->Initialize("data/cylinder.msh", "data/opaque.bineffect");
-	object_cylinder2->Initialize("data/cylinder.msh", "data/transparent.bineffect");
-
+	object_cube->Initialize("data/pyramid.msh", "data/OpaqueDefault.material");
+	object_plane->Initialize("data/plane.msh", "data/OpaqueDefault.material");
+	object_sphere1->Initialize("data/sphere.msh", "data/OpaqueRed.material");
+	object_sphere2->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
+	object_sphere3->Initialize("data/sphere.msh", "data/TransparentGreen.material");
+	object_sphere4->Initialize("data/sphere.msh", "data/TransparentYellow.material");
+	
 	Camera->Position.z = 10.0f;
 	object_cube->Position.y = -2.0f;
 	object_plane->Position.y = -2.0f;
-	object_cylinder1->Position.x = 1.0f;
-	object_cylinder1->Position.y = -2.0f;
-	object_cylinder1->Position.z = 3.0f;
-	object_cylinder2->Position.x = 0.0f;
-	object_cylinder2->Position.y = -1.0f;
-	object_cylinder2->Position.z = 2.0f;
+	object_sphere1->Position.z = 2.0f;
+	object_sphere2->Position.z = 2.0f;
+	object_sphere3->Position.z = 2.0f;
+	object_sphere4->Position.z = 2.0f;
+	
+	object_sphere1->Position.x = -3.0f;
+	object_sphere2->Position.x = -1.0f;
+	object_sphere3->Position.x = 1.0f;
+	object_sphere4->Position.x = 3.0f;
 
 	eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[gameObjectCount];
 	for (int i = 0; i < gameObjectCount; i++)
@@ -559,11 +566,11 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 					}
 					if (eae6320::UserInput::IsKeyPressed('Q'))
 					{
-						object_cylinder2->Orientation = object_cylinder2->Orientation * unitRotationAroundY;
+						object_cube->Orientation = object_cube->Orientation * unitRotationAroundY;
 					}
 					if (eae6320::UserInput::IsKeyPressed('E'))
 					{
-						object_cylinder2->Orientation = object_cylinder2->Orientation * ( unitRotationAroundY * -1);
+						object_cube->Orientation = object_cube->Orientation * ( unitRotationAroundY * -1);
 					}
 				}
 				// Get the speed
@@ -574,9 +581,7 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 				cameraOffset *= unitsToMove;
 			}
 			Camera->Position += cameraOffset;
-			//Camera->Orientation = Camera->Orientation * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(1.0f), eae6320::Math::cVector(0, 1, 0));
-			object_cylinder2->Position += offset;
-			object_cube->Orientation = object_cube->Orientation * unitRotationAroundY;
+			object_cube->Position += offset;
 			for (int i = 0; i < gameObjectCount; i++)
 				gameObjectList[i]->Update(Camera);
 			eae6320::Graphics::Render(renderableList, gameObjectCount);
@@ -608,12 +613,11 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 			DispatchMessage( &message );
 		}
 	} while ( message.message != WM_QUIT );
-	gameObjectList[0]->ShutDown();
-	gameObjectList[1]->ShutDown();
-	//gameObjectList[2]->ShutDown();
-	delete gameObjectList[0];
-	delete gameObjectList[1];
-	//delete gameObjectList[2];
+	for (int i = 0; i < gameObjectCount; i++)
+	{
+		gameObjectList[i]->ShutDown();
+		delete gameObjectList[i];
+	}
 	delete renderableList;
 	delete gameObjectList;
 	eae6320::Graphics::ShutDown();

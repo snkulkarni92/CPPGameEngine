@@ -1,0 +1,12 @@
+return
+{
+	effect = "data/opaque.bineffect",
+	uniforms = 
+	{
+		{
+			name = "g_MatColor",
+			value = {1, 0, 0},
+			shader = "fragment",
+		},
+	}
+}
