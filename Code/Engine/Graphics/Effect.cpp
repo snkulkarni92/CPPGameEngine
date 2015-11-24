@@ -34,6 +34,7 @@ void * eae6320::Graphics::Effect::LoadEffect(const char * i_path)
 		iPointer += strlen(fragmentShaderPath) + 1;
 		renderStates = *reinterpret_cast<uint8_t *>(iPointer);
 		iPointer += sizeof(renderStates);
+		fclose(iFile);
 		return buffer;
 	}
 	return NULL;

@@ -117,10 +117,7 @@ namespace eae6320
 			// Create an index buffer
 			unsigned int bufferSize;
 			{
-				// We are drawing a square
-				const unsigned int triangleCount = 2;
-				const unsigned int vertexCountPerTriangle = 3;
-				bufferSize = triangleCount * vertexCountPerTriangle * sizeof(uint32_t);
+				bufferSize = mIndexCount * sizeof(uint32_t);
 				// We'll use 32-bit indices in this class to keep things simple
 				// (i.e. every index will be a 32 bit unsigned integer)
 				const D3DFORMAT format = D3DFMT_INDEX32;
@@ -227,9 +224,7 @@ namespace eae6320
 
 			// Create a vertex buffer
 			{
-				// We are drawing one square
-				const unsigned int vertexCount = 4;
-				const unsigned int bufferSize = vertexCount * sizeof(sVertex);
+				const unsigned int bufferSize = mVertexCount * sizeof(sVertex);
 				// We will define our own vertex format
 				const DWORD useSeparateVertexDeclaration = 0;
 				// Place the vertex buffer into memory that Direct3D thinks is the most appropriate
