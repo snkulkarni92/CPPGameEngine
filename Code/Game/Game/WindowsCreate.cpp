@@ -492,6 +492,11 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	Camera->Position.z = 10.0f;
 	object_cube->Position.y = -2.0f;
 	object_plane->Position.y = -2.0f;
+	object_sphere1->Position.y = -1.0f;
+	object_sphere2->Position.y = -1.0f;
+	object_sphere3->Position.y = -1.0f;
+	object_sphere4->Position.y = -1.0f;
+
 	object_sphere1->Position.z = 2.0f;
 	object_sphere2->Position.z = 2.0f;
 	object_sphere3->Position.z = 2.0f;
