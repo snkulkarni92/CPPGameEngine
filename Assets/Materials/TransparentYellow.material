@@ -13,5 +13,10 @@ return
 			value = {0.25},
 			shader = "fragment",
 		},
+	},
+	texture = 
+	{
+		sampler = "g_TexSampler",
+		path = "data/default.texture",
 	}
 }

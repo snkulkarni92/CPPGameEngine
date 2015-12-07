@@ -2,6 +2,7 @@
 #define EAE6320_MATERIAL_H
 
 #include "Effect.h"
+#include "Texture.h"
 #include "Includes.h"
 
 namespace eae6320
@@ -12,6 +13,7 @@ namespace eae6320
 		{
 		public:
 			Effect * m_Effect;
+			Texture * m_Texture;
 			MatParameters * m_Parameters;
 			uint8_t m_ParameterCount;
 

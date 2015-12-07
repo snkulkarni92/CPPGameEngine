@@ -18,6 +18,8 @@
 
 #define Transform(i_vector, i_matrix) mul(i_vector, i_matrix)
 
+#define Texture2D tex2D
+
 #elif defined( EAE6320_PLATFORM_GL )
 
 // The version of GLSL to use must come first
@@ -38,5 +40,7 @@
 #define out_position gl_Position
 
 #define Transform(i_vector, i_matrix) i_vector * i_matrix
+
+#define Texture2D texture2D
 
 #endif

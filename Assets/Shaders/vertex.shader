@@ -42,8 +42,9 @@ uniform float4x4 g_View_To_Screen;
 		float4 position_view = Transform( position_world, g_World_To_View );
 		out_position = Transform( position_view, g_View_To_Screen );
 	}
-	// Pass the input color to the fragment shader unchanged:
+	// Pass the other input values to the fragment shader unchanged:
 	{
 		o_color = i_color;
+		o_texcoord = i_texcoord;
 	}
 }

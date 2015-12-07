@@ -7,6 +7,7 @@
 
 //Uniform Declaration
 uniform float3 g_MatColor;
+uniform sampler2D g_TexSampler;
 
 // Entry Point
 //============
@@ -18,6 +19,7 @@ uniform float3 g_MatColor;
 	// (where color is represented by 4 floats representing "RGBA" == "Red/Green/Blue/Alpha")
 	{
 		o_color = i_color;
+		o_color *= Texture2D( g_TexSampler, i_texcoord );
 		o_color.rgb *= g_MatColor;
 	}
 }

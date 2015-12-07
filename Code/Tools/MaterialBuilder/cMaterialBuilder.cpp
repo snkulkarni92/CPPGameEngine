@@ -167,6 +167,24 @@ bool eae6320::cMaterialBuilder::Build(const std::vector<std::string>&)
 				lua_pop(luaState, 1);
 			}
 			lua_pop(luaState, 1);
+
+			//Texture Data
+			LoadTableWithKey(*luaState, "texture");
+
+			lua_pushstring(luaState, "sampler");
+			lua_gettable(luaState, -2);
+			const char * samplerName = lua_tostring(luaState, -1);
+			fwrite(samplerName, strlen(samplerName) + 1, 1, oFile);
+			lua_pop(luaState, 1);
+
+			lua_pushstring(luaState, "path");
+			lua_gettable(luaState, -2);
+			const char * path = lua_tostring(luaState, -1);
+			fwrite(path, strlen(path) + 1, 1, oFile);
+			lua_pop(luaState, 1);
+
+
+			lua_pop(luaState, 1);
 		}
 	}
 

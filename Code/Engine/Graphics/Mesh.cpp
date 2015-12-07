@@ -13,7 +13,6 @@ namespace eae6320
 
 		Mesh::Mesh()
 		{
-
 			mVertexData = NULL;
 			mIndexData = NULL;
 			mVertexCount = 0;

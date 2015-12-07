@@ -8,5 +8,10 @@ return
 			value = {0, 0, 1},
 			shader = "fragment",
 		},
+	},
+	texture = 
+	{
+		sampler = "g_TexSampler",
+		path = "data/default.texture",
 	}
 }

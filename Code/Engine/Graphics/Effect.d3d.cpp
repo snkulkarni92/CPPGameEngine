@@ -207,6 +207,11 @@ namespace eae6320
 			}
 			return !wereThereErrors;
 		}
+		SamplerID Effect::GetSamplerID(const char * i_Name)
+		{
+			UniformHandle handle = fragmentShaderConstantTable->GetConstantByName(NULL, i_Name);
+			return static_cast<SamplerID>(fragmentShaderConstantTable->GetSamplerIndex(handle));
+		}
 		void Effect::GetUniform(const char * i_Name, MatParameters *o_Uniform)
 		{
 			ID3DXConstantTable * constTable = (o_Uniform->shaderType == ShaderTypes::Fragment) ? fragmentShaderConstantTable : vertexShaderConstantTable;

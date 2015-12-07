@@ -17,7 +17,7 @@
 bool LoadTableWithKey(lua_State& io_luaState, const char * key);
 bool LoadTableWithIndex(lua_State& io_luaState, const int index);
 bool LoadValueWithIndex(lua_State& io_luaState, const int index);
-eae6320::cMeshBuilder::sVertex GetVertexData(lua_State& io_luaState);
+eae6320::Graphics::sVertex GetVertexData(lua_State& io_luaState);
 
 
 
@@ -121,7 +121,7 @@ bool eae6320::cMeshBuilder::Build(const std::vector<std::string>&)
 		{
 			fwrite(&mVertexCount, sizeof(uint32_t), 1, oFile);
 			fwrite(&mIndexCount, sizeof(uint32_t), 1, oFile);
-			fwrite(mVertexData, sizeof(sVertex), mVertexCount, oFile);
+			fwrite(mVertexData, sizeof(eae6320::Graphics::sVertex), mVertexCount, oFile);
 			fwrite(mIndexData, sizeof(uint32_t), mIndexCount, oFile);
 			fclose(oFile);
 		}
@@ -157,7 +157,7 @@ bool eae6320::cMeshBuilder::ProcessMeshData(lua_State& io_luaState)
 	//Get number of vertices
 	mVertexCount = luaL_len(&io_luaState, -1);
 
-	mVertexData = new sVertex[mVertexCount];
+	mVertexData = new eae6320::Graphics::sVertex[mVertexCount];
 
 	//Iterate through all the vertices
 
@@ -219,10 +219,10 @@ bool eae6320::cMeshBuilder::ProcessMeshData(lua_State& io_luaState)
 
 	return true;
 }
-eae6320::cMeshBuilder::sVertex GetVertexData(lua_State& io_luaState)
+eae6320::Graphics::sVertex GetVertexData(lua_State& io_luaState)
 {
 	//Vertex i table is on top of stack
-	eae6320::cMeshBuilder::sVertex vertex;
+	eae6320::Graphics::sVertex vertex;
 	if (LoadTableWithKey(io_luaState, "position"))
 	{
 		int a = luaL_len(&io_luaState, -1);
@@ -255,6 +255,17 @@ eae6320::cMeshBuilder::sVertex GetVertexData(lua_State& io_luaState)
 		vertex.a = (uint8_t)(255 * lua_tonumber(&io_luaState, -1));
 		lua_pop(&io_luaState, 1);
 		//Pop Color Table from stack
+		lua_pop(&io_luaState, 1);
+	}
+	if (LoadTableWithKey(io_luaState, "texcoord"))
+	{
+		LoadValueWithIndex(io_luaState, 1);
+		vertex.u = (float)lua_tonumber(&io_luaState, -1);
+		lua_pop(&io_luaState, 1);
+		LoadValueWithIndex(io_luaState, 2);
+		vertex.v = 1.0f - (float)lua_tonumber(&io_luaState, -1);
+		lua_pop(&io_luaState, 1);
+
 		lua_pop(&io_luaState, 1);
 	}
 	return vertex;

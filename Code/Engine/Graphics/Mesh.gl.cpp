@@ -40,9 +40,7 @@ namespace eae6320
 				const GLenum indexType = GL_UNSIGNED_INT;
 				// It is possible to start rendering in the middle of an index buffer
 				const GLvoid* const offset = 0;
-				// We are drawing a square
-				const GLsizei primitiveCountToRender = 2;
-				const GLsizei vertexCountPerTriangle = 3;
+
 				const GLsizei vertexCountToRender = mIndexCount;
 				glDrawElements(mode, vertexCountToRender, indexType, offset);
 				assert(glGetError() == GL_NO_ERROR);
@@ -232,7 +230,45 @@ namespace eae6320
 						goto OnExit;
 					}
 				}
+				// Texture Coordinates (2)
+				// 2 floats == 8 bytes
+				// Offset = 16
+				{
+					const GLuint vertexElementLocation = 2;
+					const GLint elementCount = 2;
+					const GLboolean notNormalized = GL_FALSE;
+					glVertexAttribPointer(vertexElementLocation, elementCount, GL_UNSIGNED_BYTE, notNormalized, stride, offset);
+					const GLenum errorCode = glGetError();
+					if (errorCode == GL_NO_ERROR)
+					{
+						glEnableVertexAttribArray(vertexElementLocation);
+						const GLenum errorCode = glGetError();
+						if (errorCode == GL_NO_ERROR)
+						{
+							offset = reinterpret_cast<GLvoid*>(reinterpret_cast<uint8_t*>(offset) + (elementCount * sizeof(float)));
+						}
+						else
+						{
+							wereThereErrors = true;
+							std::stringstream errorMessage;
+							errorMessage << "OpenGL failed to enable the texture coordinate vertex attribute: " <<
+								reinterpret_cast<const char*>(gluErrorString(errorCode));
+							eae6320::UserOutput::Print(errorMessage.str());
+							goto OnExit;
+						}
+					}
+					else
+					{
+						wereThereErrors = true;
+						std::stringstream errorMessage;
+						errorMessage << "OpenGL failed to set the texture coordinate vertex attribute: " <<
+							reinterpret_cast<const char*>(gluErrorString(errorCode));
+						eae6320::UserOutput::Print(errorMessage.str());
+						goto OnExit;
+					}
+				}
 			}
+
 
 			// Create an index buffer object and make it active
 			{

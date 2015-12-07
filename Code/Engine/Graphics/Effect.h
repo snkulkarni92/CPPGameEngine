@@ -53,6 +53,7 @@ namespace eae6320
 			void Bind();
 			void SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3);
 			void ShutDown();
+			SamplerID GetSamplerID(const char * i_Name);
 			void GetUniform(const char * i_name, MatParameters *Uniform);
 			void SetUniform(MatParameters * Uniform);
 #if defined EAE6320_PLATFORM_GL

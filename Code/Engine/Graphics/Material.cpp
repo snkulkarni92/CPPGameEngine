@@ -10,6 +10,7 @@ namespace eae6320
 		Material::Material()
 		{
 			m_Effect = new Effect();
+			m_Texture = new Texture();
 		}
 		void Material::Load(const char * i_Path)
 		{
@@ -50,6 +51,17 @@ namespace eae6320
 					iPointer += strlen(iPointer) + 1;
 				}
 
+				char * uniformName = iPointer;
+				iPointer += strlen(uniformName) + 1;
+
+				char * texturePath = iPointer;
+				iPointer += strlen(texturePath) + 1;
+
+				SamplerID samplerID = m_Effect->GetSamplerID(uniformName);
+				m_Texture->LoadTexture(texturePath, samplerID);
+
+
+
 				free(buffer);
 				fclose(iFile);
 			}
@@ -60,6 +72,10 @@ namespace eae6320
 			{
 				m_Effect->ShutDown();
 				delete m_Effect;
+			}
+			if (m_Texture)
+			{
+				m_Texture->Release();
 			}
 			if (m_Parameters)
 			{

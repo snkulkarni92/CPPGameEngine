@@ -11,6 +11,10 @@ namespace eae6320
 		{
 
 		}
+		SamplerID Effect::GetSamplerID(const char * i_Name)
+		{
+			return glGetUniformLocation(s_programId, i_Name);
+		}
 		void Effect::GetUniform(const char * i_Name, MatParameters * o_Uniform)
 		{
 			o_Uniform->handle = glGetUniformLocation(s_programId, i_Name);
