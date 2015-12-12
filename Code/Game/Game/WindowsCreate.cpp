@@ -482,12 +482,12 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	eae6320::Core::GameObject * object_sphere3 = gameObjectList[4] = new eae6320::Core::GameObject();
 	eae6320::Core::GameObject * object_sphere4 = gameObjectList[5] = new eae6320::Core::GameObject();
 
-	object_cube->Initialize("data/pyramid.msh", "data/OpaqueDefault.material");
-	object_plane->Initialize("data/plane.msh", "data/OpaqueDefault.material");
-	object_sphere1->Initialize("data/sphere.msh", "data/OpaqueRed.material");
+	object_cube->Initialize("data/pyramid.msh", "data/OpaqueBlue.material");
+	object_plane->Initialize("data/plane.msh", "data/OpaqueBlue.material");
+	object_sphere1->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
 	object_sphere2->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
-	object_sphere3->Initialize("data/sphere.msh", "data/TransparentGreen.material");
-	object_sphere4->Initialize("data/sphere.msh", "data/TransparentYellow.material");
+	object_sphere3->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
+	object_sphere4->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
 	
 	Camera->Position.z = 10.0f;
 	object_cube->Position.y = -2.0f;

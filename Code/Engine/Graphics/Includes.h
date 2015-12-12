@@ -44,7 +44,7 @@ namespace eae6320
 
 		typedef
 #if defined( EAE6320_PLATFORM_D3D )
-			DWORD
+			unsigned long
 #elif defined( EAE6320_PLATFORM_GL )
 			int
 #endif

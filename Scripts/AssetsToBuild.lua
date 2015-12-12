@@ -32,6 +32,14 @@ return
 		}
 	},
 	{
+		root = "Textures",
+		builder = "TextureBuilder.exe",
+		assets =
+		{
+			{source = "wall.jpg", target = "wall.jpg"}
+		}
+	},
+	{
 		root = "Shaders",
 		builder = "ShaderBuilder.exe",
 		assets = 

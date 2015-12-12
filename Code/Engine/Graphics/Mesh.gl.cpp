@@ -237,7 +237,7 @@ namespace eae6320
 					const GLuint vertexElementLocation = 2;
 					const GLint elementCount = 2;
 					const GLboolean notNormalized = GL_FALSE;
-					glVertexAttribPointer(vertexElementLocation, elementCount, GL_UNSIGNED_BYTE, notNormalized, stride, offset);
+					glVertexAttribPointer(vertexElementLocation, elementCount, GL_FLOAT, notNormalized, stride, offset);
 					const GLenum errorCode = glGetError();
 					if (errorCode == GL_NO_ERROR)
 					{

@@ -85,6 +85,7 @@ namespace eae6320
 		void Material::Bind()
 		{
 			m_Effect->Bind();
+			m_Texture->BindTexture();
 		}
 		void Material::SetUniforms()
 		{

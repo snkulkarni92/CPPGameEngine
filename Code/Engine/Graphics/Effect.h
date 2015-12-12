@@ -45,7 +45,6 @@ namespace eae6320
 			// The fragment shader is a program that operates on fragments
 			IDirect3DPixelShader9* s_fragmentShader = NULL;
 #endif //Platform Check
-
 		public:
 			Effect();
 			bool Initialize(void * buffer);
