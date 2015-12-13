@@ -1,0 +1,17 @@
+return
+{
+	effect = "data/opaque.bineffect",
+	uniforms = 
+	{
+		{
+			name = "g_MatColor",
+			value = {1, 1, 1},
+			shader = "fragment",
+		},
+	},
+	texture = 
+	{
+		sampler = "g_TexSampler",
+		path = "data/eae6320.texture",
+	}
+}

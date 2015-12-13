@@ -8,6 +8,7 @@ return
 			{source = "pyramid.msh", target = "pyramid.msh"},
 			{source = "sphere.msh", target = "sphere.msh"},
 			{source = "plane.msh", target = "plane.msh"},
+			{source = "plane1.msh", target = "plane1.msh"},
 		}
 	},
 	{
@@ -29,6 +30,8 @@ return
 			{source = "OpaqueBlue.material", target = "OpaqueBlue.material"},
 			{source = "TransparentGreen.material", target = "TransparentGreen.material"},
 			{source = "TransparentYellow.material", target = "TransparentYellow.material"},
+			{source = "Test1.material", target = "Test1.material"},
+			{source = "Test2.material", target = "Test2.material"},
 		}
 	},
 	{
@@ -36,7 +39,10 @@ return
 		builder = "TextureBuilder.exe",
 		assets =
 		{
-			{source = "wall.jpg", target = "wall.jpg"}
+			{source = "wall.jpg", target = "wall.texture"},
+			{source = "eae6320.png", target = "eae6320.texture"},
+			{source = "alpha.png", target = "alpha.texture"},
+			{source = "default.png", target = "default.texture"},
 		}
 	},
 	{

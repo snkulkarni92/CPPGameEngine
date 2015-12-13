@@ -12,6 +12,6 @@ return
 	texture = 
 	{
 		sampler = "g_TexSampler",
-		path = "data/wall.jpg",
+		path = "data/wall.texture",
 	}
 }

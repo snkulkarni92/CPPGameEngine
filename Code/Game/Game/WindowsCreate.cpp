@@ -472,7 +472,7 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
 	Camera->AspectRatio = (float)desiredWidth / (float)desiredHeight;
 
-	const int gameObjectCount = 6;
+	const int gameObjectCount = 8;
 
 	eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject * [gameObjectCount];
 	eae6320::Core::GameObject * object_cube = gameObjectList[0] = new eae6320::Core::GameObject();
@@ -481,13 +481,17 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	eae6320::Core::GameObject * object_sphere2 = gameObjectList[3] = new eae6320::Core::GameObject();
 	eae6320::Core::GameObject * object_sphere3 = gameObjectList[4] = new eae6320::Core::GameObject();
 	eae6320::Core::GameObject * object_sphere4 = gameObjectList[5] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * test1 = gameObjectList[6] = new eae6320::Core::GameObject();
+	eae6320::Core::GameObject * test2 = gameObjectList[7] = new eae6320::Core::GameObject();
 
-	object_cube->Initialize("data/pyramid.msh", "data/OpaqueBlue.material");
-	object_plane->Initialize("data/plane.msh", "data/OpaqueBlue.material");
-	object_sphere1->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
+	object_cube->Initialize("data/pyramid.msh", "data/OpaqueDefault.material");
+	object_plane->Initialize("data/plane.msh", "data/OpaqueDefault.material");
+	object_sphere1->Initialize("data/sphere.msh", "data/OpaqueRed.material");
 	object_sphere2->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
-	object_sphere3->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
-	object_sphere4->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
+	object_sphere3->Initialize("data/sphere.msh", "data/TransparentYellow.material");
+	object_sphere4->Initialize("data/sphere.msh", "data/TransparentGreen.material");
+	test1->Initialize("data/plane1.msh", "data/Test1.material");
+	test2->Initialize("data/plane1.msh", "data/Test2.material");
 	
 	Camera->Position.z = 10.0f;
 	object_cube->Position.y = -2.0f;
@@ -506,6 +510,11 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	object_sphere2->Position.x = -1.0f;
 	object_sphere3->Position.x = 1.0f;
 	object_sphere4->Position.x = 3.0f;
+	test1->Position.x = 2.0f;
+	test1->Position.y = 1.0f;
+	test2->Position.z = +7.0f;
+	test2->Position.x = -1.0f;
+	test2->Position.y = -1.0f;
 
 	eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[gameObjectCount];
 	for (int i = 0; i < gameObjectCount; i++)

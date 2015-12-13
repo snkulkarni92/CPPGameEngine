@@ -12,6 +12,6 @@ return
 	texture = 
 	{
 		sampler = "g_TexSampler",
-		path = "data/default.texture",
+		path = "data/wall.texture",
 	}
 }
