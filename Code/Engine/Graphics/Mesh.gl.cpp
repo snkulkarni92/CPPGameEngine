@@ -267,6 +267,43 @@ namespace eae6320
 						goto OnExit;
 					}
 				}
+				// Normals (3)
+				// 3 floats == 12 bytes
+				// Offset = 24
+				{
+					const GLuint vertexElementLocation = 3;
+					const GLint elementCount = 3;
+					const GLboolean notNormalized = GL_FALSE;
+					glVertexAttribPointer(vertexElementLocation, elementCount, GL_FLOAT, notNormalized, stride, offset);
+					const GLenum errorCode = glGetError();
+					if (errorCode == GL_NO_ERROR)
+					{
+						glEnableVertexAttribArray(vertexElementLocation);
+						const GLenum errorCode = glGetError();
+						if (errorCode == GL_NO_ERROR)
+						{
+							offset = reinterpret_cast<GLvoid*>(reinterpret_cast<uint8_t*>(offset) + (elementCount * sizeof(float)));
+						}
+						else
+						{
+							wereThereErrors = true;
+							std::stringstream errorMessage;
+							errorMessage << "OpenGL failed to enable the texture coordinate vertex attribute: " <<
+								reinterpret_cast<const char*>(gluErrorString(errorCode));
+							eae6320::UserOutput::Print(errorMessage.str());
+							goto OnExit;
+						}
+					}
+					else
+					{
+						wereThereErrors = true;
+						std::stringstream errorMessage;
+						errorMessage << "OpenGL failed to set the texture coordinate vertex attribute: " <<
+							reinterpret_cast<const char*>(gluErrorString(errorCode));
+						eae6320::UserOutput::Print(errorMessage.str());
+						goto OnExit;
+					}
+				}
 			}
 
 

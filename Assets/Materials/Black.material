@@ -1,0 +1,37 @@
+return
+{
+	effect = "data/opaque.bineffect",
+	uniforms = 
+	{
+		{
+			name = "g_MatColor",
+			value = {0.2, 0.2, 0.2},
+			shader = "fragment",
+		},
+		{
+			name = "g_LightDirection",
+			value = {-0.5, -1, -0.5},
+			shader = "fragment",
+		},
+		{
+			name = "g_LightColor",
+			value = {0.8, 0.8, 0.8},
+			shader = "fragment",
+		},
+		{
+			name = "g_Ambient",
+			value = {0.2, 0.2, 0.2},
+			shader = "fragment",
+		},
+		{
+			name = "g_Shininess",
+			value = {64},
+			shader = "fragment",
+		},
+	},
+	texture = 
+	{
+		sampler = "g_TexSampler",
+		path = "data/wall.texture",
+	}
+}

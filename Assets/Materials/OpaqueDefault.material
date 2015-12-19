@@ -5,13 +5,13 @@ return
 	{
 		{
 			name = "g_MatColor",
-			value = {1, 1, 1},
+			value = {0.5, 0.5, 0.5},
 			shader = "fragment",
 		},
 	},
 	texture = 
 	{
 		sampler = "g_TexSampler",
-		path = "data/default.texture",
+		path = "data/wall.texture",
 	}
 }

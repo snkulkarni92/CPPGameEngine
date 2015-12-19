@@ -30,6 +30,10 @@ namespace eae6320
 			// 2 floats == 8 bytes
 			// Offset = 16
 			float u, v;
+			//Normals
+			// 3 floats == 12 bytes
+			// Offset = 24
+			float nx, ny, nz;
 		};
 
 		typedef

@@ -268,6 +268,20 @@ eae6320::Graphics::sVertex GetVertexData(lua_State& io_luaState)
 
 		lua_pop(&io_luaState, 1);
 	}
+	if (LoadTableWithKey(io_luaState, "normal"))
+	{
+		LoadValueWithIndex(io_luaState, 1);
+		vertex.nx = (float)lua_tonumber(&io_luaState, -1);
+		lua_pop(&io_luaState, 1);
+		LoadValueWithIndex(io_luaState, 2);
+		vertex.ny = (float)lua_tonumber(&io_luaState, -1);
+		lua_pop(&io_luaState, 1);
+		LoadValueWithIndex(io_luaState, 3);
+		vertex.nz = (float)lua_tonumber(&io_luaState, -1);
+		lua_pop(&io_luaState, 1);
+
+		lua_pop(&io_luaState, 1);
+	}
 	return vertex;
 }
 

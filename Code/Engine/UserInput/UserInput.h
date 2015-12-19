@@ -21,6 +21,7 @@ namespace eae6320
 
 		bool IsKeyPressed( const int i_virtualKeyCode );
 		bool IsMouseButtonPressed( const int i_virtualButtonCode );
+		bool IsKeyUp(const int i_virtualButtonCode);
 	}
 }
 

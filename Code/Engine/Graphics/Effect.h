@@ -39,6 +39,7 @@ namespace eae6320
 			GLint localToWorld = -1;
 			GLint worldToView = -1;
 			GLint viewToScreen = -1;
+			GLint cameraPosition = -1;
 #elif defined EAE6320_PLATFORM_D3D
 			// The vertex shader is a program that operates on vertices.
 			IDirect3DVertexShader9* s_vertexShader = NULL;
@@ -50,7 +51,7 @@ namespace eae6320
 			bool Initialize(void * buffer);
 			void * LoadEffect(const char * i_path);
 			void Bind();
-			void SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3);
+			void SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3, float * cameraPos);
 			void ShutDown();
 			SamplerID GetSamplerID(const char * i_Name);
 			void GetUniform(const char * i_name, MatParameters *Uniform);
@@ -78,6 +79,7 @@ namespace eae6320
 			D3DXHANDLE localToWorld;
 			D3DXHANDLE worldToView;
 			D3DXHANDLE viewToScreen;
+			D3DXHANDLE cameraPosition;
 			bool LoadFragmentShader();
 			bool LoadVertexShader();
 

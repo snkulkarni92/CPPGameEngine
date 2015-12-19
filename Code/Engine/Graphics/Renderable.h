@@ -26,6 +26,7 @@ namespace eae6320
 			Math::cMatrix_transformation localToWorldTransformation;
 			Math::cMatrix_transformation worldToViewTransformation;
 			Math::cMatrix_transformation viewToScreenTransformation;
+			float cameraPos[3];
 		};
 	}
 }

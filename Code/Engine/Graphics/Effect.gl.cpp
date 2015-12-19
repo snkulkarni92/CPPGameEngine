@@ -52,6 +52,8 @@ namespace eae6320
 				localToWorld = glGetUniformLocation(s_programId, "g_Local_To_World");
 				worldToView = glGetUniformLocation(s_programId, "g_World_To_View");
 				viewToScreen = glGetUniformLocation(s_programId, "g_View_To_Screen");
+				cameraPosition = glGetUniformLocation(s_programId, "g_CameraPosition");
+				
 			}
 			free(buffer);
 			return !wereThereErrors;
@@ -115,13 +117,14 @@ namespace eae6320
 				s_programId = 0;
 			}
 		}
-		void Effect::SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3)
+		void Effect::SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3, float * cameraPos)
 		{
 			const GLboolean dontTranspose = false; // Matrices are already in the correct format
 			const GLsizei uniformCountToSet = 1;
 			glUniformMatrix4fv(localToWorld, uniformCountToSet, dontTranspose, reinterpret_cast<const GLfloat*>(&matrix1));
 			glUniformMatrix4fv(worldToView, uniformCountToSet, dontTranspose, reinterpret_cast<const GLfloat*>(&matrix2));
 			glUniformMatrix4fv(viewToScreen, uniformCountToSet, dontTranspose, reinterpret_cast<const GLfloat*>(&matrix3));
+			glUniform3fv(cameraPosition, 1, cameraPos);
 			//glUniform2fv(positionOffset, 1, floatArray);
 		}
 		bool Effect::CreateProgram()

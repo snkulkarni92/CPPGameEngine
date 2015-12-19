@@ -207,6 +207,11 @@ namespace eae6320
 					// offset = 16
 					{ 0, 16, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 
+					//Normal
+					// 3 floats = 12 bytes
+					// offset = 24
+					{ 0, 24, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+
 					// The following marker signals the end of the vertex declaration
 					D3DDECL_END()
 				};

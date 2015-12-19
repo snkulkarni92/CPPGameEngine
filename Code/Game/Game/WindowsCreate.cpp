@@ -6,19 +6,13 @@
 //=============
 
 #include "WindowsCreate.h"
-
+#include "Game.h"
 // Resource.h contains the #defines for the icon resources
 // that the main window will use
 #include "Resources/Resource.h"
 // WindowsFunctions.h contains convenience functionality for Windows features;
 // in this example program we just use it to get error messages
 #include "../../Engine/Windows/WindowsFunctions.h"
-#include "../../Engine/Graphics/Graphics.h"
-#include "../../Engine/Core/GameObject.h"
-#include "../../Engine/Core/Camera.h"
-#include "../../Engine/Time/Time.h"
-#include "../../Engine/UserInput/UserInput.h"
-#include "../../Engine/Math/Functions.h"
 
 // Static Data Initialization
 //===========================
@@ -467,176 +461,5 @@ bool WaitForMainWindowToClose( int& o_exitCode )   // **** GAME LOOP
 	// (e.g. from an in-game menu)
 
 	// Enter an infinite loop that will continue until a quit message (WM_QUIT) is received from Windows
-	eae6320::Graphics::Initialize(s_mainWindow);
-
-	eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
-	Camera->AspectRatio = (float)desiredWidth / (float)desiredHeight;
-
-	const int gameObjectCount = 8;
-
-	eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject * [gameObjectCount];
-	eae6320::Core::GameObject * object_cube = gameObjectList[0] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_plane = gameObjectList[1] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_sphere1 = gameObjectList[2] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_sphere2 = gameObjectList[3] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_sphere3 = gameObjectList[4] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * object_sphere4 = gameObjectList[5] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * test1 = gameObjectList[6] = new eae6320::Core::GameObject();
-	eae6320::Core::GameObject * test2 = gameObjectList[7] = new eae6320::Core::GameObject();
-
-	object_cube->Initialize("data/pyramid.msh", "data/OpaqueDefault.material");
-	object_plane->Initialize("data/plane.msh", "data/OpaqueDefault.material");
-	object_sphere1->Initialize("data/sphere.msh", "data/OpaqueRed.material");
-	object_sphere2->Initialize("data/sphere.msh", "data/OpaqueBlue.material");
-	object_sphere3->Initialize("data/sphere.msh", "data/TransparentYellow.material");
-	object_sphere4->Initialize("data/sphere.msh", "data/TransparentGreen.material");
-	test1->Initialize("data/plane1.msh", "data/Test1.material");
-	test2->Initialize("data/plane1.msh", "data/Test2.material");
-	
-	Camera->Position.z = 10.0f;
-	object_cube->Position.y = -2.0f;
-	object_plane->Position.y = -2.0f;
-	object_sphere1->Position.y = -1.0f;
-	object_sphere2->Position.y = -1.0f;
-	object_sphere3->Position.y = -1.0f;
-	object_sphere4->Position.y = -1.0f;
-
-	object_sphere1->Position.z = 2.0f;
-	object_sphere2->Position.z = 2.0f;
-	object_sphere3->Position.z = 2.0f;
-	object_sphere4->Position.z = 2.0f;
-	
-	object_sphere1->Position.x = -3.0f;
-	object_sphere2->Position.x = -1.0f;
-	object_sphere3->Position.x = 1.0f;
-	object_sphere4->Position.x = 3.0f;
-	test1->Position.x = 2.0f;
-	test1->Position.y = 1.0f;
-	test2->Position.z = +7.0f;
-	test2->Position.x = -1.0f;
-	test2->Position.y = -1.0f;
-
-	eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[gameObjectCount];
-	for (int i = 0; i < gameObjectCount; i++)
-		renderableList[i] = gameObjectList[i]->Renderable;
-	MSG message = { 0 };
-	do
-	{
-		// To send us a message, Windows will add it to a queue.
-		// Most Windows applications should wait until a message is received and then react to it.
-		// Real-time programs, though, must continually draw new images to the screen as fast as possible
-		// and only pause momentarily when there is a Windows message to deal with.
-
-		// This means that the first thing that must be done every iteration of the game loop is to "peek" at the message queue
-		// and see if there are any messages from Windows that need to be handled
-		bool hasWindowsSentAMessage;
-		{
-			HWND getMessagesFromAnyWindowBelongingToTheCurrentThread = NULL;
-			unsigned int getAllMessageTypes = 0;
-			unsigned int ifAMessageExistsRemoveItFromTheQueue = PM_REMOVE;
-			hasWindowsSentAMessage = PeekMessage( &message, getMessagesFromAnyWindowBelongingToTheCurrentThread,
-				getAllMessageTypes, getAllMessageTypes, ifAMessageExistsRemoveItFromTheQueue ) == TRUE;
-		}
-		if ( !hasWindowsSentAMessage )
-		{
-			eae6320::Time::OnNewFrame();
-			eae6320::Math::cVector offset(0.0f, 0.0f);
-			eae6320::Math::cVector cameraOffset(0.0f, 0.0f, 0.0f);
-			eae6320::Math::cQuaternion unitRotationAroundY(eae6320::Math::ConvertDegreesToRadians(2.0f), eae6320::Math::cVector(0, -1, 0));
-			{
-				// Get the direction
-				{
-					if (eae6320::UserInput::IsKeyPressed('A'))
-					{
-						offset.x -= 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed('D'))
-					{
-						offset.x += 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed('W'))
-					{
-						offset.y += 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed('S'))
-					{
-						offset.y -= 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed(VK_UP))
-					{
-						cameraOffset.z -= 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed(VK_LEFT))
-					{
-						cameraOffset.x -= 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed(VK_DOWN))
-					{
-						cameraOffset.z += 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed(VK_RIGHT))
-					{
-						cameraOffset.x += 1.0f;
-					}
-					if (eae6320::UserInput::IsKeyPressed('Q'))
-					{
-						object_cube->Orientation = object_cube->Orientation * unitRotationAroundY;
-					}
-					if (eae6320::UserInput::IsKeyPressed('E'))
-					{
-						object_cube->Orientation = object_cube->Orientation * ( unitRotationAroundY * -1);
-					}
-				}
-				// Get the speed
-				const float unitsPerSecond = 3.0f;	// This is arbitrary
-				const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
-				// Normalize the offset
-				offset *= unitsToMove;
-				cameraOffset *= unitsToMove;
-			}
-			Camera->Position += cameraOffset;
-			object_cube->Position += offset;
-			for (int i = 0; i < gameObjectCount; i++)
-				gameObjectList[i]->Update(Camera);
-			eae6320::Graphics::Render(renderableList, gameObjectCount);
-
-			// Usually there will be no messages in the queue, and the game can run
-
-			// (This example program has nothing to do,
-			// and so it will just constantly run this while loop using up CPU cycles.
-			// A real game might have something like the following:
-			//	someGameClass.OnNewFrame();
-			// or similar, though.)
-		}
-		else
-		{
-			// If Windows _has_ sent a message, this iteration of the loop will handle it.
-			// Note that Windows messages will take precedence over our game functionality;
-			// this is because if we don't handle Windows messages the window can appear sluggish to the user
-			// (if s/he tries to move it, for example, but we give too much precedence to our own game code).
-
-			// First, the message must be "translated"
-			// (Key presses are translated into character messages)
-			TranslateMessage( &message );
-
-			// Then, the message is sent on to the appropriate processing function.
-			// This function is specified in the lpfnWndProc field of the WNDCLASSEX struct
-			// used to register a class with Windows.
-			// In the case of the main window in this example program
-			// it will always be OnMessageReceived()
-			DispatchMessage( &message );
-		}
-	} while ( message.message != WM_QUIT );
-	for (int i = 0; i < gameObjectCount; i++)
-	{
-		gameObjectList[i]->ShutDown();
-		delete gameObjectList[i];
-	}
-	delete renderableList;
-	delete gameObjectList;
-	eae6320::Graphics::ShutDown();
-	// The exit code for the application is stored in the WPARAM of a WM_QUIT message
-	o_exitCode = static_cast<int>( message.wParam );
-
-	return true;
+	return eae6320::Game::GameLoop(o_exitCode, s_mainWindow);
 }
