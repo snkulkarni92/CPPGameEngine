@@ -334,93 +334,96 @@ namespace eae6320
 
 					if (UserInput::IsKeyPressed(VK_SPACE) && !spacePressed)
 					{
-						uint8_t x = (uint8_t)(3.5f - SelBox->Position.x);
-						uint8_t y = (uint8_t)(3.5f - SelBox->Position.z);
-						if (selected == NULL)
+						int x = (int)(3.5f - SelBox->Position.x);
+						int y = (int)(3.5f - SelBox->Position.z);
+						if (x >= 0 && x < 8 && y >= 0 && y < 8)
 						{
-							if (board[x][y].hasPiece)
+							if (selected == NULL)
 							{
-								if (board[x][y].piece.color == turn)
+								if (board[x][y].hasPiece)
 								{
-									selected = board[x][y].piece.piece;
-									if (board[x][y].piece.val == 1)
+									if (board[x][y].piece.color == turn)
 									{
-										for (int i = 0; i < 8; i++)
+										selected = board[x][y].piece.piece;
+										if (board[x][y].piece.val == 1)
 										{
-											int m = x + movesX[board[x][y].piece.val][i];
-											int n = y + movesY[board[x][y].piece.val][i];
-											if (m < 0 || m > 7 || n < 0 || n > 7)
-												continue;
-											if (!board[m][n].hasPiece)
-												board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
-										}
-									}
-									else if (board[x][y].piece.val == 6)
-									{
-										if (x < 7 || x > 0)
-										{
-											if(!board[x+turn][y].hasPiece)
-												board[x+turn][y].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
-											if(x == 1 && turn == 1 || x == 6 && turn == -1)
-												if (!board[x + turn + turn][y].hasPiece)
-													board[x + turn + turn][y].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
-										}
-									}
-									else if(board[x][y].piece.val == 4)
-									{
-										for (int i = 0; i < 8; i++)
-										{
-											int m = x + movesX[board[x][y].piece.val][i];
-											int n = y + movesY[board[x][y].piece.val][i];
-											if (m < 0 || m > 7 || n < 0 || n > 7)
-												continue;
-											if (!board[m][n].hasPiece)
-												board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
-										}
-									}
-									else if (board[x][y].piece.val != 4 || board[x][y].piece.val == -4 || board[x][y].piece.val != 6 || board[x][y].piece.val != -6)
-									{
-										for (int i = 0; i < 8; i++)
-										{
-											for (int j = 1; j < 8; j++)
+											for (int i = 0; i < 8; i++)
 											{
-												int m = x + movesX[abs(board[x][y].piece.val)][i] * j;
-												int n = y + movesY[abs(board[x][y].piece.val)][i] * j;
+												int m = x + movesX[board[x][y].piece.val][i];
+												int n = y + movesY[board[x][y].piece.val][i];
 												if (m < 0 || m > 7 || n < 0 || n > 7)
-													break;
-												if (board[m][n].hasPiece)
-													break;
-												board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
+													continue;
+												if (!board[m][n].hasPiece)
+													board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
+											}
+										}
+										else if (board[x][y].piece.val == 6)
+										{
+											if (x < 7 || x > 0)
+											{
+												if (!board[x + turn][y].hasPiece)
+													board[x + turn][y].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
+												if (x == 1 && turn == 1 || x == 6 && turn == -1)
+													if (!board[x + turn + turn][y].hasPiece)
+														board[x + turn + turn][y].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
+											}
+										}
+										else if (board[x][y].piece.val == 4)
+										{
+											for (int i = 0; i < 8; i++)
+											{
+												int m = x + movesX[board[x][y].piece.val][i];
+												int n = y + movesY[board[x][y].piece.val][i];
+												if (m < 0 || m > 7 || n < 0 || n > 7)
+													continue;
+												if (!board[m][n].hasPiece)
+													board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
+											}
+										}
+										else if (board[x][y].piece.val != 4 || board[x][y].piece.val == -4 || board[x][y].piece.val != 6 || board[x][y].piece.val != -6)
+										{
+											for (int i = 0; i < 8; i++)
+											{
+												for (int j = 1; j < 8; j++)
+												{
+													int m = x + movesX[abs(board[x][y].piece.val)][i] * j;
+													int n = y + movesY[abs(board[x][y].piece.val)][i] * j;
+													if (m < 0 || m > 7 || n < 0 || n > 7)
+														break;
+													if (board[m][n].hasPiece)
+														break;
+													board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.2f;
+												}
 											}
 										}
 									}
 								}
 							}
-						}
-						else
-						{
-							if (selected && !board[x][y].hasPiece && board[x][y].square->Renderable->Material->m_Parameters[1].values[0] > 0.0f)
+							else
 							{
-								uint8_t i = (uint8_t)(3.5f - selected->Position.x);
-								uint8_t j = (uint8_t)(3.5f - selected->Position.z);
-								board[i][j].hasPiece = false;
-								board[x][y].hasPiece = true;
-								board[x][y].piece = board[i][j].piece;
-								board[i][j].piece.piece->Position = board[x][y].square->Position;
-								selected = NULL;
-								for (int m = 0; m < 8; m++)
+								if (selected && !board[x][y].hasPiece && board[x][y].square->Renderable->Material->m_Parameters[1].values[0] > 0.0f)
 								{
-									for (int n = 0; n < 8; n++)
+									uint8_t i = (uint8_t)(3.5f - selected->Position.x);
+									uint8_t j = (uint8_t)(3.5f - selected->Position.z);
+									board[i][j].hasPiece = false;
+									board[x][y].hasPiece = true;
+									board[x][y].piece = board[i][j].piece;
+									board[i][j].piece.piece->Position = board[x][y].square->Position;
+									selected = NULL;
+									for (int m = 0; m < 8; m++)
 									{
-										board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.0f;
+										for (int n = 0; n < 8; n++)
+										{
+											board[m][n].square->Renderable->Material->m_Parameters[1].values[0] = 0.0f;
+										}
 									}
+									turn = turn > 0 ? -1 : 1;
+									Camera->Orientation = Camera->Orientation * Math::cQuaternion(Math::ConvertDegreesToRadians(180), Math::cVector(0.0f, 1.0f, 0.0f));
+									Camera->Position = turn == 1 ? WhiteCamera : BlackCamera;
 								}
-								turn = turn > 0 ? -1 : 1;
-								Camera->Orientation = Camera->Orientation * Math::cQuaternion(Math::ConvertDegreesToRadians(180), Math::cVector(0.0f, 1.0f, 0.0f));
-								Camera->Position = turn == 1 ? WhiteCamera : BlackCamera;
 							}
+							spacePressed = true;
 						}
-						spacePressed = true;
 					}
 					else if (!UserInput::IsKeyPressed(VK_SPACE) && spacePressed)
 					{
