@@ -730,51 +730,58 @@ namespace
 		//	* TEXCOORD	-> u, 1 - v
 		//
 		//	* triangle index order	-> index_0, index_2, index_1
-
-		std::ofstream fout( i_fileName.asChar() );
-		if ( fout.is_open() )
+		
+		for (int n = 0; n < i_materialInfo.size(); n++)
 		{
-			// Open table
-			fout << "return\n";
-			fout << "{\n";
+			std::string fileName = i_fileName.asChar();
+			std::string fileNumber = std::to_string(n);
+			fileName.insert(fileName.length() - 4, fileNumber);
+			std::ofstream fout( fileName.c_str() );
+			if ( fout.is_open() )
 			{
-				fout << "\tvertices =\n";
-				fout << "\t{\n";
+				// Open table
+				fout << "return\n";
+				fout << "{\n";
 				{
-					for (int i = 0; i < i_vertexBuffer.size(); i++)
+					fout << "\tvertices =\n";
+					fout << "\t{\n";
 					{
-						sVertex_maya v = i_vertexBuffer[i];
-						fout << "\t\t{\n";
-						fout << "\t\t\tposition = { " << v.x << ", " << v.y << ", " << v.z << " },\n";
-						fout << "\t\t\tnormal = { " << v.nx << ", " << v.ny << ", " << v.nz << " },\n";
-						fout << "\t\t\ttangent = { " << v.tx << ", " << v.ty << ", " << v.tz << " },\n";
-						fout << "\t\t\tbittangent = { " << v.btx << ", " << v.bty << ", " << v.btz << " },\n";
-						fout << "\t\t\ttexcoord = { " << v.u << ", " << v.v << " },\n";
-						fout << "\t\t\tcolor = { " << v.r << ", " << v.g << ", " << v.b << ", " << v.a << " },\n";
-						fout << "\t\t},\n";
+						for (int i = i_materialInfo[n].vertexRange.first; i <= i_materialInfo[n].vertexRange.last; i++)
+						{
+							sVertex_maya v = i_vertexBuffer[i];
+							fout << "\t\t{\n";
+							fout << "\t\t\tposition = { " << v.x << ", " << v.y << ", " << v.z << " },\n";
+							fout << "\t\t\tnormal = { " << v.nx << ", " << v.ny << ", " << v.nz << " },\n";
+							fout << "\t\t\ttangent = { " << v.tx << ", " << v.ty << ", " << v.tz << " },\n";
+							fout << "\t\t\tbittangent = { " << v.btx << ", " << v.bty << ", " << v.btz << " },\n";
+							fout << "\t\t\ttexcoord = { " << v.u << ", " << v.v << " },\n";
+							fout << "\t\t\tcolor = { " << v.r << ", " << v.g << ", " << v.b << ", " << v.a << " },\n";
+							fout << "\t\t},\n";
+						}
 					}
-				}
-				fout << "\t},\n";
-				fout << "\tindices =\n";
-				fout << "\t{\n";
-				{
-					for (int i = 0; i < i_indexBuffer.size(); i += 3)
+					fout << "\t},\n";
+					fout << "\tindices =\n";
+					fout << "\t{\n";
 					{
-						fout << "\t\t" << i_indexBuffer[i] << ", " << i_indexBuffer[i + 1] << ", " << i_indexBuffer[i + 2] << ",\n";
+						for (int i = i_materialInfo[n].indexRange.first; i <= i_materialInfo[n].indexRange.last; i += 3)
+						{
+							fout << "\t\t" << i_indexBuffer[i] - i_materialInfo[n].indexRange.first << ", " << i_indexBuffer[i + 1] - i_materialInfo[n].indexRange.first << ", " << i_indexBuffer[i + 2] - i_materialInfo[n].indexRange.first << ",\n";
+						}
 					}
+					fout << "\t}\n";
 				}
-				fout << "\t}\n";
-			}
-			// Close table
-			fout << "}\n";
-			fout.close();
+				// Close table
+				fout << "}\n";
+				fout.close();
 
-			return MStatus::kSuccess;
+				//return MStatus::kSuccess;
+			}
+			else
+			{
+				MGlobal::displayError( MString( "Couldn't open " ) + i_fileName + " for writing" );
+				return MStatus::kFailure;
+			}
 		}
-		else
-		{
-			MGlobal::displayError( MString( "Couldn't open " ) + i_fileName + " for writing" );
-			return MStatus::kFailure;
-		}
+		return MStatus::kSuccess;
 	}
 }

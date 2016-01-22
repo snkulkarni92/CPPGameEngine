@@ -1,27 +1,18 @@
 return
 {
 	{
-		root = "Scenes",
-		builder = "SceneBuilder.exe",
-		assets = 
-		{
-			{source = "chess.scene", target = "chess.scene"},
-		}
-	},
-	{
 		root = "Meshes",
 		builder = "MeshBuilder.exe",
 		assets = 
 		{
-			{source = "chessboard.msh", target = "chessboard.msh"},
-			{source = "king.msh", target = "king.msh"},
-			{source = "queen.msh", target = "queen.msh"},
-			{source = "bishop.msh", target = "bishop.msh"},
-			{source = "knight.msh", target = "knight.msh"},
-			{source = "rook.msh", target = "rook.msh"},
-			{source = "pawn.msh", target = "pawn.msh"},
-			{source = "box.msh", target = "box.msh"},
-			{source = "smallbox.msh", target = "smallbox.msh"},
+			{source = "CTF0.msh", target = "CTF0.msh"},
+			{source = "CTF1.msh", target = "CTF1.msh"},
+			{source = "CTF2.msh", target = "CTF2.msh"},
+			{source = "CTF3.msh", target = "CTF3.msh"},
+			{source = "CTF4.msh", target = "CTF4.msh"},
+			{source = "CTF5.msh", target = "CTF5.msh"},
+			{source = "CTF6.msh", target = "CTF6.msh"},
+			{source = "CTF7.msh", target = "CTF7.msh"},
 		}
 	},
 	{
@@ -30,10 +21,11 @@ return
 		assets = 
 		{
 			{source = "OpaqueDefault.material", target = "OpaqueDefault.material"},
-			{source = "ChessBoard.material", target = "ChessBoard.material"},
-			{source = "White.material", target = "White.material"},
-			{source = "Black.material", target = "Black.material"},
-			{source = "Selection.material", target = "Selection.material"},
+			{source = "Floor.material", target = "Floor.material"},
+			{source = "Railing.material", target = "Railing.material"},
+			{source = "Cement.material", target = "Cement.material"},
+			{source = "Metal.material", target = "Metal.material"},
+			{source = "Walls.material", target = "Walls.material"},
 		}
 	},
 	{
@@ -41,10 +33,12 @@ return
 		builder = "TextureBuilder.exe",
 		assets =
 		{
-			{source = "chessboard.jpg", target = "chessboard.texture"},
+			{source = "cement_wall_D.png", target = "cement.texture"},
 			{source = "default.png", target = "default.texture"},
-			{source = "wall.jpg", target = "wall.texture"},
-			{source = "black.jpg", target = "black.texture"},
+			{source = "floor_D.png", target = "floor.texture"},
+			{source = "metal_brace_D.png", target = "metal.texture"},
+			{source = "railing_D.png", target = "railing.texture"},
+			{source = "wall_D.png", target = "walls.texture"},
 		}
 	},
 	{

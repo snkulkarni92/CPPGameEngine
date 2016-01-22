@@ -48,7 +48,7 @@ void eae6320::Graphics::Renderable::SetTransformations(eae6320::Math::cVector i_
 	Offset = i_Position;
 	localToWorldTransformation = eae6320::Math::cMatrix_transformation(i_Orientation, i_Position);
 	worldToViewTransformation = eae6320::Math::cMatrix_transformation::CreateWorldToViewTransform(i_CameraOrientation, i_CameraPosition);
-	viewToScreenTransformation = eae6320::Math::cMatrix_transformation::CreateViewToScreenTransform(eae6320::Math::ConvertDegreesToRadians(60.0f), i_AspectRatio, 0.1f, 100);
+	viewToScreenTransformation = eae6320::Math::cMatrix_transformation::CreateViewToScreenTransform(eae6320::Math::ConvertDegreesToRadians(60.0f), i_AspectRatio, 0.1f, 10000);
 	cameraPos[0] = i_CameraPosition.x;
 	cameraPos[1] = i_CameraPosition.y;
 	cameraPos[2] = i_CameraPosition.z;
