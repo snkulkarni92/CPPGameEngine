@@ -36,6 +36,9 @@ namespace eae6320
 
 			cQuaternion& operator =(const cQuaternion& i_rhs);
 
+			cQuaternion& operator *=(const cQuaternion& i_rhs);
+			cQuaternion& operator *=(const float i_rhs);
+
 			// Inversion
 			void Invert();
 			cQuaternion CreateInverse() const;
@@ -55,6 +58,7 @@ namespace eae6320
 
 			// Data
 			//=====
+			
 
 		private:
 

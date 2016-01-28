@@ -15,6 +15,7 @@ void eae6320::Graphics::Render(eae6320::Graphics::Renderable ** i_RenderingList,
 		{
 			i_RenderingList[i]->Draw();
 		}
+		DrawDebugLine();
 	}
 	EndFrame();
 

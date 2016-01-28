@@ -20,10 +20,10 @@ namespace eae6320
 			eae6320::Graphics::Initialize(s_mainWindow);
 
 			eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
-			Camera->AspectRatio = (float)800 / (float)600;
-
+			Camera->AspectRatio = (float)1024 / (float)768;
+			
 			Camera->Position = WhiteCamera;
-			Camera->Orientation = Math::cQuaternion(Math::ConvertDegreesToRadians(0), Math::cVector(1.0f, 0.0f, 0.0f)) * Math::cQuaternion(Math::ConvertDegreesToRadians(270), Math::cVector(0.0f, 1.0f, 0.0f));
+			//Camera->Orientation = Math::cQuaternion(Math::ConvertDegreesToRadians(0), Math::cVector(1.0f, 0.0f, 0.0f)) * Math::cQuaternion(Math::ConvertDegreesToRadians(270), Math::cVector(0.0f, 1.0f, 0.0f));
 
 			FILE * iFile;
 			void * buffer;
@@ -115,37 +115,61 @@ namespace eae6320
 					
 
 					eae6320::Time::OnNewFrame();
-					eae6320::Math::cVector offset(0.0f, 0.0f);
+					//eae6320::Math::cVector offset(0.0f, 0.0f);
 					eae6320::Math::cVector cameraOffset(0.0f, 0.0f, 0.0f);
-					eae6320::Math::cQuaternion unitRotationAroundY(eae6320::Math::ConvertDegreesToRadians(2.0f), eae6320::Math::cVector(0, -1, 0));
+					float rotSpeed = 2.0f;
 					{
 						// Get the direction
 						{
 							if (UserInput::IsKeyPressed(VK_LEFT))
 							{
-								offset.z += 1.0f;
+								Camera->eulerY -= rotSpeed;
 							}
 							if (UserInput::IsKeyPressed(VK_RIGHT))
 							{
-								offset.z -= 1.0f;
+								Camera->eulerY += rotSpeed;
 							}
 							if (UserInput::IsKeyPressed(VK_UP))
 							{
-								offset.x -= 1.0f;
+								Camera->eulerX -= rotSpeed;
 							}
 							if (UserInput::IsKeyPressed(VK_DOWN))
 							{
-								offset.x += 1.0f;
+								Camera->eulerX += rotSpeed;
+							}
+							if (UserInput::IsKeyPressed('Q'))
+							{
+								Camera->eulerZ -= rotSpeed;
+							}
+							if (UserInput::IsKeyPressed('E'))
+							{
+								Camera->eulerZ += rotSpeed;
+							}
+							if (UserInput::IsKeyPressed('A'))
+							{
+								cameraOffset -= Camera->getLocalX();
+							}
+							if (UserInput::IsKeyPressed('D'))
+							{
+								cameraOffset += Camera->getLocalX();
+							}
+							if (UserInput::IsKeyPressed('W'))
+							{
+								cameraOffset -= Camera->getLocalZ();
+							}
+							if (UserInput::IsKeyPressed('S'))
+							{
+								cameraOffset += Camera->getLocalZ();
 							}
 							// Get the speed
-							const float unitsPerSecond = 500.0f;	// This is arbitrary
+							const float unitsPerSecond = 700.0f;	// This is arbitrary
 							const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
 																													// Normalize the offset
-							offset *= unitsToMove;
 							cameraOffset *= unitsToMove;
 						}
 					}
-					Camera->Position += offset;
+					Camera->Position += cameraOffset;
+					Camera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerZ), eae6320::Math::cVector(0, 0, 1));
 					for (uint32_t i = 0; i < nObjects; i++)
 						gameObjectList[i]->Update(Camera);
 					eae6320::Graphics::Render(renderableList, nObjects);

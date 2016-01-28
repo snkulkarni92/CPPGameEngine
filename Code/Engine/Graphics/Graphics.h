@@ -21,7 +21,7 @@ namespace eae6320
 		bool Initialize( const HWND i_renderingWindow );
 		void Render(Renderable ** i_renderingList, const unsigned int i_RenderingListLength);
 		bool ShutDown();
-
+		void DrawDebugLine();
 		void ClearFrame();
 		void BeginFrame();
 		void EndFrame();

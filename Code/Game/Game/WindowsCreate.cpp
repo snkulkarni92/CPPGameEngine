@@ -36,8 +36,8 @@ namespace
 	// as one of your classmate's
 	const char* s_mainWindowClass_name = "Saurabh's Main Window Class";
 
-	const int desiredWidth = 800;
-	const int desiredHeight = 600;
+	const int desiredWidth = 1024;
+	const int desiredHeight = 768;
 }
 
 // Main Function

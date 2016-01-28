@@ -58,6 +58,8 @@ namespace eae6320
 			cMatrix_transformation();	// Identity
 			cMatrix_transformation( const cQuaternion& i_rotation, const cVector& i_translation );
 
+			friend class cVector;
+
 			// Data
 			//=====
 

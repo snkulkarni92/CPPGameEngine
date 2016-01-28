@@ -12,6 +12,7 @@ namespace eae6320
 {
 	namespace Math
 	{
+		class cMatrix_transformation;
 		class cVector
 		{
 			// Interface
@@ -32,6 +33,8 @@ namespace eae6320
 			cVector operator *( const float i_rhs ) const;
 			cVector& operator *=( const float i_rhs );
 			friend cVector operator *( const float i_lhs, const cVector& i_rhs );
+
+			cVector operator *(const cMatrix_transformation i_rhs) const;
 
 			// Division
 			cVector operator /( const float i_rhs ) const;

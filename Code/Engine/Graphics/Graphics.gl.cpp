@@ -143,12 +143,19 @@ void eae6320::Graphics::DrawFrame()
 	assert(result != FALSE);
 }
 
+void eae6320::Graphics::DrawDebugLine()
+{
+	GLUquadric * quad = gluNewQuadric();
+	glColor3f(1, 0, 0);
+	gluQuadricTexture(quad, false);
+	gluSphere(quad, 200, 10, 10);
+}
+
 // Helper Function Declarations
 //=============================
 
 namespace
 {
-	
 
 	bool CreateRenderingContext()
 	{
