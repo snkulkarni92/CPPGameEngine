@@ -16,6 +16,15 @@ bool eae6320::Core::GameObject::Initialize(const char * i_MeshPath, const char *
 	}
 	return true;
 }
+bool eae6320::Core::GameObject::Initialize(const char * i_EffectPath)
+{
+	if (!this->Renderable->Initialize(i_EffectPath))
+	{
+		ShutDown();
+		return false;
+	}
+	return true;
+}
 
 void eae6320::Core::GameObject::Update(Camera * i_Camera)
 {

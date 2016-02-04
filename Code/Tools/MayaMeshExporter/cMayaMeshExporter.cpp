@@ -746,7 +746,7 @@ namespace
 					fout << "\tvertices =\n";
 					fout << "\t{\n";
 					{
-						for (int i = i_materialInfo[n].vertexRange.first; i <= i_materialInfo[n].vertexRange.last; i++)
+						for (size_t i = i_materialInfo[n].vertexRange.first; i <= i_materialInfo[n].vertexRange.last; i++)
 						{
 							sVertex_maya v = i_vertexBuffer[i];
 							fout << "\t\t{\n";
@@ -763,7 +763,7 @@ namespace
 					fout << "\tindices =\n";
 					fout << "\t{\n";
 					{
-						for (int i = i_materialInfo[n].indexRange.first; i <= i_materialInfo[n].indexRange.last; i += 3)
+						for (size_t i = i_materialInfo[n].indexRange.first; i <= i_materialInfo[n].indexRange.last; i += 3)
 						{
 							fout << "\t\t" << i_indexBuffer[i] - i_materialInfo[n].indexRange.first << ", " << i_indexBuffer[i + 1] - i_materialInfo[n].indexRange.first << ", " << i_indexBuffer[i + 2] - i_materialInfo[n].indexRange.first << ",\n";
 						}

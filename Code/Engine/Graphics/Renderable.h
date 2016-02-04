@@ -14,7 +14,8 @@ namespace eae6320
 		{
 		public:
 			Renderable();
-			bool Initialize(const char * i_MeshPath, const char * i_EffectPath);
+			bool Initialize(const char * i_MeshPath, const char * i_MaterialPath);
+			bool Initialize(const char * i_MaterialPath);
 			void Draw();
 			void ShutDown();
 

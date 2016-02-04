@@ -68,6 +68,8 @@ namespace eae6320
 			ShaderTypes shaderType;
 			uint8_t valueCount;
 		};
+
+
 	}
 }
 

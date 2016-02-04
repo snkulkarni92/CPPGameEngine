@@ -143,12 +143,14 @@ void eae6320::Graphics::DrawFrame()
 	assert(result != FALSE);
 }
 
-void eae6320::Graphics::DrawDebugLine()
+void eae6320::Graphics::DebugLine(eae6320::Math::cVector startPoint, eae6320::Math::cVector endPoint, eae6320::Math::cVector color)
 {
-	GLUquadric * quad = gluNewQuadric();
-	glColor3f(1, 0, 0);
-	gluQuadricTexture(quad, false);
-	gluSphere(quad, 200, 10, 10);
+	glLineWidth(2.5f);
+	glColor3f(color.x, color.y, color.z);
+	glBegin(GL_LINES);
+	glVertex3f(startPoint.x, startPoint.y, startPoint.z);
+	glVertex3f(endPoint.x, endPoint.y, endPoint.z);
+	glEnd();
 }
 
 // Helper Function Declarations

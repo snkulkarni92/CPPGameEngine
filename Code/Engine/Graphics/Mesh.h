@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "Includes.h"
+#include "../Math/cVector.h"
 
 #if defined EAE6320_PLATFORM_GL
 #include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
@@ -37,9 +38,6 @@ namespace eae6320
 			// (i.e. it defines the vertex connectivity)
 			IDirect3DIndexBuffer9* s_indexBuffer = NULL;
 #endif // Platform Check
-		
-
-
 
 		//Methods
 			
@@ -51,6 +49,11 @@ namespace eae6320
 			bool ShutDown();
 
 			void * LoadMesh(const char * i_path);
+			void AddMesh(LPD3DXMESH& mesh);
+			bool CreateEmpty();
+			void AddLine(sVertex startPoint, sVertex endPoint);
+			void AddBox(eae6320::Math::cVector extents, eae6320::Math::cVector offset, eae6320::Math::cVector color);
+			void DrawLines();
 
 #if defined EAE6320_PLATFORM_GL
 			bool CreateVertexArray();

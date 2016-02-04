@@ -21,6 +21,7 @@ return
 		assets = 
 		{
 			{source = "OpaqueDefault.material", target = "OpaqueDefault.material"},
+			{source = "Debug.material", target = "Debug.material"},
 			{source = "Floor.material", target = "Floor.material"},
 			{source = "Railing.material", target = "Railing.material"},
 			{source = "Cement.material", target = "Cement.material"},
@@ -48,6 +49,7 @@ return
 		{
 			{source = "opaque.effect", target = "opaque.bineffect"},
 			{source = "transparent.effect", target = "transparent.bineffect"},
+			{source = "debug.effect", target = "debug.bineffect"},
 		}
 	},
 	{
@@ -66,8 +68,28 @@ return
 				},
 			},
 			{
+				source = "debugVertex.shader", 
+				target = "debugVertex.shader", 
+				arguments = "vertex",
+				dependencies = 
+				{
+					"shaders.inc",
+					"vertexMain.inc",
+				},
+			},
+			{
 				source = "opaque.shader", 
 				target = "opaque.shader", 
+				arguments = "fragment",
+				dependencies = 
+				{
+					"shaders.inc",
+					"fragmentMain.inc"
+				},
+			},
+			{
+				source = "debug.shader", 
+				target = "debug.shader", 
 				arguments = "fragment",
 				dependencies = 
 				{

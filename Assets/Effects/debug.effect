@@ -1,0 +1,9 @@
+return
+{
+	vertex = "data/debugVertex.shader",
+	fragment = "data/debug.shader",
+	alphaTransparency = false,
+	depthTesting = true,
+	depthWriting = true,
+	faceCulling = false,
+}

@@ -50,6 +50,9 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 	HRESULT result = s_direct3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	result = s_direct3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	result = s_direct3dDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+
+	InitializeDebugShapes();
+
 	return true;
 
 OnError:
@@ -58,10 +61,27 @@ OnError:
 	return false;
 }
 
+eae6320::Graphics::Renderable* eae6320::Graphics::InitializeDebugLine()
+{
+	Renderable* renderable = new Renderable();
+	renderable->Initialize("data/OpaqueDefault.material");
+	return renderable;
+}
+
+eae6320::Graphics::Renderable* eae6320::Graphics::InitializeDebugBox()
+{
+	
+	LPD3DXMESH mesh;
+	D3DXCreateBox(s_direct3dDevice, 500, 100, 100, &mesh, 0);
+	Renderable* renderable = new Renderable();
+	renderable->Initialize("data/OpaqueDefault.material");
+	renderable->Mesh->AddMesh(mesh);
+	return renderable;
+}
 bool eae6320::Graphics::ShutDown()
 {
 	bool wereThereErrors = false;
-
+	ShutDownDebugShapes();
 	if (s_direct3dInterface)
 	{
 		if (s_direct3dDevice)
@@ -147,7 +167,7 @@ namespace
 			presentationParameters.hDeviceWindow = s_renderingWindow;
 			presentationParameters.Windowed = TRUE;
 			presentationParameters.EnableAutoDepthStencil = TRUE;
-			presentationParameters.AutoDepthStencilFormat = D3DFMT_D16;
+			presentationParameters.AutoDepthStencilFormat = D3DFMT_D24S8;
 			presentationParameters.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 		}
 		HRESULT result = s_direct3dInterface->CreateDevice( useDefaultDevice, useHardwareRendering,

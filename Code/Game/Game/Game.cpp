@@ -7,7 +7,7 @@
 #include "../../Engine/UserInput/UserInput.h"
 #include "../../Engine/Math/Functions.h"
 
-eae6320::Math::cVector WhiteCamera(10.0f, 10.0f, 0.0f);
+eae6320::Math::cVector WhiteCamera(0.0f, 0.0f, 200.0f);
 
 namespace eae6320
 {
@@ -24,11 +24,7 @@ namespace eae6320
 			
 			Camera->Position = WhiteCamera;
 			//Camera->Orientation = Math::cQuaternion(Math::ConvertDegreesToRadians(0), Math::cVector(1.0f, 0.0f, 0.0f)) * Math::cQuaternion(Math::ConvertDegreesToRadians(270), Math::cVector(0.0f, 1.0f, 0.0f));
-
-			FILE * iFile;
-			void * buffer;
-			size_t fileSize;
-
+			
 			uint32_t nObjects = 7;
 
 			eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject *[nObjects];
@@ -41,63 +37,12 @@ namespace eae6320
 			gameObjectList[4]->Initialize("data/CTF4.msh", "data/Metal.material");
 			gameObjectList[5]->Initialize("data/CTF5.msh", "data/Cement.material");
 			gameObjectList[6]->Initialize("data/CTF6.msh", "data/Walls.material");
-			/*fopen_s(&iFile, "data/chess.scene", "rb");
-			if (iFile != NULL)
-			{
-				fseek(iFile, 0, SEEK_END);
-				fileSize = ftell(iFile);
-				rewind(iFile);
-
-				buffer = (void *)malloc(fileSize);
-
-				size_t result = fread(buffer, 1, fileSize, iFile);
-				if (result != fileSize)
-				{
-					free(buffer);
-					return NULL;
-				}
-				char * iPointer = reinterpret_cast<char *>(buffer);
-
-				nObjects = *reinterpret_cast<uint32_t *>(iPointer);
-				iPointer += sizeof(nObjects);
-
-				gameObjectList = new Core::GameObject *[nObjects + 64];
-
-				for (uint32_t i = 0; i < nObjects; i++)
-				{
-					gameObjectList[i] = new Core::GameObject();
-					const char * mesh = iPointer;
-					iPointer += strlen(mesh) + 1;
-					const char * material = iPointer;
-					iPointer += strlen(material) + 1;
-					gameObjectList[i]->Initialize(mesh, material);
-					gameObjectList[i]->Position.x = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-					gameObjectList[i]->Position.y = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-					gameObjectList[i]->Position.z = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-
-					float x, y, z, w;
-					w = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-					x = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-					y = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-					z = *reinterpret_cast<float *>(iPointer);
-					iPointer += sizeof(float);
-
-					gameObjectList[i]->Orientation = Math::cQuaternion(Math::ConvertDegreesToRadians(w), Math::cVector(x, y, z));
-				}
-				free(buffer);
-				fclose(iFile);
-			}
-*/
-
+			
 			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				renderableList[i] = gameObjectList[i]->Renderable;
+
+			//renderableList[nObjects] = DebugObjects;
 
 			MSG message = { 0 };
 			do
@@ -115,6 +60,12 @@ namespace eae6320
 					
 
 					eae6320::Time::OnNewFrame();
+					
+					eae6320::Graphics::DebugLine(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(100.0f, 0.0f, 0.0f), eae6320::Math::cVector(1.0f, 0.0f, 0.0f));
+					eae6320::Graphics::DebugLine(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(0.0f, 100.0f, 0.0f), eae6320::Math::cVector(0.0f, 1.0f, 0.0f));
+					eae6320::Graphics::DebugLine(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(0.0f, 0.0f, 100.0f), eae6320::Math::cVector(0.0f, 0.0f, 1.0f));
+					//eae6320::Graphics::DebugBox(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(100.0f, 0.0f, 0.0f), eae6320::Math::cVector(1.0f, 0.0f, 0.0f));
+
 					//eae6320::Math::cVector offset(0.0f, 0.0f);
 					eae6320::Math::cVector cameraOffset(0.0f, 0.0f, 0.0f);
 					float rotSpeed = 2.0f;

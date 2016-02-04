@@ -1,0 +1,56 @@
+/*
+	This is an example of a vertex shader
+*/
+
+// Platform-specific setup
+#include "shaders.inc"
+
+// Platform-independant Uniform declaration
+//uniform float3 g_position_offset;
+uniform float4x4 g_Local_To_World;
+uniform float4x4 g_World_To_View;
+uniform float4x4 g_View_To_Screen;
+
+// Entry Point
+//============
+
+#include "vertexMain.inc" // void main()
+
+{
+	// Calculate the position of this vertex on screen
+	{
+		// The position stored in the vertex is in "local space",
+		// meaning that it is relative to the center (or "origin", or "pivot")
+		// of the mesh.
+		// The graphics hardware needs the position of the vertex
+		// in normalized device coordinates,
+		// meaning where the position of the vertex should be drawn
+		// on the screen.
+		// This position that we need to output, then,
+		// is the result of taking the original vertex in local space
+		// and transforming it into "screen space".
+
+		// Any matrix transformations that include translation
+		// will operate on a float4 position,
+		// which _must_ have 1 for the w value
+		
+		//float4 position_world = Transform( float4( i_position, 1.0 ), g_Local_To_World );
+		float4 position_view = Transform( float4( i_position, 1.0 ), g_World_To_View );
+		out_position = Transform( position_view, g_View_To_Screen );
+		
+		o_world_position = i_position;
+	}
+	
+	{
+		float3x3 rotation_localToWorld = float3x3(
+		g_Local_To_World[0].xyz,
+		g_Local_To_World[1].xyz,
+		g_Local_To_World[2].xyz );
+		o_normal = Transform( i_normal, rotation_localToWorld );
+	}
+	// Pass the other input values to the fragment shader unchanged:
+	{
+		o_color = i_color;
+		o_texcoord = i_texcoord;
+	}
+}
