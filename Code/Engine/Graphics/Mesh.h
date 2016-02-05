@@ -43,17 +43,11 @@ namespace eae6320
 			
 		public:
 			Mesh();
-			//static Mesh * CreateMesh();
 			bool Initialize(void * buffer);
 			void Draw();
 			bool ShutDown();
 
 			void * LoadMesh(const char * i_path);
-			void AddMesh(LPD3DXMESH& mesh);
-			bool CreateEmpty();
-			void AddLine(sVertex startPoint, sVertex endPoint);
-			void AddBox(eae6320::Math::cVector extents, eae6320::Math::cVector offset, eae6320::Math::cVector color);
-			void DrawLines();
 
 #if defined EAE6320_PLATFORM_GL
 			bool CreateVertexArray();

@@ -18,6 +18,11 @@ namespace eae6320
 			IDirect3DVertexDeclaration9* s_vertexDeclaration = NULL;
 			IDirect3DVertexBuffer9* s_vertexBuffer = NULL;
 			IDirect3DIndexBuffer9* s_indexBuffer = NULL;
+
+			static IDirect3DDevice9* s_direct3dDevice;
+			static void SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice);
+			static void ReleaseDirect3dDevice();
+
 		public:
 			DebugShape();
 			
