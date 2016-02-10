@@ -1,6 +1,6 @@
 return
 {
-	vertex = "data/debugVertex.shader",
+	vertex = "data/vertex.shader",
 	fragment = "data/debug.shader",
 	alphaTransparency = false,
 	depthTesting = true,

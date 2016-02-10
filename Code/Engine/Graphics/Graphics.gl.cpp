@@ -143,16 +143,6 @@ void eae6320::Graphics::DrawFrame()
 	assert(result != FALSE);
 }
 
-void eae6320::Graphics::DebugLine(eae6320::Math::cVector startPoint, eae6320::Math::cVector endPoint, eae6320::Math::cVector color)
-{
-	glLineWidth(2.5f);
-	glColor3f(color.x, color.y, color.z);
-	glBegin(GL_LINES);
-	glVertex3f(startPoint.x, startPoint.y, startPoint.z);
-	glVertex3f(endPoint.x, endPoint.y, endPoint.z);
-	glEnd();
-}
-
 // Helper Function Declarations
 //=============================
 

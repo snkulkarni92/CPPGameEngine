@@ -51,6 +51,7 @@ namespace eae6320
 			bool Initialize(void * buffer);
 			void * LoadEffect(const char * i_path);
 			void Bind();
+			void SetShaders();
 			void SetDrawCallUniforms(Math::cMatrix_transformation matrix1, Math::cMatrix_transformation matrix2, Math::cMatrix_transformation matrix3, float * cameraPos);
 			void ShutDown();
 			SamplerID GetSamplerID(const char * i_Name);

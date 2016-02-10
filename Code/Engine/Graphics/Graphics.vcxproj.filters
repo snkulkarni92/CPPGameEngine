@@ -38,7 +38,7 @@
     <ClCompile Include="Texture.gl.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="DebugShapes.d3d.cpp">
+    <ClCompile Include="DebugShape.d3d.cpp">
       <Filter>Direct3D</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,6 +50,6 @@
     <ClInclude Include="Includes.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="DebugShapes.h" />
+    <ClInclude Include="DebugShape.h" />
   </ItemGroup>
 </Project>

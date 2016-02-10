@@ -4,7 +4,6 @@
 #include <cstdint>
 
 #include "Includes.h"
-#include "../Math/cVector.h"
 
 #if defined EAE6320_PLATFORM_GL
 #include "../../Externals/OpenGlExtensions/OpenGlExtensions.h"
@@ -38,11 +37,15 @@ namespace eae6320
 			// (i.e. it defines the vertex connectivity)
 			IDirect3DIndexBuffer9* s_indexBuffer = NULL;
 #endif // Platform Check
+		
+
+
 
 		//Methods
 			
 		public:
 			Mesh();
+			//static Mesh * CreateMesh();
 			bool Initialize(void * buffer);
 			void Draw();
 			bool ShutDown();

@@ -20,13 +20,6 @@ bool eae6320::Graphics::Renderable::Initialize(const char * i_MeshPath, const ch
 	return true;
 }
 
-bool eae6320::Graphics::Renderable::Initialize(const char * i_MaterialPath)
-{
-	Mesh->CreateEmpty();
-	Material->Load(i_MaterialPath);
-	return true;
-}
-
 void eae6320::Graphics::Renderable::ShutDown()
 {
 	if (Material)

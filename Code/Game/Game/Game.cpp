@@ -6,8 +6,9 @@
 #include "../../Engine/Time/Time.h"
 #include "../../Engine/UserInput/UserInput.h"
 #include "../../Engine/Math/Functions.h"
+#include "../../Engine/Graphics/DebugShape.h"
 
-eae6320::Math::cVector WhiteCamera(0.0f, 0.0f, 200.0f);
+//eae6320::Math::cVector WhiteCamera(10.0f, 10.0f, 0.0f);
 
 namespace eae6320
 {
@@ -22,9 +23,8 @@ namespace eae6320
 			eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
 			Camera->AspectRatio = (float)1024 / (float)768;
 			
-			Camera->Position = WhiteCamera;
-			//Camera->Orientation = Math::cQuaternion(Math::ConvertDegreesToRadians(0), Math::cVector(1.0f, 0.0f, 0.0f)) * Math::cQuaternion(Math::ConvertDegreesToRadians(270), Math::cVector(0.0f, 1.0f, 0.0f));
-			
+			Camera->Position = eae6320::Math::cVector(0, 0, 200);
+
 			uint32_t nObjects = 7;
 
 			eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject *[nObjects];
@@ -37,12 +37,9 @@ namespace eae6320
 			gameObjectList[4]->Initialize("data/CTF4.msh", "data/Metal.material");
 			gameObjectList[5]->Initialize("data/CTF5.msh", "data/Cement.material");
 			gameObjectList[6]->Initialize("data/CTF6.msh", "data/Walls.material");
-			
 			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				renderableList[i] = gameObjectList[i]->Renderable;
-
-			//renderableList[nObjects] = DebugObjects;
 
 			MSG message = { 0 };
 			do
@@ -61,12 +58,17 @@ namespace eae6320
 
 					eae6320::Time::OnNewFrame();
 					
-					eae6320::Graphics::DebugLine(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(100.0f, 0.0f, 0.0f), eae6320::Math::cVector(1.0f, 0.0f, 0.0f));
-					eae6320::Graphics::DebugLine(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(0.0f, 100.0f, 0.0f), eae6320::Math::cVector(0.0f, 1.0f, 0.0f));
-					eae6320::Graphics::DebugLine(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(0.0f, 0.0f, 100.0f), eae6320::Math::cVector(0.0f, 0.0f, 1.0f));
-					//eae6320::Graphics::DebugBox(eae6320::Math::cVector(0.0f, 0.0f, 0.0f), eae6320::Math::cVector(100.0f, 0.0f, 0.0f), eae6320::Math::cVector(1.0f, 0.0f, 0.0f));
+					Graphics::DebugShapes::AddBox(Math::cVector(0, -200, -600), Math::cVector(100, 100, 100), Math::cVector(255, 0, 0));
+					Graphics::DebugShapes::AddBox(Math::cVector(-200, -200, -600), Math::cVector(100, 100, 100), Math::cVector(0, 255, 0));
+					Graphics::DebugShapes::AddSphere(Math::cVector(200, -100, -600), 100, Math::cVector(0, 0, 255));
+					Graphics::DebugShapes::AddSphere(Math::cVector(400, -100, -600), 100, Math::cVector(255, 0, 255));
+					Graphics::DebugShapes::AddCylinder(Math::cVector(-200, -200, -200), 50, 50, 400, Math::cVector(255, 255, 0));
+					Graphics::DebugShapes::AddCylinder(Math::cVector(+200, -200, -200), 50, 50, 400, Math::cVector(0, 255, 255));
 
-					//eae6320::Math::cVector offset(0.0f, 0.0f);
+					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(200, 0, 0), Math::cVector(255, 0, 0));
+					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 200, 0), Math::cVector(0, 255, 0));
+					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 0, 200), Math::cVector(0, 0, 255));
+
 					eae6320::Math::cVector cameraOffset(0.0f, 0.0f, 0.0f);
 					float rotSpeed = 2.0f;
 					{

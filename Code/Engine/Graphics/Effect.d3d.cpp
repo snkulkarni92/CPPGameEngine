@@ -41,6 +41,14 @@ namespace eae6320
 			return !wereThereErrors;
 		}
 
+		void Effect::SetShaders()
+		{
+			HRESULT result = s_direct3dDevice->SetVertexShader(s_vertexShader);
+			assert(SUCCEEDED(result));
+			result = s_direct3dDevice->SetPixelShader(s_fragmentShader);
+			assert(SUCCEEDED(result));
+		}
+
 		void Effect::Bind()
 		{
 			// Set the shaders
