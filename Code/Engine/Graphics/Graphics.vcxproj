@@ -53,6 +53,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="Sprite.d3d.cpp" />
     <ClCompile Include="Texture.d3d.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -74,6 +75,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Renderable.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

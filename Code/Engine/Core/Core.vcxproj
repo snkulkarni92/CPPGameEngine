@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1104BADA-153D-46D4-B8F7-22228BDA7608}</ProjectGuid>

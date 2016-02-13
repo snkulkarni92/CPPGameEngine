@@ -8,6 +8,7 @@
 #include <sstream>
 #include "../UserOutput/UserOutput.h"
 #include "DebugShape.h"
+#include "../Core/UI.h"
 
 // Static Data Initialization
 //===========================
@@ -49,8 +50,10 @@ bool eae6320::Graphics::Initialize( const HWND i_renderingWindow )
 	Mesh::SetDirect3dDevice(s_direct3dDevice);
 	Effect::SetDirect3dDevice(s_direct3dDevice);
 	DebugShapes::SetDirect3dDevice(s_direct3dDevice);
+	Core::UI::SetDirect3dDevice(s_direct3dDevice);
 
 	DebugShapes::Initialize();
+	Core::UI::Initialize();
 
 	HRESULT result = s_direct3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	result = s_direct3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);

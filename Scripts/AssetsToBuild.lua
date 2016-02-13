@@ -40,6 +40,8 @@ return
 			{source = "metal_brace_D.png", target = "metal.texture"},
 			{source = "railing_D.png", target = "railing.texture"},
 			{source = "wall_D.png", target = "walls.texture"},
+			{source = "logo.png", target = "logo.texture"},
+			{source = "numbers.png", target = "numbers.texture"},
 		}
 	},
 	{

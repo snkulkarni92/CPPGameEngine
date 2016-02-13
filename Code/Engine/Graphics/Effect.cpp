@@ -11,7 +11,7 @@ void * eae6320::Graphics::Effect::LoadEffect(const char * i_path)
 	void * buffer;
 	size_t fileSize;
 
-	fopen_s(&iFile, i_path, "rb");
+	errno_t s = fopen_s(&iFile, i_path, "rb");
 	if (iFile != NULL)
 	{
 		fseek(iFile, 0, SEEK_END);

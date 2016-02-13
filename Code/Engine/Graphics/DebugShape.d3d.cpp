@@ -79,7 +79,7 @@ namespace eae6320
 					// Place the vertex buffer into memory that Direct3D thinks is the most appropriate
 					const D3DPOOL useDefaultPool = D3DPOOL_DEFAULT;
 					HANDLE* const notUsed = NULL;
-					const HRESULT result = s_direct3dDevice->CreateVertexBuffer(128 * sizeof(sVertex1), usage, 0, D3DPOOL_DEFAULT, &s_vertexBuffer, NULL);
+					const HRESULT result = s_direct3dDevice->CreateVertexBuffer(256 * sizeof(sVertex1), usage, 0, D3DPOOL_DEFAULT, &s_vertexBuffer, NULL);
 				}
 
 				DebugLineList = new sVertex1[256];

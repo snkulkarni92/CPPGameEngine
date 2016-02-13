@@ -7,6 +7,7 @@
 #include "../../Engine/UserInput/UserInput.h"
 #include "../../Engine/Math/Functions.h"
 #include "../../Engine/Graphics/DebugShape.h"
+#include "../../Engine/Core/UI.h"
 
 //eae6320::Math::cVector WhiteCamera(10.0f, 10.0f, 0.0f);
 
@@ -125,6 +126,9 @@ namespace eae6320
 					Camera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerZ), eae6320::Math::cVector(0, 0, 1));
 					for (uint32_t i = 0; i < nObjects; i++)
 						gameObjectList[i]->Update(Camera);
+
+					eae6320::Core::UI::Update(eae6320::Time::GetSecondsElapsedThisFrame());
+
 					eae6320::Graphics::Render(renderableList, nObjects);
 				}
 				else

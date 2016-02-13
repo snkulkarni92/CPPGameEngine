@@ -41,6 +41,9 @@
     <ClCompile Include="DebugShape.d3d.cpp">
       <Filter>Direct3D</Filter>
     </ClCompile>
+    <ClCompile Include="Sprite.d3d.cpp">
+      <Filter>Direct3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
@@ -51,5 +54,6 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="DebugShape.h" />
+    <ClInclude Include="Sprite.h" />
   </ItemGroup>
 </Project>
