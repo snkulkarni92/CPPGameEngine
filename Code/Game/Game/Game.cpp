@@ -75,6 +75,10 @@ namespace eae6320
 					{
 						// Get the direction
 						{
+							if (UserInput::IsKeyUp(VK_OEM_3))
+							{
+								Core::UI::ToggleDebugMenu();
+							}
 							if (UserInput::IsKeyPressed(VK_LEFT))
 							{
 								Camera->eulerY -= rotSpeed;

@@ -7,42 +7,48 @@ namespace eae6320
 		namespace UI
 		{
 			IDirect3DDevice9* s_direct3dDevice = NULL;
+			bool DebugMenu = false;
 			void SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice)
 			{
 				s_direct3dDevice = i_direct3dDevice;
 			}
-
-			Graphics::GameSprite s_logo;
-			eae6320::Graphics::GameSprite* s_numbers = NULL;
-			eae6320::Graphics::GameSprite* s_numbers1 = NULL;
+			ID3DXFont *s_font = NULL;
+			UIElement **UIElements;
+			uint32_t elementCount = 0;
 
 			void Initialize()
 			{
-				s_logo = Graphics::GameSprite(10, 10);
-				s_numbers = new Graphics::GameSprite(900, 50);
-				s_numbers1 = new Graphics::GameSprite(950, 50);
-				s_logo.Initialize(s_direct3dDevice, "data/logo.texture", 256, 256);
-				s_numbers->Initialize(s_direct3dDevice, "data/numbers.texture", 512, 64);
-				s_numbers1->Initialize(s_direct3dDevice, "data/numbers.texture", 512, 64);
+				HRESULT hr = D3DXCreateFont(s_direct3dDevice, 22, 0, FW_BOLD, 1, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Courier", &s_font);
+				UIElements = new UIElement*[50];
 			}
 
 			void Update(float time)
 			{
-				float fps = 1/time;
-
-				s_numbers->m_texPortion->left = 512 / 10 * (int)(fps / 10);
-				s_numbers->m_texPortion->right = 512 / 10 * ((int)(fps / 10) + 1);
-
-				s_numbers1->m_texPortion->left = 512 / 10 * ((int)fps % 10);
-				s_numbers1->m_texPortion->right = 512 / 10 * ((int)fps % 10 + 1);
+				
 			}
-
+			void ToggleDebugMenu()
+			{
+				DebugMenu = !DebugMenu;
+			}
 			void Draw()
 			{
-				s_logo.Draw();
-				s_numbers->Draw();
-				s_numbers1->Draw();
+				if (DebugMenu)
+				{
+					RECT font_rect;
+					SetRect(&font_rect, 0, 0, 800, 600);
+					int a = s_font->DrawText(NULL, "Aasdfasdfas", -1, &font_rect, DT_LEFT | DT_NOCLIP, 0xFF00FF00);
+				}
 			}
+
+			void UIText::Create(const char *i_name, char *i_value, float left, float top)
+			{
+				SetRect(&fontRect, left, top, 1280, 768);
+				value = i_value;
+				name = strdup(i_name);
+				UIElements[elementCount] = this;
+				elementCount++;
+			}
+
 		}
 	}
 }
