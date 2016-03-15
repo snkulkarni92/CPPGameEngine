@@ -13,7 +13,7 @@ namespace
 	bool IsVirtualKeyPressed( const int i_virtualKeyCode );
 }
 
-bool lastFramePressed = false;
+int lastFramePressed = 0;
 // Interface
 //==========
 
@@ -29,14 +29,14 @@ bool eae6320::UserInput::IsMouseButtonPressed( const int i_virtualButtonCode )
 
 bool eae6320::UserInput::IsKeyUp(const int i_virtualKeyCode)
 {
-	if (IsVirtualKeyPressed(i_virtualKeyCode) && !lastFramePressed)
+	if (IsVirtualKeyPressed(i_virtualKeyCode) && lastFramePressed != i_virtualKeyCode)
 	{
-		lastFramePressed = true;
+		lastFramePressed = i_virtualKeyCode;
 		return true;
 	}
-	else if (!IsVirtualKeyPressed(i_virtualKeyCode) && lastFramePressed)
+	else if (!IsVirtualKeyPressed(i_virtualKeyCode) && lastFramePressed == i_virtualKeyCode)
 	{
-		lastFramePressed = false;
+		lastFramePressed = 0;
 	}
 	return false;
 }

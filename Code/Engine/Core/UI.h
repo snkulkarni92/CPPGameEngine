@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Graphics/Sprite.h"
+#include "UIElements.h"
 
 namespace eae6320
 {
@@ -9,30 +10,18 @@ namespace eae6320
 		namespace UI
 		{
 			void Initialize();
-			void Draw();
-			void ShutDown();
-			void Update(float time);
 			void SetDirect3dDevice(IDirect3DDevice9* i_direct3dDevice);
+			void ShutDown();
+
+			void CreateText(const char * name, char * text);
+			void CreateCheckBox(const char * name, bool * value);
+			void CreateSlider(const char * name, int *value, int min, int max);
+			void CreateButton(const char* name, void(*callback)(void));
+
 			void ToggleDebugMenu();
-
-			class UIElement
-			{
-			protected:
-				RECT fontRect;
-				const char *name;
-				bool isSelected;
-			public:
-				virtual void Update() = 0;
-			};
-
-			class UIText : public UIElement
-			{
-			private:
-				char *value;
-			public:
-				void Create(const char *name, char *value, float left, float top);
-				void Update();
-			};
+			bool IsDebugMenuActive();
+			void Draw();
+			void Update(UIInput input);
 		}
 	}
 }

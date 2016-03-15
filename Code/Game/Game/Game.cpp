@@ -15,6 +15,12 @@ namespace eae6320
 {
 	namespace Game
 	{
+		const int defaultRadius = 100;
+		int radius = defaultRadius;
+		void ResetSphere()
+		{
+			radius = defaultRadius;
+		}
 		bool GameLoop(int& o_exitCode, HWND s_mainWindow)
 		{
 			Core::GameObject * selected = NULL;
@@ -24,7 +30,7 @@ namespace eae6320
 			eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
 			Camera->AspectRatio = (float)1024 / (float)768;
 			
-			Camera->Position = eae6320::Math::cVector(0, 0, 200);
+			Camera->Position = eae6320::Math::cVector(0, 0, 400);
 
 			uint32_t nObjects = 7;
 
@@ -41,7 +47,20 @@ namespace eae6320
 			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				renderableList[i] = gameObjectList[i]->Renderable;
+			
+			
+			char * fpsString = new char[20];
+			sprintf(fpsString, "Abc");
+			Core::UI::CreateText("FPS", fpsString);
+			
+			bool sphereEnabled = true;
+			Core::UI::CreateCheckBox("Sphere", &sphereEnabled);
 
+			Core::UI::CreateSlider("Radius", &radius, 60, 460);
+			Core::UI::CreateButton("Default", &ResetSphere);
+			
+			int UIDelay = 0;
+			
 			MSG message = { 0 };
 			do
 			{
@@ -59,13 +78,8 @@ namespace eae6320
 
 					eae6320::Time::OnNewFrame();
 					
-					Graphics::DebugShapes::AddBox(Math::cVector(0, -200, -600), Math::cVector(100, 100, 100), Math::cVector(255, 0, 0));
-					Graphics::DebugShapes::AddBox(Math::cVector(-200, -200, -600), Math::cVector(100, 100, 100), Math::cVector(0, 255, 0));
-					Graphics::DebugShapes::AddSphere(Math::cVector(200, -100, -600), 100, Math::cVector(0, 0, 255));
-					Graphics::DebugShapes::AddSphere(Math::cVector(400, -100, -600), 100, Math::cVector(255, 0, 255));
-					Graphics::DebugShapes::AddCylinder(Math::cVector(-200, -200, -200), 50, 50, 400, Math::cVector(255, 255, 0));
-					Graphics::DebugShapes::AddCylinder(Math::cVector(+200, -200, -200), 50, 50, 400, Math::cVector(0, 255, 255));
-
+					if(sphereEnabled)
+						Graphics::DebugShapes::AddSphere(Math::cVector(0, -150, -600), radius, Math::cVector(255, 0, 255));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(200, 0, 0), Math::cVector(255, 0, 0));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 200, 0), Math::cVector(0, 255, 0));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 0, 200), Math::cVector(0, 0, 255));
@@ -79,45 +93,61 @@ namespace eae6320
 							{
 								Core::UI::ToggleDebugMenu();
 							}
-							if (UserInput::IsKeyPressed(VK_LEFT))
+							if (Core::UI::IsDebugMenuActive())
 							{
-								Camera->eulerY -= rotSpeed;
+								if (UserInput::IsKeyUp(VK_UP))
+									Core::UI::Update(Core::UI::Up);
+								else if (UserInput::IsKeyUp(VK_DOWN))
+									Core::UI::Update(Core::UI::Down);
+								else if (UserInput::IsKeyUp(VK_SPACE))
+									Core::UI::Update(Core::UI::Interact);
+								else if (UserInput::IsKeyUp(VK_LEFT))
+									Core::UI::Update(Core::UI::Left);
+								else if (UserInput::IsKeyUp(VK_RIGHT))
+									Core::UI::Update(Core::UI::Right);
 							}
-							if (UserInput::IsKeyPressed(VK_RIGHT))
+							else
 							{
-								Camera->eulerY += rotSpeed;
-							}
-							if (UserInput::IsKeyPressed(VK_UP))
-							{
-								Camera->eulerX -= rotSpeed;
-							}
-							if (UserInput::IsKeyPressed(VK_DOWN))
-							{
-								Camera->eulerX += rotSpeed;
-							}
-							if (UserInput::IsKeyPressed('Q'))
-							{
-								Camera->eulerZ -= rotSpeed;
-							}
-							if (UserInput::IsKeyPressed('E'))
-							{
-								Camera->eulerZ += rotSpeed;
-							}
-							if (UserInput::IsKeyPressed('A'))
-							{
-								cameraOffset -= Camera->getLocalX();
-							}
-							if (UserInput::IsKeyPressed('D'))
-							{
-								cameraOffset += Camera->getLocalX();
-							}
-							if (UserInput::IsKeyPressed('W'))
-							{
-								cameraOffset -= Camera->getLocalZ();
-							}
-							if (UserInput::IsKeyPressed('S'))
-							{
-								cameraOffset += Camera->getLocalZ();
+								if (UserInput::IsKeyPressed(VK_LEFT))
+								{
+									Camera->eulerY -= rotSpeed;
+								}
+								if (UserInput::IsKeyPressed(VK_RIGHT))
+								{
+									Camera->eulerY += rotSpeed;
+								}
+								if (UserInput::IsKeyPressed(VK_UP))
+								{
+									Camera->eulerX -= rotSpeed;
+								}
+								if (UserInput::IsKeyPressed(VK_DOWN))
+								{
+									Camera->eulerX += rotSpeed;
+								}
+								if (UserInput::IsKeyPressed('Q'))
+								{
+									Camera->eulerZ -= rotSpeed;
+								}
+								if (UserInput::IsKeyPressed('E'))
+								{
+									Camera->eulerZ += rotSpeed;
+								}
+								if (UserInput::IsKeyPressed('A'))
+								{
+									cameraOffset -= Camera->getLocalX();
+								}
+								if (UserInput::IsKeyPressed('D'))
+								{
+									cameraOffset += Camera->getLocalX();
+								}
+								if (UserInput::IsKeyPressed('W'))
+								{
+									cameraOffset -= Camera->getLocalZ();
+								}
+								if (UserInput::IsKeyPressed('S'))
+								{
+									cameraOffset += Camera->getLocalZ();
+								}
 							}
 							// Get the speed
 							const float unitsPerSecond = 700.0f;	// This is arbitrary
@@ -130,8 +160,16 @@ namespace eae6320
 					Camera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerZ), eae6320::Math::cVector(0, 0, 1));
 					for (uint32_t i = 0; i < nObjects; i++)
 						gameObjectList[i]->Update(Camera);
-
-					eae6320::Core::UI::Update(eae6320::Time::GetSecondsElapsedThisFrame());
+					if (UIDelay > 10)
+					{
+						sprintf(fpsString, "%2.0f", 1 / eae6320::Time::GetSecondsElapsedThisFrame());
+						UIDelay = 0;
+					}
+					else
+					{
+						UIDelay++;
+					}
+					//eae6320::Core::UI::Update();
 
 					eae6320::Graphics::Render(renderableList, nObjects);
 				}

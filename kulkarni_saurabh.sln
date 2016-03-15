@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{00ECC077-318E-4A02-BCF7-B5EEB760D1EA}"
 EndProject
@@ -314,7 +314,6 @@ Global
 		{EC809270-CE46-4204-A0F7-F88A6A4732E9}.Release|OpenGL_32.ActiveCfg = Release|Win32
 		{EC809270-CE46-4204-A0F7-F88A6A4732E9}.Release|OpenGL_32.Build.0 = Release|Win32
 		{70B81970-5665-4429-B2B2-7F6FCED5AB84}.Debug|Direct3D_64.ActiveCfg = Debug|x64
-		{70B81970-5665-4429-B2B2-7F6FCED5AB84}.Debug|Direct3D_64.Build.0 = Debug|x64
 		{70B81970-5665-4429-B2B2-7F6FCED5AB84}.Debug|OpenGL_32.ActiveCfg = Debug|x64
 		{70B81970-5665-4429-B2B2-7F6FCED5AB84}.Debug|OpenGL_32.Build.0 = Debug|x64
 		{70B81970-5665-4429-B2B2-7F6FCED5AB84}.Release|Direct3D_64.ActiveCfg = Release|x64

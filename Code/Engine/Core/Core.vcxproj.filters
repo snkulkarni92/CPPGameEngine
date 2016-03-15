@@ -3,19 +3,12 @@
   <ItemGroup>
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="UI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
+    <ClInclude Include="UI.h" />
+    <ClInclude Include="UIElements.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="UI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="UI">
-      <UniqueIdentifier>{a310dee5-f6dc-4a4a-bcfc-747de32c245c}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UIElements.cpp" />
   </ItemGroup>
 </Project>
