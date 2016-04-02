@@ -1,5 +1,7 @@
 #include "CollisionSystem.h"
 
+#include "../Graphics/DebugShape.h"
+
 #include <cstdint>
 #include <cstdio>
 #include <sstream>
@@ -94,8 +96,9 @@ namespace eae6320
 				}
 			}
 
-			Math::cVector CheckCollision(Math::cVector p, Math::cVector q)
+			Math::cVector CheckCollision(Math::cVector& p, Math::cVector& q)
 			{
+				Graphics::DebugShapes::AddLine(p, q, Math::cVector(0, 255, 0));
 				Math::cVector CollisionNormal;
 				for (uint32_t i = 0; i < triangleCount; i++)
 				{
@@ -108,6 +111,7 @@ namespace eae6320
 					Math::cVector qp = p - q;
 					Math::cVector n(triangleList[i].a.nx, triangleList[i].a.ny, triangleList[i].a.nz);
 
+
 					float d = Math::Dot(qp, n);
 					if (d < 0.0f)
 						continue;
@@ -119,11 +123,15 @@ namespace eae6320
 						continue;
 
 					Math::cVector e = Math::Cross(qp, ap);
+
+					Graphics::DebugShapes::AddLine(p, q, Math::cVector(255 , 0, 0));
+					Graphics::DebugShapes::AddLine(a, p, Math::cVector(512 / i, 0, 0));
+
 					float v = Math::Dot(ac, e);
-					if (v < 0.0f || v > d)
+					if (v < 0.0f)
 						continue;
 					float w = -Dot(ab, e);     
-					if (w < 0.0f || v + w > d)
+					if (w < 0.0f)
 						continue;
 					return n;
 				}

@@ -11,7 +11,7 @@ namespace eae6320
 			void Initialize(const char * collisionDataFileName);
 			void ShutDown();
 
-			Math::cVector CheckCollision(Math::cVector startPoint, Math::cVector endPoint);
+			Math::cVector CheckCollision(Math::cVector& startPoint, Math::cVector& endPoint);
 		}
 	}
 }
