@@ -8,6 +8,8 @@
 #include "../../Engine/Math/Functions.h"
 #include "../../Engine/Graphics/DebugShape.h"
 #include "../../Engine/Core/UI.h"
+#include "../../Engine/Core/CollisionSystem.h"
+#include "../../Engine/Core/Player.h"
 
 //eae6320::Math::cVector WhiteCamera(10.0f, 10.0f, 0.0f);
 
@@ -23,20 +25,23 @@ namespace eae6320
 		}
 		bool GameLoop(int& o_exitCode, HWND s_mainWindow)
 		{
-			Core::GameObject * selected = NULL;
+			Graphics::Initialize(s_mainWindow);
 
-			eae6320::Graphics::Initialize(s_mainWindow);
+			Core::CollisionSystem::Initialize("data/CTF1.msh");
+		
+			Core::Player * player = new Core::Player();
 
-			eae6320::Core::Camera * Camera = new eae6320::Core::Camera();
-			Camera->AspectRatio = (float)1024 / (float)768;
-			
-			Camera->Position = eae6320::Math::cVector(0, 0, 400);
+			player->Position = Math::cVector(0, 0, 400);
+
+			Core::Camera * playerCamera = new eae6320::Core::Camera();
+
+			playerCamera->AspectRatio = (float)1024 / (float)768;
 
 			uint32_t nObjects = 7;
 
-			eae6320::Core::GameObject ** gameObjectList = new eae6320::Core::GameObject *[nObjects];
+			Core::GameObject ** gameObjectList = new Core::GameObject *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
-				gameObjectList[i] = new eae6320::Core::GameObject();
+				gameObjectList[i] = new Core::GameObject();
 			gameObjectList[0]->Initialize("data/CTF0.msh", "data/OpaqueDefault.material");
 			gameObjectList[1]->Initialize("data/CTF1.msh", "data/Floor.material");
 			gameObjectList[2]->Initialize("data/CTF2.msh", "data/Railing.material");
@@ -108,46 +113,38 @@ namespace eae6320
 							}
 							else
 							{
-								if (UserInput::IsKeyPressed(VK_LEFT))
+								/*if (UserInput::IsKeyPressed(VK_LEFT))
 								{
-									Camera->eulerY -= rotSpeed;
+									player->eulerY -= rotSpeed;
 								}
 								if (UserInput::IsKeyPressed(VK_RIGHT))
 								{
-									Camera->eulerY += rotSpeed;
+									player->eulerY += rotSpeed;
 								}
 								if (UserInput::IsKeyPressed(VK_UP))
 								{
-									Camera->eulerX -= rotSpeed;
+									player->eulerX -= rotSpeed;
 								}
 								if (UserInput::IsKeyPressed(VK_DOWN))
 								{
-									Camera->eulerX += rotSpeed;
-								}
-								if (UserInput::IsKeyPressed('Q'))
-								{
-									Camera->eulerZ -= rotSpeed;
-								}
-								if (UserInput::IsKeyPressed('E'))
-								{
-									Camera->eulerZ += rotSpeed;
+									player->eulerX += rotSpeed;
 								}
 								if (UserInput::IsKeyPressed('A'))
 								{
-									cameraOffset -= Camera->getLocalX();
+									cameraOffset -= playerCamera->getLocalX();
 								}
 								if (UserInput::IsKeyPressed('D'))
 								{
-									cameraOffset += Camera->getLocalX();
+									cameraOffset += playerCamera->getLocalX();
 								}
 								if (UserInput::IsKeyPressed('W'))
 								{
-									cameraOffset -= Camera->getLocalZ();
+									cameraOffset -= playerCamera->getLocalZ();
 								}
 								if (UserInput::IsKeyPressed('S'))
 								{
-									cameraOffset += Camera->getLocalZ();
-								}
+									cameraOffset += playerCamera->getLocalZ();
+								}*/
 							}
 							// Get the speed
 							const float unitsPerSecond = 700.0f;	// This is arbitrary
@@ -156,10 +153,15 @@ namespace eae6320
 							cameraOffset *= unitsToMove;
 						}
 					}
-					Camera->Position += cameraOffset;
-					Camera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(Camera->eulerZ), eae6320::Math::cVector(0, 0, 1));
+					/*playerCamera->Position += cameraOffset;
+					playerCamera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerZ), eae6320::Math::cVector(0, 0, 1));
+*/
+					player->Update(Time::GetSecondsElapsedThisFrame());
+
+					playerCamera->Position = player->Position;
+					playerCamera->Orientation = player->Orientation;
 					for (uint32_t i = 0; i < nObjects; i++)
-						gameObjectList[i]->Update(Camera);
+						gameObjectList[i]->Update(playerCamera);
 					if (UIDelay > 10)
 					{
 						sprintf(fpsString, "%2.0f", 1 / eae6320::Time::GetSecondsElapsedThisFrame());
