@@ -108,12 +108,12 @@ namespace eae6320
 
 					Math::cVector ab = b - a;
 					Math::cVector ac = c - a;
-					Math::cVector qp = p - q;
+					Math::cVector pq = q - p;
 					Math::cVector n(triangleList[i].a.nx, triangleList[i].a.ny, triangleList[i].a.nz);
 
 
-					float d = Math::Dot(qp, n);
-					if (d < 0.0f)
+					float d = -Math::Dot(pq, n);
+					if (d <= 0.0f)
 						continue;
 					Math::cVector ap = p - a;
 					float t = Math::Dot(ap, n);
@@ -122,18 +122,52 @@ namespace eae6320
 					if (t > d)
 						continue;
 
-					Math::cVector e = Math::Cross(qp, ap);
+					Math::cVector w = ap + pq * t / d;
 
-					Graphics::DebugShapes::AddLine(p, q, Math::cVector(255 , 0, 0));
-					Graphics::DebugShapes::AddLine(a, p, Math::cVector(512 / i, 0, 0));
+					float uu, uv, vv, wu, wv, D;
 
-					float v = Math::Dot(ac, e);
-					if (v < 0.0f)
+					uu = Math::Dot(ab, ab);
+					uv = Math::Dot(ab, ac);
+					vv = Math::Dot(ac, ac);
+					wu = Math::Dot(w, ab);
+					wv = Math::Dot(w, ac);
+
+					D = uv * uv - uu * vv;
+
+					float si, ti;
+					si = (uv * wv - vv * wu) / D;
+					if (si < 0.0 || si > 1.0)         // I is outside T
 						continue;
-					float w = -Dot(ab, e);     
-					if (w < 0.0f)
+					ti = (uv * wu - uu * wv) / D;
+					if (ti < 0.0 || (si + ti) > 1.0)  // I is outside T
 						continue;
+
 					return n;
+
+					////Math::cVector e = Math::Cross(qp, ap);
+
+					
+
+					//Graphics::DebugShapes::AddLine(a, p, Math::cVector(0, 128, 128));
+					//Graphics::DebugShapes::AddLine(b, p, Math::cVector(0, 128, 128));
+					//Graphics::DebugShapes::AddLine(c, p, Math::cVector(0, 128, 128));
+
+					//Graphics::DebugShapes::AddLine(a, b, Math::cVector(0, 128, 0));
+					//Graphics::DebugShapes::AddLine(a, c, Math::cVector(0, 128, 0));
+					//Graphics::DebugShapes::AddLine(b, c, Math::cVector(0, 128, 0));
+
+					//Graphics::DebugShapes::AddLine(a, a+w, Math::cVector(0, 0, 255));
+
+					////Graphics::DebugShapes::AddLine(p, p + e, Math::cVector(0, 255, 0));
+
+
+					///*float v = Math::Dot(ac, e);
+					//if (v < 0.0f)
+					//	continue;
+					//float w = -Dot(ab, e);     
+					//if (w < 0.0f)
+					//	continue;*/
+					////return n;
 				}
 				return CollisionNormal;
 			}

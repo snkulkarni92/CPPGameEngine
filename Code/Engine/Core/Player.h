@@ -15,6 +15,12 @@ namespace eae6320
 			Math::cVector Velocity;
 			void Update(float dt);
 
+			void UpdateInput();
+
+			Math::cVector getLocalX();
+			Math::cVector getLocalY();
+			Math::cVector getLocalZ();
+
 		private:
 			float height = 100;
 			float eulerX, eulerY, eulerZ;

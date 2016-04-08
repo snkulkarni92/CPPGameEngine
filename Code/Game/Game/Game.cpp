@@ -27,29 +27,29 @@ namespace eae6320
 		{
 			Graphics::Initialize(s_mainWindow);
 
-			Core::CollisionSystem::Initialize("data/CTF1.msh");
+			Core::CollisionSystem::Initialize("data/CTF7.msh");
 		
 			Core::Player * player = new Core::Player();
 
-			player->Position = Math::cVector(0, -104, 0);
+			player->Position = Math::cVector(0, -120, 0);
 
 			Core::Camera * playerCamera = new eae6320::Core::Camera();
 
 			playerCamera->AspectRatio = (float)1024 / (float)768;
-			playerCamera->Position = eae6320::Math::cVector(0, -200, 400);
+			//playerCamera->Position = eae6320::Math::cVector(150, -200, 200);
 
-			uint32_t nObjects = 1;
+			uint32_t nObjects = 7;
 
 			Core::GameObject ** gameObjectList = new Core::GameObject *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				gameObjectList[i] = new Core::GameObject();
-			gameObjectList[0]->Initialize("data/CTF1.msh", "data/OpaqueDefault.material");
-			/*gameObjectList[1]->Initialize("data/CTF1.msh", "data/Floor.material");
+			gameObjectList[0]->Initialize("data/CTF0.msh", "data/OpaqueDefault.material");
+			gameObjectList[1]->Initialize("data/CTF1.msh", "data/Floor.material");
 			gameObjectList[2]->Initialize("data/CTF2.msh", "data/Railing.material");
 			gameObjectList[3]->Initialize("data/CTF3.msh", "data/Cement.material");
 			gameObjectList[4]->Initialize("data/CTF4.msh", "data/Metal.material");
 			gameObjectList[5]->Initialize("data/CTF5.msh", "data/Cement.material");
-			gameObjectList[6]->Initialize("data/CTF6.msh", "data/Walls.material");*/
+			gameObjectList[6]->Initialize("data/CTF6.msh", "data/Walls.material");
 			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				renderableList[i] = gameObjectList[i]->Renderable;
@@ -61,6 +61,8 @@ namespace eae6320
 			
 			bool sphereEnabled = false;
 			Core::UI::CreateCheckBox("Sphere", &sphereEnabled);
+
+			bool flyCamActive = false;
 
 			Core::UI::CreateSlider("Radius", &radius, 60, 460);
 			Core::UI::CreateButton("Default", &ResetSphere);
@@ -90,7 +92,7 @@ namespace eae6320
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 200, 0), Math::cVector(0, 255, 0));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 0, 200), Math::cVector(0, 0, 255));
 
-					eae6320::Math::cVector cameraOffset(0.0f, 0.0f, 0.0f);
+					eae6320::Math::cVector Offset(0.0f, 0.0f, 0.0f);
 					float rotSpeed = 2.0f;
 					{
 						// Get the direction
@@ -114,53 +116,60 @@ namespace eae6320
 							}
 							else
 							{
-								if (UserInput::IsKeyPressed(VK_LEFT))
+								if (flyCamActive)
 								{
-									playerCamera->eulerY -= rotSpeed;
+									/*if (UserInput::IsKeyPressed(VK_LEFT))
+									{
+										playerCamera->eulerY -= rotSpeed;
+									}
+									if (UserInput::IsKeyPressed(VK_RIGHT))
+									{
+										playerCamera->eulerY += rotSpeed;
+									}
+									if (UserInput::IsKeyPressed(VK_UP))
+									{
+										playerCamera->eulerX -= rotSpeed;
+									}
+									if (UserInput::IsKeyPressed(VK_DOWN))
+									{
+										playerCamera->eulerX += rotSpeed;
+									}
+									if (UserInput::IsKeyPressed('A'))
+									{
+										cameraOffset -= playerCamera->getLocalX();
+									}
+									if (UserInput::IsKeyPressed('D'))
+									{
+										cameraOffset += playerCamera->getLocalX();
+									}
+									if (UserInput::IsKeyPressed('W'))
+									{
+										cameraOffset -= playerCamera->getLocalZ();
+									}
+									if (UserInput::IsKeyPressed('S'))
+									{
+										cameraOffset += playerCamera->getLocalZ();
+									}*/
 								}
-								if (UserInput::IsKeyPressed(VK_RIGHT))
+								else
 								{
-									playerCamera->eulerY += rotSpeed;
-								}
-								if (UserInput::IsKeyPressed(VK_UP))
-								{
-									playerCamera->eulerX -= rotSpeed;
-								}
-								if (UserInput::IsKeyPressed(VK_DOWN))
-								{
-									playerCamera->eulerX += rotSpeed;
-								}
-								if (UserInput::IsKeyPressed('A'))
-								{
-									cameraOffset -= playerCamera->getLocalX();
-								}
-								if (UserInput::IsKeyPressed('D'))
-								{
-									cameraOffset += playerCamera->getLocalX();
-								}
-								if (UserInput::IsKeyPressed('W'))
-								{
-									cameraOffset -= playerCamera->getLocalZ();
-								}
-								if (UserInput::IsKeyPressed('S'))
-								{
-									cameraOffset += playerCamera->getLocalZ();
+									player->UpdateInput();
 								}
 							}
 							// Get the speed
 							const float unitsPerSecond = 700.0f;	// This is arbitrary
 							const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
 																													// Normalize the offset
-							cameraOffset *= unitsToMove;
+							Offset *= unitsToMove;
 						}
 					}
-					playerCamera->Position += cameraOffset;
-					playerCamera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerZ), eae6320::Math::cVector(0, 0, 1));
+					//playerCamera->Position += Offset;
+					//playerCamera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerZ), eae6320::Math::cVector(0, 0, 1));
 
 					player->Update(Time::GetSecondsElapsedThisFrame());
 
-					//playerCamera->Position = player->Position;
-					//playerCamera->Orientation = player->Orientation;
+					playerCamera->Position = player->Position;
+					playerCamera->Orientation = player->Orientation;
 					for (uint32_t i = 0; i < nObjects; i++)
 						gameObjectList[i]->Update(playerCamera);
 					if (UIDelay > 10)
