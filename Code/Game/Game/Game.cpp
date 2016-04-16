@@ -34,8 +34,12 @@ namespace eae6320
 			player->Position = Math::cVector(0, -120, 0);
 
 			Core::Camera * playerCamera = new eae6320::Core::Camera();
+			Core::Camera * flyCamera = new eae6320::Core::Camera();
+
+			bool flyCamActive = false;
 
 			playerCamera->AspectRatio = (float)1024 / (float)768;
+			flyCamera->AspectRatio = (float)1024 / (float)768;
 			//playerCamera->Position = eae6320::Math::cVector(150, -200, 200);
 
 			uint32_t nObjects = 7;
@@ -61,8 +65,6 @@ namespace eae6320
 			
 			bool sphereEnabled = false;
 			Core::UI::CreateCheckBox("Sphere", &sphereEnabled);
-
-			bool flyCamActive = false;
 
 			Core::UI::CreateSlider("Radius", &radius, 60, 460);
 			Core::UI::CreateButton("Default", &ResetSphere);
@@ -92,7 +94,6 @@ namespace eae6320
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 200, 0), Math::cVector(0, 255, 0));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 0, 200), Math::cVector(0, 0, 255));
 
-					eae6320::Math::cVector Offset(0.0f, 0.0f, 0.0f);
 					float rotSpeed = 2.0f;
 					{
 						// Get the direction
@@ -100,6 +101,18 @@ namespace eae6320
 							if (UserInput::IsKeyUp(VK_OEM_3))
 							{
 								Core::UI::ToggleDebugMenu();
+							}
+							if (UserInput::IsKeyUp('F'))
+							{
+								flyCamActive = !flyCamActive;
+								if (flyCamActive)
+								{
+									flyCamera->eulerX = playerCamera->eulerX;
+									flyCamera->eulerY = playerCamera->eulerY;
+									flyCamera->eulerZ = playerCamera->eulerZ;
+									flyCamera->Position = player->Position + Math::cVector(0, 10, 0) + flyCamera->getLocalZ() * 100;
+									
+								}
 							}
 							if (Core::UI::IsDebugMenuActive())
 							{
@@ -118,60 +131,65 @@ namespace eae6320
 							{
 								if (flyCamActive)
 								{
-									/*if (UserInput::IsKeyPressed(VK_LEFT))
+									eae6320::Math::cVector Offset(0.0f, 0.0f, 0.0f);
+									if (UserInput::IsKeyPressed(VK_LEFT))
 									{
-										playerCamera->eulerY -= rotSpeed;
+										flyCamera->eulerY -= rotSpeed;
 									}
 									if (UserInput::IsKeyPressed(VK_RIGHT))
 									{
-										playerCamera->eulerY += rotSpeed;
+										flyCamera->eulerY += rotSpeed;
 									}
 									if (UserInput::IsKeyPressed(VK_UP))
 									{
-										playerCamera->eulerX -= rotSpeed;
+										flyCamera->eulerX -= rotSpeed;
 									}
 									if (UserInput::IsKeyPressed(VK_DOWN))
 									{
-										playerCamera->eulerX += rotSpeed;
+										flyCamera->eulerX += rotSpeed;
 									}
 									if (UserInput::IsKeyPressed('A'))
 									{
-										cameraOffset -= playerCamera->getLocalX();
+										Offset -= flyCamera->getLocalX();
 									}
 									if (UserInput::IsKeyPressed('D'))
 									{
-										cameraOffset += playerCamera->getLocalX();
+										Offset += flyCamera->getLocalX();
 									}
 									if (UserInput::IsKeyPressed('W'))
 									{
-										cameraOffset -= playerCamera->getLocalZ();
+										Offset -= flyCamera->getLocalZ();
 									}
 									if (UserInput::IsKeyPressed('S'))
 									{
-										cameraOffset += playerCamera->getLocalZ();
-									}*/
+										Offset += flyCamera->getLocalZ();
+									}
+									const float unitsPerSecond = 700.0f;	// This is arbitrary
+									const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
+																															// Normalize the offset
+									Offset *= unitsToMove;
+									flyCamera->Position += Offset;
+									flyCamera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(flyCamera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(flyCamera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(flyCamera->eulerZ), eae6320::Math::cVector(0, 0, 1));
 								}
 								else
 								{
 									player->UpdateInput();
 								}
 							}
-							// Get the speed
-							const float unitsPerSecond = 700.0f;	// This is arbitrary
-							const float unitsToMove = unitsPerSecond * eae6320::Time::GetSecondsElapsedThisFrame();	// This makes the speed frame-rate-independent
-																													// Normalize the offset
-							Offset *= unitsToMove;
 						}
 					}
-					//playerCamera->Position += Offset;
-					//playerCamera->Orientation = eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerX), eae6320::Math::cVector(1, 0, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerY), eae6320::Math::cVector(0, 1, 0)) * eae6320::Math::cQuaternion(eae6320::Math::ConvertDegreesToRadians(playerCamera->eulerZ), eae6320::Math::cVector(0, 0, 1));
 
 					player->Update(Time::GetSecondsElapsedThisFrame());
 
 					playerCamera->Position = player->Position;
 					playerCamera->Orientation = player->Orientation;
 					for (uint32_t i = 0; i < nObjects; i++)
-						gameObjectList[i]->Update(playerCamera);
+					{
+						if (flyCamActive)
+							gameObjectList[i]->Update(flyCamera);
+						else
+							gameObjectList[i]->Update(playerCamera);
+					}
 					if (UIDelay > 10)
 					{
 						sprintf(fpsString, "%2.0f", 1 / eae6320::Time::GetSecondsElapsedThisFrame());
