@@ -8,10 +8,16 @@ namespace eae6320
 	{
 		namespace CollisionSystem
 		{
+			struct CollidedPoint
+			{
+				bool isCollided;
+				Math::cVector Point;
+				Math::cVector Normal;
+			};
 			void Initialize(const char * collisionDataFileName);
 			void ShutDown();
 
-			Math::cVector CheckCollision(Math::cVector& startPoint, Math::cVector& endPoint);
+			CollidedPoint CheckCollision(Math::cVector& startPoint, Math::cVector& endPoint);
 		}
 	}
 }

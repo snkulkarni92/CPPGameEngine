@@ -5,6 +5,7 @@ eae6320::Core::GameObject::GameObject()
 	Renderable = new eae6320::Graphics::Renderable();
 	Position.x = 0.0f;
 	Position.y = 0.0f;
+	Position.z = 0.0f;
 }
 
 bool eae6320::Core::GameObject::Initialize(const char * i_MeshPath, const char * i_EffectPath)

@@ -2,6 +2,7 @@
 
 #include "../Math/cVector.h"
 #include "../Math/cQuaternion.h"
+#include "Camera.h"
 
 namespace eae6320
 {
@@ -13,9 +14,11 @@ namespace eae6320
 			Math::cVector Position;
 			Math::cQuaternion Orientation;
 			Math::cVector Velocity;
+			float eulerX, eulerY, eulerZ;
 			void Update(float dt);
 
 			void UpdateInput();
+			void UpdateCamera(Camera * camera);
 
 			Math::cVector getLocalX();
 			Math::cVector getLocalY();
@@ -23,7 +26,7 @@ namespace eae6320
 
 		private:
 			float height = 100;
-			float eulerX, eulerY, eulerZ;
+			
 		};
 	}
 }

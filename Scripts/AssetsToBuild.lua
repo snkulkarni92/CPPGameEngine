@@ -13,6 +13,7 @@ return
 			{source = "CTF5.msh", target = "CTF5.msh"},
 			{source = "CTF6.msh", target = "CTF6.msh"},
 			{source = "CTF7.msh", target = "CTF7.msh"},
+			{source = "Player.msh", target = "Player.msh"},
 		}
 	},
 	{

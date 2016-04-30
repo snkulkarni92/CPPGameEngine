@@ -96,10 +96,9 @@ namespace eae6320
 				}
 			}
 
-			Math::cVector CheckCollision(Math::cVector& p, Math::cVector& q)
+			CollidedPoint CheckCollision(Math::cVector& p, Math::cVector& q)
 			{
-				Graphics::DebugShapes::AddLine(p, q, Math::cVector(0, 255, 0));
-				Math::cVector CollisionNormal;
+				Math::cVector ZeroVector;
 				for (uint32_t i = 0; i < triangleCount; i++)
 				{
 					Math::cVector a(triangleList[i].a.x, triangleList[i].a.y, triangleList[i].a.z);
@@ -123,7 +122,7 @@ namespace eae6320
 						continue;
 
 					Math::cVector w = ap + pq * t / d;
-
+					Math::cVector pnt = p + pq * t / d;
 					float uu, uv, vv, wu, wv, D;
 
 					uu = Math::Dot(ab, ab);
@@ -142,7 +141,12 @@ namespace eae6320
 					if (ti < 0.0 || (si + ti) > 1.0)  // I is outside T
 						continue;
 
-					return n;
+					CollidedPoint cp;
+					cp.isCollided = true;
+					cp.Normal = n;
+					cp.Point = pnt;
+					return cp;
+
 
 					////Math::cVector e = Math::Cross(qp, ap);
 
@@ -169,7 +173,10 @@ namespace eae6320
 					//	continue;*/
 					////return n;
 				}
-				return CollisionNormal;
+				CollidedPoint cp;
+				cp.isCollided = false;
+				cp.Normal = cp.Point = ZeroVector;
+				return cp;
 			}
 		}
 	}

@@ -42,18 +42,21 @@ namespace eae6320
 			flyCamera->AspectRatio = (float)1024 / (float)768;
 			//playerCamera->Position = eae6320::Math::cVector(150, -200, 200);
 
-			uint32_t nObjects = 7;
+			uint32_t nObjects = 8;
 
 			Core::GameObject ** gameObjectList = new Core::GameObject *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				gameObjectList[i] = new Core::GameObject();
-			gameObjectList[0]->Initialize("data/CTF0.msh", "data/OpaqueDefault.material");
-			gameObjectList[1]->Initialize("data/CTF1.msh", "data/Floor.material");
-			gameObjectList[2]->Initialize("data/CTF2.msh", "data/Railing.material");
-			gameObjectList[3]->Initialize("data/CTF3.msh", "data/Cement.material");
-			gameObjectList[4]->Initialize("data/CTF4.msh", "data/Metal.material");
-			gameObjectList[5]->Initialize("data/CTF5.msh", "data/Cement.material");
-			gameObjectList[6]->Initialize("data/CTF6.msh", "data/Walls.material");
+			gameObjectList[0]->Initialize("data/Player.msh", "data/OpaqueDefault.material");
+			gameObjectList[1]->Initialize("data/CTF0.msh", "data/OpaqueDefault.material");
+			gameObjectList[2]->Initialize("data/CTF1.msh", "data/Floor.material");
+			gameObjectList[3]->Initialize("data/CTF2.msh", "data/Railing.material");
+			gameObjectList[4]->Initialize("data/CTF3.msh", "data/Cement.material");
+			gameObjectList[5]->Initialize("data/CTF4.msh", "data/Metal.material");
+			gameObjectList[6]->Initialize("data/CTF5.msh", "data/Cement.material");
+			gameObjectList[7]->Initialize("data/CTF6.msh", "data/Walls.material");
+
+			Core::GameObject * playerObject = gameObjectList[0];
 			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				renderableList[i] = gameObjectList[i]->Renderable;
@@ -70,7 +73,7 @@ namespace eae6320
 			Core::UI::CreateButton("Default", &ResetSphere);
 			
 			int UIDelay = 0;
-			
+			float rotationOffset = 0;
 			MSG message = { 0 };
 			do
 			{
@@ -173,6 +176,16 @@ namespace eae6320
 								}
 								else
 								{
+									if (UserInput::IsKeyPressed(VK_LEFT))
+									{
+										rotationOffset = -45;
+									}
+									else if (UserInput::IsKeyPressed(VK_RIGHT))
+									{
+										rotationOffset = 45;
+									}
+									else
+										rotationOffset = 0;
 									player->UpdateInput();
 								}
 							}
@@ -180,9 +193,18 @@ namespace eae6320
 					}
 
 					player->Update(Time::GetSecondsElapsedThisFrame());
+					
 
-					playerCamera->Position = player->Position;
-					playerCamera->Orientation = player->Orientation;
+					/*playerCamera->Position = player->Position;
+					playerCamera->Orientation = player->Orientation;*/
+
+					playerCamera->eulerX = 5;
+					playerCamera->eulerY += (player->eulerY + rotationOffset - playerCamera->eulerY) * eae6320::Time::GetSecondsElapsedThisFrame() * 3;
+
+					player->UpdateCamera(playerCamera);
+
+					playerObject->Position = player->Position;
+					playerObject->Orientation = player->Orientation;
 					for (uint32_t i = 0; i < nObjects; i++)
 					{
 						if (flyCamActive)
@@ -192,7 +214,7 @@ namespace eae6320
 					}
 					if (UIDelay > 10)
 					{
-						sprintf(fpsString, "%2.0f", 1 / eae6320::Time::GetSecondsElapsedThisFrame());
+						sprintf(fpsString, "%f", playerCamera->Position.y);
 						UIDelay = 0;
 					}
 					else
