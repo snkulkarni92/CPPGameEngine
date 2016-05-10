@@ -11,8 +11,12 @@
 namespace
 {
 	bool IsVirtualKeyPressed( const int i_virtualKeyCode );
+	HWND s_mainWindow = NULL;
 }
-
+void eae6320::UserInput::Initialize(HWND mainWindow)
+{
+	s_mainWindow = mainWindow;
+}
 int lastFramePressed = 0;
 // Interface
 //==========
@@ -48,8 +52,13 @@ namespace
 {
 	bool IsVirtualKeyPressed( const int i_virtualKeyCode )
 	{
-		short keyState = GetAsyncKeyState( i_virtualKeyCode );
-		const short isKeyDownMask = ~1;
-		return ( keyState & isKeyDownMask ) != 0;
+		if (GetForegroundWindow() == s_mainWindow)
+		{
+			short keyState = GetAsyncKeyState(i_virtualKeyCode);
+			const short isKeyDownMask = ~1;
+			return (keyState & isKeyDownMask) != 0;
+		}
+		else
+			return false;
 	}
 }

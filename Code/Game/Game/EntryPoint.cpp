@@ -12,6 +12,7 @@ WinMain() is the function where Windows programs start execution
 // You should always only have a single way of #including windows.h that everything
 // in your solution uses.
 #include "../../Engine/Windows/Includes.h"
+#include "Game.h"
 
 // Entry Point
 //============
@@ -37,6 +38,16 @@ int WINAPI WinMain(
 	// A Windows program doesn't actually need any windows at all
 	// but in most cases there will be a single "main" window
 	// and when it is closed the program will exit
+
+	if (i_commandLineArguments[0] == 's')
+	{
+		eae6320::Game::SetServer();
+	}
+	else if (i_commandLineArguments[0] == 'c')
+	{
+		eae6320::Game::SetClient();
+	}
+
 	const int exitCode = CreateMainWindowAndReturnExitCodeWhenItCloses(i_thisInstanceOfTheProgram, i_initialWindowDisplayState);
 	// Unlike standard C/C++ programs there is no standardized return value
 	// to indicate that the program "succeeded".

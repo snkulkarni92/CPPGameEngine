@@ -75,17 +75,19 @@ namespace eae6320
 			eae6320::Math::cMatrix_transformation i_localToWorld = eae6320::Math::cMatrix_transformation(camera->Orientation, Position);
 			Math::cVector valDefault = camDefault * i_localToWorld;
 
-			CollisionSystem::CollidedPoint collisionPoint = CollisionSystem::CheckCollision(valDefault, Position);
+			CollisionSystem::CollidedPoint collisionPoint1 = CollisionSystem::CheckCollision(Position, valDefault + Velocity.z * 10);
+			CollisionSystem::CollidedPoint collisionPoint2 = CollisionSystem::CheckCollision(Position, valDefault + Velocity.x * 10);
+			CollisionSystem::CollidedPoint collisionPoint3 = CollisionSystem::CheckCollision(Position, valDefault + Velocity.y * 10);
 			eae6320::Math::cVector val;
-			if (collisionPoint.isCollided == true)
+			if (collisionPoint1.isCollided || collisionPoint2.isCollided || collisionPoint3.isCollided)
 			{
-				CollisionSystem::CollidedPoint cameraCollision = CollisionSystem::CheckCollision(camera->Position, Position);
+				CollisionSystem::CollidedPoint cameraCollision = CollisionSystem::CheckCollision(Position, camera->Position);
 				if(cameraCollision.isCollided == true)
-					camOffset.z -= 500 * Time::GetSecondsElapsedThisFrame();
+					camOffset.z -= 1000 * Time::GetSecondsElapsedThisFrame();
 			}
 			else
 			{
-				camOffset += (camDefault - camOffset) * Time::GetSecondsElapsedThisFrame();
+				camOffset += (camDefault - camOffset) * Time::GetSecondsElapsedThisFrame() * 5;
 			}
 
 			val = camOffset * i_localToWorld;

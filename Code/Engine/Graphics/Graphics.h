@@ -19,7 +19,7 @@ namespace eae6320
 	namespace Graphics
 	{
 		bool Initialize( const HWND i_renderingWindow );
-		void Render(Renderable ** i_renderingList, const unsigned int i_RenderingListLength);
+		void Render(Renderable ** i_renderingList, const unsigned int i_RenderingListLength, bool drawPlayer, bool drawOther);
 		bool ShutDown();
 		void DrawDebugLine();
 		void ClearFrame();

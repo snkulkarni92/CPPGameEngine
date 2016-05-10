@@ -9,13 +9,17 @@
 
 
 
-void eae6320::Graphics::Render(eae6320::Graphics::Renderable ** i_RenderingList, const unsigned int i_RenderingListLength)
+void eae6320::Graphics::Render(eae6320::Graphics::Renderable ** i_RenderingList, const unsigned int i_RenderingListLength, bool drawPlayer, bool drawOther)
 {
 	ClearFrame();
 	
 	BeginFrame();
 	{
-		for (unsigned int i = 0; i < i_RenderingListLength; i++)
+		if (drawPlayer)
+			i_RenderingList[0]->Draw();
+		if (drawOther)
+			i_RenderingList[1]->Draw();
+		for (unsigned int i = 2; i < i_RenderingListLength; i++)
 		{
 			i_RenderingList[i]->Draw();
 		}

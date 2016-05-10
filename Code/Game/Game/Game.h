@@ -7,6 +7,8 @@ namespace eae6320
 {
 	namespace Game
 	{
+		void SetClient();
+		void SetServer();
 		bool GameLoop(int& o_exitCode, HWND s_mainWindow);
 	}
 }

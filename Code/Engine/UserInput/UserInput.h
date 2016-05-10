@@ -5,6 +5,8 @@
 #ifndef EAE6320_USERINPUT_H
 #define EAE6320_USERINPUT_H
 
+#include "../Windows/Includes.h"
+
 // Interface
 //==========
 
@@ -18,7 +20,7 @@ namespace eae6320
 
 		// For standard letter or number keys, the representative ascii char can be used:
 		// IsKeyPressed( 'A' ) or IsKeyPressed( '6' )
-
+		void Initialize(HWND mainWindow);
 		bool IsKeyPressed( const int i_virtualKeyCode );
 		bool IsMouseButtonPressed( const int i_virtualButtonCode );
 		bool IsKeyUp(const int i_virtualButtonCode);
