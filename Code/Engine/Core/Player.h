@@ -24,6 +24,8 @@ namespace eae6320
 			Math::cVector getLocalY();
 			Math::cVector getLocalZ();
 
+			float speed = 8.0f;
+
 		private:
 			float height = 100;
 			

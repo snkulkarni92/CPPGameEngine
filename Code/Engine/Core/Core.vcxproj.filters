@@ -7,6 +7,7 @@
     <ClInclude Include="UIElements.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Audio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
@@ -14,5 +15,6 @@
     <ClCompile Include="UIElements.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Audio.cpp" />
   </ItemGroup>
 </Project>

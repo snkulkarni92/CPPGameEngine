@@ -80,27 +80,14 @@ namespace eae6320
 					break;
 				}
 			}
-			void ToggleDebugMenu()
-			{
-				DebugMenu = !DebugMenu;
-			}
-			bool IsDebugMenuActive()
-			{
-				return DebugMenu;
-			}
 			void Draw()
 			{
-				if (DebugMenu)
-				{
 					for (uint32_t i = 0; i < elementCount; i++)
 					{
-						if (i == activeElement)
-							UIElements[i]->Draw(true);
-						else
-							UIElements[i]->Draw(false);
+
+						UIElements[i]->Draw(true);
 					}
 				}
-			}
 
 		}
 	}

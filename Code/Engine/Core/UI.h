@@ -18,10 +18,7 @@ namespace eae6320
 			void CreateSlider(const char * name, int *value, int min, int max);
 			void CreateButton(const char* name, void(*callback)(void));
 
-			void ToggleDebugMenu();
-			bool IsDebugMenuActive();
 			void Draw();
-			void Update(UIInput input);
 		}
 	}
 }

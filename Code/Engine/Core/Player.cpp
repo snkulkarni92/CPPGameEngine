@@ -15,9 +15,9 @@ namespace eae6320
 		{
 			Math::cVector VelocityOffset;
 			if (UserInput::IsKeyPressed('W'))
-				VelocityOffset.z -= 8.0f;
+				VelocityOffset.z -= speed;
 			if (UserInput::IsKeyPressed('S'))
-				VelocityOffset.z += 8.0f;
+				VelocityOffset.z += speed;
 			/*if (UserInput::IsKeyPressed('A'))
 				VelocityOffset.x -= 5.0f;
 			if (UserInput::IsKeyPressed('D'))

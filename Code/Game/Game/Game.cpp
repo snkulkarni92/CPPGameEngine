@@ -10,6 +10,7 @@
 #include "../../Engine/Core/UI.h"
 #include "../../Engine/Core/CollisionSystem.h"
 #include "../../Engine/Core/Player.h"
+#include "../../Engine/Core/Audio.h"
 
 #include "RakNet/RakPeerInterface.h"
 #include "RakNet/MessageIdentifiers.h"
@@ -25,10 +26,18 @@ namespace eae6320
 		{
 			float x, y, z;
 		};
+		struct Bullet
+		{
+			Math::cVector Direction;
+			Core::GameObject * gameObject;
+			float time;
+			bool hasFired;
+		};
 		enum GameMessages
 		{
 			ID_ServerPosition = ID_USER_PACKET_ENUM + 1,
 			ID_ClientPosition = ID_USER_PACKET_ENUM + 2,
+			ID_Shoot = 3,
 		};
 		const int defaultRadius = 100;
 		int radius = defaultRadius;
@@ -51,6 +60,23 @@ namespace eae6320
 		}
 		bool GameLoop(int& o_exitCode, HWND s_mainWindow)
 		{
+
+			Audio::Initialize();
+
+			Audio::AddAudioFile("data/Audio/music.wav",true, 0.8f);
+			Audio::AddAudioFile("data/Audio/bg.wav", true);
+			Audio::AddAudioFile("data/Audio/playerpickup.wav");
+			Audio::AddAudioFile("data/Audio/playerscore.wav");
+			Audio::AddAudioFile("data/Audio/enemypickup.wav");
+			Audio::AddAudioFile("data/Audio/enemyscore.wav");
+			Audio::AddAudioFile("data/Audio/reset.wav");
+			Audio::AddAudioFile("data/Audio/run1.wav");
+			Audio::AddAudioFile("data/Audio/run2.wav");
+			Audio::AddAudioFile("data/Audio/sprint.wav");
+
+			//Audio::PlayAudio(0);
+			//Audio::PlayAudio(1);
+
 			Graphics::Initialize(s_mainWindow);
 			UserInput::Initialize(s_mainWindow);
 
@@ -89,46 +115,121 @@ namespace eae6320
 			Core::GameObject ** playerList = new Core::GameObject *[nPlayers];
 			for (uint32_t i = 0; i < nPlayers; i++)
 				playerList[i] = new Core::GameObject();
+			if (isServer)
+			{
+				playerList[0]->Initialize("data/Player.msh", "data/RedTeam.material");
+				playerList[1]->Initialize("data/Player.msh", "data/BlueTeam.material");
+			}
+			else
+			{
+				playerList[0]->Initialize("data/Player.msh", "data/BlueTeam.material");
+				playerList[1]->Initialize("data/Player.msh", "data/RedTeam.material");
+			}
 
-			playerList[0]->Initialize("data/Player.msh", "data/OpaqueDefault.material");
-			playerList[1]->Initialize("data/Player.msh", "data/OpaqueDefault.material");
+			Core::GameObject ** bulletList = new Core::GameObject *[20];
+			for (uint32_t i = 0; i < 20; i++)
+			{
+				bulletList[i] = new Core::GameObject();
+				if (i < 10)
+				{
+					bulletList[i]->Initialize("data/Bullet.msh", "data/RedTeam.material");
 
-			uint32_t nObjects = 7;
+				}
+				else
+				{
+					bulletList[i]->Initialize("data/Bullet.msh", "data/BlueTeam.material");
+				}
+			}
+			uint32_t playerBulletCount = 0, otherBulletCount = 0;
+			Bullet playerBulletList[10], otherBulletList[10];
 
+			for (uint32_t i = 0; i < 10; i++)
+			{
+				if (isClient)
+				{
+					playerBulletList[i].gameObject = bulletList[i + 10];
+					otherBulletList[i].gameObject = bulletList[i];
+				}
+				else
+				{
+					otherBulletList[i].gameObject = bulletList[i + 10];
+					playerBulletList[i].gameObject = bulletList[i];
+				}
+				playerBulletList[i].hasFired = false;
+				playerBulletList[i].time = 0;
+				otherBulletList[i].hasFired = false;
+				otherBulletList[i].time = 0;
+			}
+
+			uint32_t nObjects = 11;
+			//-500 -200 1000
 			Core::GameObject ** gameObjectList = new Core::GameObject *[nObjects];
 			for (uint32_t i = 0; i < nObjects; i++)
 				gameObjectList[i] = new Core::GameObject();
-			gameObjectList[0]->Initialize("data/CTF0.msh", "data/OpaqueDefault.material");
-			gameObjectList[1]->Initialize("data/CTF1.msh", "data/Floor.material");
-			gameObjectList[2]->Initialize("data/CTF2.msh", "data/Railing.material");
-			gameObjectList[3]->Initialize("data/CTF3.msh", "data/Cement.material");
-			gameObjectList[4]->Initialize("data/CTF4.msh", "data/Metal.material");
-			gameObjectList[5]->Initialize("data/CTF5.msh", "data/Cement.material");
-			gameObjectList[6]->Initialize("data/CTF6.msh", "data/Walls.material");
+			gameObjectList[0]->Initialize("data/Flag.msh", "data/RedTeam.material");
+			gameObjectList[1]->Initialize("data/Flag.msh", "data/BlueTeam.material");
+			gameObjectList[2]->Initialize("data/Area.msh", "data/RedTeam.material");
+			gameObjectList[3]->Initialize("data/Area.msh", "data/BlueTeam.material");
+			gameObjectList[4]->Initialize("data/CTF0.msh", "data/OpaqueDefault.material");
+			gameObjectList[5]->Initialize("data/CTF1.msh", "data/Floor.material");
+			gameObjectList[6]->Initialize("data/CTF2.msh", "data/Railing.material");
+			gameObjectList[7]->Initialize("data/CTF3.msh", "data/Cement.material");
+			gameObjectList[8]->Initialize("data/CTF4.msh", "data/Metal.material");
+			gameObjectList[9]->Initialize("data/CTF5.msh", "data/Cement.material");
+			gameObjectList[10]->Initialize("data/CTF6.msh", "data/Walls.material");
 
 			Core::GameObject * playerObject = playerList[0];
 			Core::GameObject * otherObject = playerList[1];
-			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nPlayers + nObjects];
+
+			Math::cVector redAreaPos(-500, -250, 1000), blueAreaPos(500, -250, -1000);
+
+			Core::GameObject *playerArea = isServer ? gameObjectList[2] : gameObjectList[3];
+			playerArea->Position = isServer ? redAreaPos : blueAreaPos;
+
+			Core::GameObject *otherArea = isClient ? gameObjectList[2] : gameObjectList[3];
+			otherArea->Position = isClient ? redAreaPos : blueAreaPos;
+
+			Core::GameObject *playerFlag = isServer ? gameObjectList[0] : gameObjectList[1];
+			playerFlag->Position = playerArea->Position + Math::cVector(0, 100, 0);
+
+			Core::GameObject *otherFlag = isClient ? gameObjectList[0] : gameObjectList[1];
+			otherFlag->Position = otherArea->Position + Math::cVector(0, 100, 0);
+
+			bool playerHasFlag = false, otherHasFlag = false;
+
+			eae6320::Graphics::Renderable ** renderableList = new eae6320::Graphics::Renderable *[nPlayers + nObjects + 20];
 			for (uint32_t i = 0; i < nPlayers; i++)
 			{
 				renderableList[i] = playerList[i]->Renderable;
 				//renderableList[i]->Offset.y -= 200;
 			}
+			for (uint32_t i = 0; i < 20; i++)
+			{
+				renderableList[nPlayers + i] = bulletList[i]->Renderable;
+			}
 			for (uint32_t i = 0; i < nObjects; i++)
 			{
-				renderableList[nPlayers+i] = gameObjectList[i]->Renderable;
+				renderableList[20+nPlayers+i] = gameObjectList[i]->Renderable;
 				//renderableList[i]->Offset.y -= 200;
 			}
-			
-			char * fpsString = new char[20];
-			sprintf(fpsString, "Abc");
-			Core::UI::CreateText("FPS", fpsString);
-			
-			bool sphereEnabled = false;
-			Core::UI::CreateCheckBox("Sphere", &sphereEnabled);
 
-			Core::UI::CreateSlider("Radius", &radius, 60, 460);
-			Core::UI::CreateButton("Default", &ResetSphere);
+			int playerScore = 0, otherScore = 0;
+			
+			char * playerScoreString = new char[20];
+			sprintf(playerScoreString, "0");
+			Core::UI::CreateText("Player", playerScoreString);
+
+			char *otherScoreString = new char[20];
+			sprintf(otherScoreString, "0");
+			Core::UI::CreateText("Enemy", otherScoreString);
+
+			int staminaValue = 10;
+			float stamina = 10;
+			Core::UI::CreateSlider("Stamina", &staminaValue, 0, 10);
+
+			int bulletsRemaining = 10;
+			Core::UI::CreateSlider("Bullets", &bulletsRemaining, 0, 10);
+			
 			
 			int UIDelay = 0;
 			float rotationOffset = 0;
@@ -145,10 +246,8 @@ namespace eae6320
 				}
 				if (!hasWindowsSentAMessage)
 				{
-					
-
 					eae6320::Time::OnNewFrame();
-
+					bool shotThisFrame = false;
 					RakNet::Packet *packet;
 					for (packet = peer->Receive(); packet; peer->DeallocatePacket(packet), packet = peer->Receive())
 					{
@@ -177,7 +276,12 @@ namespace eae6320
 								pos.y = player->Position.y;
 								pos.z = player->Position.z;
 								bsOut.Write(pos);
-								RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
+								Vector dir;
+								pos.x = player->getLocalZ().x;
+								pos.y = player->getLocalZ().y;
+								pos.z = player->getLocalZ().z;
+								bsOut.Write(dir);
+								bsOut.Write(shotThisFrame);
 								peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 							}
 							break;
@@ -193,6 +297,13 @@ namespace eae6320
 								pos.y = player->Position.y;
 								pos.z = player->Position.z;
 								bsOut.Write(pos);
+								Vector dir;
+								pos.x = player->getLocalZ().x;
+								pos.y = player->getLocalZ().y;
+								pos.z = player->getLocalZ().z;
+								bsOut.Write(dir);
+								bsOut.Write(shotThisFrame);
+								RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
 								peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 							}
 							break;
@@ -226,7 +337,19 @@ namespace eae6320
 								bsIn.Read(pos);
 								if (!other)
 									other = new Core::Player();
+								
 								other->Position = Math::cVector(pos.x, pos.y, pos.z);
+
+								Vector dir;
+								bsIn.Read(dir);
+								bool s;
+								bsIn.Read(s);
+								if (s)
+								{
+									otherBulletList[otherBulletCount].hasFired = true;
+									otherBulletList[otherBulletCount].Direction = Math::cVector(-dir.x, -dir.y, -dir.z);
+									otherBulletCount++;
+								}
 								break;
 							}
 						}
@@ -241,28 +364,111 @@ namespace eae6320
 								if (!other)
 									other = new Core::Player();
 								other->Position = Math::cVector(pos.x, pos.y, pos.z);
-								break;
+								Vector dir;
+								bsIn.Read(dir);
+								bool s;
+								bsIn.Read(s);
+								if (s)
+								{
+									otherBulletList[otherBulletCount].hasFired = true;
+									otherBulletList[otherBulletCount].Direction = Math::cVector(-dir.x, -dir.y, -dir.z);
+									otherBulletCount++;
+								}
 							}
+							break;
+						}
+						case ID_Shoot:
+						{
+							if (other)
+							{
+								Vector dir;
+								RakNet::BitStream bsIn(packet->data, packet->length, false);
+								bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+								bsIn.Read(dir);
+								otherBulletList[otherBulletCount].hasFired = true;
+								otherBulletList[otherBulletCount].Direction = Math::cVector(-dir.x, -dir.y, -dir.z);
+								otherBulletCount++;
+							}
+							break;
 						}
 						default:
 							//printf("Message with identifier %i has arrived.\n", packet->data[0]);
 							break;
 						}
 					}
-					if(sphereEnabled)
-						Graphics::DebugShapes::AddSphere(Math::cVector(0, -150, -600), radius, Math::cVector(255, 0, 255));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(200, 0, 0), Math::cVector(255, 0, 0));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 200, 0), Math::cVector(0, 255, 0));
 					Graphics::DebugShapes::AddLine(Math::cVector(0, 0, 0), Math::cVector(0, 0, 200), Math::cVector(0, 0, 255));
 
+					if (player)
+					{
+						if ((player->Position - otherArea->Position).GetLength() < 150 && !playerHasFlag)
+						{
+							playerHasFlag = true;
+							Audio::StopAudio(3);
+							Audio::PlayAudio(2);
+						}
+					}
+					if (other)
+					{
+						if ((other->Position - playerArea->Position).GetLength() < 150 && !otherHasFlag)
+						{
+							otherHasFlag = true;
+							Audio::StopAudio(5);
+							Audio::PlayAudio(4);
+						}
+					}
+					if (player)
+					{
+						if ((player->Position - playerArea->Position).GetLength() < 150 && playerHasFlag)
+						{
+							Audio::StopAudio(2);
+							Audio::StopAudio(4);
+							Audio::PlayAudio(3);
+							playerHasFlag = false;
+							otherHasFlag = false;
+							playerScore++;
+							sprintf(playerScoreString, "%d", playerScore);
+						}
+					}
+					if (other)
+					{
+						if ((other->Position - otherArea->Position).GetLength() < 150 && otherHasFlag)
+						{
+							Audio::StopAudio(2);
+							Audio::StopAudio(4);
+							Audio::PlayAudio(5);
+							otherHasFlag = false;
+							playerHasFlag = false;
+							otherScore++;
+							sprintf(otherScoreString, "%d", otherScore);
+						}
+					}
+					if (other)
+					{
+						for (uint32_t i = 0; i < 10; i++)
+						{
+							if (playerBulletList[i].hasFired)
+							{
+								if ((playerBulletList[i].gameObject->Position - other->Position).GetLength() < 20)
+								{
+									otherHasFlag = false;
+								}
+							}
+							if (otherBulletList[i].hasFired)
+							{
+								if ((otherBulletList[i].gameObject->Position - player->Position).GetLength() < 20)
+								{
+									playerHasFlag = false;
+								}
+							}
+						}
+					}
+					//Input Processing
 					float rotSpeed = 2.0f;
 					{
 						// Get the direction
 						{
-							if (UserInput::IsKeyUp(VK_OEM_3))
-							{
-								Core::UI::ToggleDebugMenu();
-							}
 							if (UserInput::IsKeyUp('F'))
 							{
 								flyCamActive = !flyCamActive;
@@ -281,19 +487,6 @@ namespace eae6320
 										flyCamera->Position = Math::cVector(0, 0, 0);
 									}
 								}
-							}
-							if (Core::UI::IsDebugMenuActive())
-							{
-								if (UserInput::IsKeyUp(VK_UP))
-									Core::UI::Update(Core::UI::Up);
-								else if (UserInput::IsKeyUp(VK_DOWN))
-									Core::UI::Update(Core::UI::Down);
-								else if (UserInput::IsKeyUp(VK_SPACE))
-									Core::UI::Update(Core::UI::Interact);
-								else if (UserInput::IsKeyUp(VK_LEFT))
-									Core::UI::Update(Core::UI::Left);
-								else if (UserInput::IsKeyUp(VK_RIGHT))
-									Core::UI::Update(Core::UI::Right);
 							}
 							else
 							{
@@ -351,13 +544,54 @@ namespace eae6320
 									}
 									else
 										rotationOffset = 0;
+									if (UserInput::IsKeyPressed(VK_SHIFT) && stamina > 0)
+									{
+										player->speed = 16.0f;
+										stamina -= Time::GetSecondsElapsedThisFrame() * 5;
+									}
+									else
+									{
+										player->speed = 8.0f;
+										if(stamina < 10)
+											stamina += Time::GetSecondsElapsedThisFrame() * 2;
+									}
+									staminaValue = stamina;
+									bulletsRemaining = 10 - playerBulletCount;
 									player->UpdateInput();
+									if (UserInput::IsKeyUp(VK_SPACE))
+									{
+										if (playerBulletCount < 10)
+										{
+											shotThisFrame = true;
+											playerBulletList[playerBulletCount].hasFired = true;
+											playerBulletList[playerBulletCount].Direction = -player->getLocalZ();
+											playerBulletCount++;
+											RakNet::BitStream bsOut;
+											bsOut.Write((RakNet::MessageID)ID_Shoot);
+											Vector dir;
+											dir.x = player->getLocalZ().x;
+											dir.y = player->getLocalZ().y;
+											dir.z = player->getLocalZ().z;
+											bsOut.Write(dir);
+										}
+									}
 								}
 							}
 						}
 					}
+					//Update all objects
 					if (player)
 					{
+						Audio::SetVolume(1, (player->Position).GetLength(), 400, 200);
+
+						if (playerHasFlag)
+							otherFlag->Position = player->Position + Math::cVector(60, 50, 0);
+						else
+							otherFlag->Position = otherArea->Position + Math::cVector(0, 100, 0);
+						if (otherHasFlag && other)
+							playerFlag->Position = other->Position + Math::cVector(60, 50, 0);
+						else
+							playerFlag->Position = playerArea->Position + Math::cVector(0, 100, 0);
 						player->Update(Time::GetSecondsElapsedThisFrame());
 						if (isClient && other && player)
 						{
@@ -368,6 +602,12 @@ namespace eae6320
 							pos.y = player->Position.y;
 							pos.z = player->Position.z;
 							bsOut.Write(pos);
+							Vector dir;
+							dir.x = player->getLocalZ().x;
+							dir.y = player->getLocalZ().y;
+							dir.z = player->getLocalZ().z;
+							bsOut.Write(dir);
+							bsOut.Write(shotThisFrame);
 							RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
 							peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAdress, false);
 						}
@@ -380,8 +620,14 @@ namespace eae6320
 							pos.y = player->Position.y;
 							pos.z = player->Position.z;
 							bsOut.Write(pos);
+							Vector dir;
+							dir.x = player->getLocalZ().x;
+							dir.y = player->getLocalZ().y;
+							dir.z = player->getLocalZ().z;
+							bsOut.Write(dir);
+							bsOut.Write(shotThisFrame);
 							RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
-								peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::AddressOrGUID(), true);
+							peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::AddressOrGUID(), true);
 						}
 
 						playerCamera->eulerX = 5;
@@ -408,6 +654,51 @@ namespace eae6320
 							else
 								playerList[1]->Update(playerCamera);
 						}
+						for (uint32_t i = 0; i < 10; i++)
+						{
+							if (playerBulletList[i].hasFired && playerBulletList[i].time < 5)
+							{
+								playerBulletList[i].gameObject->Position += playerBulletList[i].Direction * Time::GetSecondsElapsedThisFrame() * 200;
+								playerBulletList[i].time += Time::GetSecondsElapsedThisFrame();
+							}
+							else
+							{
+								playerBulletList[i].gameObject->Position = player->Position;
+								playerBulletList[i].hasFired = false;
+							}
+						}
+						if (playerBulletList[9].time >= 5)
+						{
+							playerBulletCount = 0;
+							for (uint32_t i = 0; i < 10; i++)
+							{
+								playerBulletList[i].hasFired = false;
+								playerBulletList[i].time = 0;
+							}
+						}
+						for (uint32_t i = 0; i < 10; i++)
+						{
+							if (otherBulletList[i].hasFired && otherBulletList[i].time < 5)
+							{
+								otherBulletList[i].gameObject->Position += otherBulletList[i].Direction * Time::GetSecondsElapsedThisFrame() * 200;
+								otherBulletList[i].time += Time::GetSecondsElapsedThisFrame();
+							}
+							else
+							{
+								if(other)
+									otherBulletList[i].gameObject->Position = other->Position;
+								otherBulletList[i].hasFired = false;
+							}
+						}
+						if (otherBulletList[9].time >= 5)
+						{
+							playerBulletCount = 0;
+							for (uint32_t i = 0; i < 10; i++)
+							{
+								otherBulletList[i].hasFired = false;
+								otherBulletList[i].time = 0;
+							}
+						}
 					}
 					for (uint32_t i = 0; i < nObjects; i++)
 					{
@@ -416,9 +707,15 @@ namespace eae6320
 						else
 							gameObjectList[i]->Update(playerCamera);
 					}
+					for (uint32_t i = 0; i < 20; i++)
+					{
+						if (flyCamActive)
+							bulletList[i]->Update(flyCamera);
+						else
+							bulletList[i]->Update(playerCamera);
+					}
 					if (UIDelay > 10)
 					{
-						sprintf(fpsString, "%f", playerCamera->Position.y);
 						UIDelay = 0;
 					}
 					else
@@ -426,7 +723,7 @@ namespace eae6320
 						UIDelay++;
 					}
 					//eae6320::Core::UI::Update();
-					eae6320::Graphics::Render(renderableList, nObjects+nPlayers, player, other);
+					eae6320::Graphics::Render(renderableList, nObjects+nPlayers+20, player, other);
 				}
 				else
 				{

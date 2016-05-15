@@ -14,6 +14,9 @@ return
 			{source = "CTF6.msh", target = "CTF6.msh"},
 			{source = "CTF7.msh", target = "CTF7.msh"},
 			{source = "Player.msh", target = "Player.msh"},
+			{source = "Flag.msh", target = "Flag.msh"},
+			{source = "Area.msh", target = "Area.msh"},
+			{source = "Bullet.msh", target = "Bullet.msh"},
 		}
 	},
 	{
@@ -22,6 +25,8 @@ return
 		assets = 
 		{
 			{source = "OpaqueDefault.material", target = "OpaqueDefault.material"},
+			{source = "RedTeam.material", target = "RedTeam.material"},
+			{source = "BlueTeam.material", target = "BlueTeam.material"},
 			{source = "Debug.material", target = "Debug.material"},
 			{source = "Floor.material", target = "Floor.material"},
 			{source = "Railing.material", target = "Railing.material"},
