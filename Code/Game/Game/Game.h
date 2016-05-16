@@ -9,6 +9,7 @@ namespace eae6320
 	{
 		void SetClient();
 		void SetServer();
+		void SetAudio(bool music, bool fx);
 		bool GameLoop(int& o_exitCode, HWND s_mainWindow);
 	}
 }

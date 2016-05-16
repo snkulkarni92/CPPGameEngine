@@ -24,6 +24,7 @@ namespace eae6320
 		std::vector<XAUDIO2_BUFFER> s_AudioBuffers;
 
 		int s_CurrentPlayingAudio;
+		bool m, f;
 	}
 
 	HRESULT FindChunk(HANDLE hFile, DWORD fourcc, DWORD & dwChunkSize, DWORD & dwChunkDataPosition)
@@ -126,7 +127,15 @@ namespace eae6320
 			s_SourceVoices[i_Index]->SetVolume(((maxDistance - minDistance) / currentDistance) / 10);
 		}
 	}
-
+	void Audio::SetVolume(int index, float value)
+	{
+		s_SourceVoices[index]->SetVolume(value);
+	}
+	void Audio::SetVolume(float value)
+	{
+		for (int i = 1; i < 10; i++)
+			s_SourceVoices[i]->SetVolume(value);
+	}
 	bool Audio::AddAudioFile(const char* i_AudioPath, bool bLoop, float i_InitialVolume)
 	{
 		WAVEFORMATEXTENSIBLE wfx = { 0 };
@@ -185,12 +194,22 @@ namespace eae6320
 		s_AudioBuffers.push_back(buffer);
 	}
 
-	void Audio::Initialize()
+	void Audio::Initialize(bool music, bool fx)
 	{
+		m = music;
+		f = fx;
 		HRESULT hr = XAudio2Create(&s_pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 		assert(SUCCEEDED(hr));
 
 		hr = s_pXAudio2->CreateMasteringVoice(&s_pMasterVoice);
 		assert(SUCCEEDED(hr));
+	}
+	bool Audio::MusicEnabled()
+	{
+		return m;
+	}
+	bool Audio::FXEnabled()
+	{
+		return f;
 	}
 }

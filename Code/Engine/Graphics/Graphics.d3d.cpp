@@ -69,7 +69,7 @@ OnError:
 bool eae6320::Graphics::ShutDown()
 {
 	bool wereThereErrors = false;
-
+	DebugShapes::ShutDown();
 	if (s_direct3dInterface)
 	{
 		if (s_direct3dDevice)

@@ -18,6 +18,8 @@
 #include "RakNet/RakNetTypes.h"  // MessageID
 //eae6320::Math::cVector WhiteCamera(10.0f, 10.0f, 0.0f);
 
+
+
 namespace eae6320
 {
 	namespace Game
@@ -58,10 +60,16 @@ namespace eae6320
 			isClient = false;
 			isServer = true;
 		}
+		bool m, f;
+		void SetAudio(bool music, bool fx)
+		{
+			m = music;
+			f = fx;
+		}
 		bool GameLoop(int& o_exitCode, HWND s_mainWindow)
 		{
 
-			Audio::Initialize();
+			Audio::Initialize(m, f);
 
 			Audio::AddAudioFile("data/Audio/music.wav",true, 0.8f);
 			Audio::AddAudioFile("data/Audio/bg.wav", true);
@@ -70,12 +78,26 @@ namespace eae6320
 			Audio::AddAudioFile("data/Audio/enemypickup.wav");
 			Audio::AddAudioFile("data/Audio/enemyscore.wav");
 			Audio::AddAudioFile("data/Audio/reset.wav");
-			Audio::AddAudioFile("data/Audio/run1.wav");
-			Audio::AddAudioFile("data/Audio/run2.wav");
-			Audio::AddAudioFile("data/Audio/sprint.wav");
+			Audio::AddAudioFile("data/Audio/run1.wav", true);
+			Audio::AddAudioFile("data/Audio/run2.wav", true);
+			Audio::AddAudioFile("data/Audio/sprint.wav", true);
+			Audio::AddAudioFile("data/Audio/run1.wav", true);
+			Audio::AddAudioFile("data/Audio/run2.wav", true);
+			Audio::AddAudioFile("data/Audio/sprint.wav", true);
 
-			//Audio::PlayAudio(0);
-			//Audio::PlayAudio(1);
+			if (Audio::MusicEnabled())
+				Audio::PlayAudio(0);
+			if(Audio::FXEnabled())
+				Audio::PlayAudio(1);
+
+			Audio::PlayAudio(10);
+			Audio::PlayAudio(11);
+			Audio::PlayAudio(12);
+			Audio::SetVolume(10, 0);
+			Audio::SetVolume(11, 0);
+			Audio::SetVolume(12, 0);
+
+			Math::cVector oldOtherPos;
 
 			Graphics::Initialize(s_mainWindow);
 			UserInput::Initialize(s_mainWindow);
@@ -229,8 +251,15 @@ namespace eae6320
 
 			int bulletsRemaining = 10;
 			Core::UI::CreateSlider("Bullets", &bulletsRemaining, 0, 10);
+
+			int musicVolume = 20;
+			Core::UI::CreateSlider("Music Volume", &musicVolume, 0, 20);
+
+			int fxVolume = 20;
+			Core::UI::CreateSlider("FX Volume", &fxVolume, 0, 20);
 			
-			
+			bool otherSpeed;
+			bool otherMove;
 			int UIDelay = 0;
 			float rotationOffset = 0;
 			MSG message = { 0 };
@@ -282,6 +311,8 @@ namespace eae6320
 								pos.z = player->getLocalZ().z;
 								bsOut.Write(dir);
 								bsOut.Write(shotThisFrame);
+								bsOut.Write(player->speed > 10);
+								bsOut.Write(UserInput::IsKeyPressed('W') || UserInput::IsKeyPressed('S'));
 								peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 							}
 							break;
@@ -303,6 +334,8 @@ namespace eae6320
 								pos.z = player->getLocalZ().z;
 								bsOut.Write(dir);
 								bsOut.Write(shotThisFrame);
+								bsOut.Write(player->speed > 10);
+								bsOut.Write(UserInput::IsKeyPressed('W') || UserInput::IsKeyPressed('S'));
 								RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
 								peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 							}
@@ -350,6 +383,8 @@ namespace eae6320
 									otherBulletList[otherBulletCount].Direction = Math::cVector(-dir.x, -dir.y, -dir.z);
 									otherBulletCount++;
 								}
+								bsIn.Read(otherSpeed);
+								bsIn.Read(otherMove);
 								break;
 							}
 						}
@@ -374,6 +409,8 @@ namespace eae6320
 									otherBulletList[otherBulletCount].Direction = Math::cVector(-dir.x, -dir.y, -dir.z);
 									otherBulletCount++;
 								}
+								bsIn.Read(otherSpeed);
+								bsIn.Read(otherMove);
 							}
 							break;
 						}
@@ -405,8 +442,8 @@ namespace eae6320
 						if ((player->Position - otherArea->Position).GetLength() < 150 && !playerHasFlag)
 						{
 							playerHasFlag = true;
-							Audio::StopAudio(3);
-							Audio::PlayAudio(2);
+							if (Audio::FXEnabled())
+								Audio::PlayAudio(2);
 						}
 					}
 					if (other)
@@ -414,17 +451,16 @@ namespace eae6320
 						if ((other->Position - playerArea->Position).GetLength() < 150 && !otherHasFlag)
 						{
 							otherHasFlag = true;
-							Audio::StopAudio(5);
-							Audio::PlayAudio(4);
+							if (Audio::FXEnabled())
+								Audio::PlayAudio(4);
 						}
 					}
 					if (player)
 					{
 						if ((player->Position - playerArea->Position).GetLength() < 150 && playerHasFlag)
 						{
-							Audio::StopAudio(2);
-							Audio::StopAudio(4);
-							Audio::PlayAudio(3);
+							if (Audio::FXEnabled())
+								Audio::PlayAudio(3);
 							playerHasFlag = false;
 							otherHasFlag = false;
 							playerScore++;
@@ -435,9 +471,8 @@ namespace eae6320
 					{
 						if ((other->Position - otherArea->Position).GetLength() < 150 && otherHasFlag)
 						{
-							Audio::StopAudio(2);
-							Audio::StopAudio(4);
-							Audio::PlayAudio(5);
+							if (Audio::FXEnabled())
+								Audio::PlayAudio(5);
 							otherHasFlag = false;
 							playerHasFlag = false;
 							otherScore++;
@@ -452,6 +487,8 @@ namespace eae6320
 							{
 								if ((playerBulletList[i].gameObject->Position - other->Position).GetLength() < 20)
 								{
+									if (Audio::FXEnabled())
+										Audio::PlayAudio(6);
 									otherHasFlag = false;
 								}
 							}
@@ -459,6 +496,8 @@ namespace eae6320
 							{
 								if ((otherBulletList[i].gameObject->Position - player->Position).GetLength() < 20)
 								{
+									if (Audio::FXEnabled())
+										Audio::PlayAudio(6);
 									playerHasFlag = false;
 								}
 							}
@@ -469,6 +508,10 @@ namespace eae6320
 					{
 						// Get the direction
 						{
+							/*if (UserInput::IsKeyUp(VK_OEM_3))
+							{
+								Core::UI::ToggleDebugMenu();
+							}*/
 							if (UserInput::IsKeyUp('F'))
 							{
 								flyCamActive = !flyCamActive;
@@ -488,6 +531,19 @@ namespace eae6320
 									}
 								}
 							}
+							/*if (Core::UI::IsDebugMenuActive())
+							{
+								if (UserInput::IsKeyUp(VK_UP))
+									Core::UI::Update(Core::UI::Up);
+								else if (UserInput::IsKeyUp(VK_DOWN))
+									Core::UI::Update(Core::UI::Down);
+								else if (UserInput::IsKeyUp(VK_SPACE))
+									Core::UI::Update(Core::UI::Interact);
+								else if (UserInput::IsKeyUp(VK_LEFT))
+									Core::UI::Update(Core::UI::Left);
+								else if (UserInput::IsKeyUp(VK_RIGHT))
+									Core::UI::Update(Core::UI::Right);
+							}*/
 							else
 							{
 								if (flyCamActive)
@@ -534,6 +590,26 @@ namespace eae6320
 								}
 								else if(player)
 								{
+									if (UserInput::IsKeyUp(VK_OEM_PLUS))
+									{
+										if (musicVolume < 20)
+											musicVolume++;
+									}
+									if (UserInput::IsKeyUp(VK_OEM_MINUS))
+									{
+										if (musicVolume > 0)
+											musicVolume--;
+									}
+									if (UserInput::IsKeyUp('0'))
+									{
+										if (fxVolume < 20)
+											fxVolume++;
+									}
+									if (UserInput::IsKeyUp('9'))
+									{
+										if (fxVolume > 0)
+											fxVolume--;
+									}
 									if (UserInput::IsKeyPressed(VK_LEFT))
 									{
 										rotationOffset = -45;
@@ -582,8 +658,42 @@ namespace eae6320
 					//Update all objects
 					if (player)
 					{
-						Audio::SetVolume(1, (player->Position).GetLength(), 400, 200);
-
+						Audio::SetVolume((float)fxVolume / 20);
+						Audio::SetVolume(0, (float)musicVolume/20);
+						Audio::SetVolume(1, (player->Position - Math::cVector(0, -150, 0)).GetLength(), 400, 50);
+						if (other)
+						{
+							if (otherMove)
+							{
+								if (otherSpeed)
+								{
+									if (Audio::FXEnabled())
+										Audio::SetVolume(12, (player->Position - other->Position).GetLength(), 1000, 50);
+								}
+								else
+								{ 
+									Audio::SetVolume(12, 0);
+								}
+								if (other->Position.y < -100)
+								{
+									Audio::SetVolume(11, 0);
+									if (Audio::FXEnabled())
+										Audio::SetVolume(10, (player->Position - other->Position).GetLength(), 1000, 50);
+								}
+								else
+								{
+									Audio::SetVolume(10, 0);
+									if (Audio::FXEnabled())
+										Audio::SetVolume(11, (player->Position - other->Position).GetLength(), 1000, 50);
+								}
+							}
+							else
+							{
+								Audio::SetVolume(10, 0);
+								Audio::SetVolume(11, 0);
+								Audio::SetVolume(12, 0);
+							}
+						}
 						if (playerHasFlag)
 							otherFlag->Position = player->Position + Math::cVector(60, 50, 0);
 						else
@@ -593,6 +703,8 @@ namespace eae6320
 						else
 							playerFlag->Position = playerArea->Position + Math::cVector(0, 100, 0);
 						player->Update(Time::GetSecondsElapsedThisFrame());
+						//Core::CollisionSystem::DrawTree();
+
 						if (isClient && other && player)
 						{
 							RakNet::BitStream bsOut;
@@ -608,6 +720,8 @@ namespace eae6320
 							dir.z = player->getLocalZ().z;
 							bsOut.Write(dir);
 							bsOut.Write(shotThisFrame);
+							bsOut.Write(player->speed > 10);
+							bsOut.Write(UserInput::IsKeyPressed('W') || UserInput::IsKeyPressed('S'));
 							RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
 							peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAdress, false);
 						}
@@ -626,6 +740,8 @@ namespace eae6320
 							dir.z = player->getLocalZ().z;
 							bsOut.Write(dir);
 							bsOut.Write(shotThisFrame);
+							bsOut.Write(player->speed > 10);
+							bsOut.Write(UserInput::IsKeyPressed('W') || UserInput::IsKeyPressed('S'));
 							RakNet::ConnectionState s = peer->GetConnectionState(peer->GetMyGUID());
 							peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::AddressOrGUID(), true);
 						}
@@ -637,6 +753,8 @@ namespace eae6320
 
 						playerObject->Position = player->Position;
 						playerObject->Orientation = player->Orientation;
+						if(UserInput::IsKeyPressed('R'))
+							Core::CollisionSystem::DrawTree(player->Position, player->getLocalZ() * 50);
 						if (other)
 						{
 							otherObject->Position = other->Position;

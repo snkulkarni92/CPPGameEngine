@@ -4,6 +4,7 @@
 #include "../UserInput/UserInput.h"
 #include "../Math/Functions.h"
 #include "../Time/Time.h"
+#include "Audio.h"
 
 namespace eae6320
 {
@@ -26,6 +27,37 @@ namespace eae6320
 				eulerY -= 2.0f;
 			if (UserInput::IsKeyPressed('D'))
 				eulerY += 2.0f;
+			if (VelocityOffset.z != 0)
+			{
+				if (speed > 10)
+				{
+					if(Audio::FXEnabled())
+						Audio::PlayAudio(9);
+				}
+				else
+				{
+					if (Audio::FXEnabled())
+						Audio::StopAudio(9);
+				}
+				if (Position.y < -100)
+				{
+					Audio::StopAudio(8);
+					if (Audio::FXEnabled())
+						Audio::PlayAudio(7);
+				}
+				else
+				{
+					Audio::StopAudio(7);
+					if (Audio::FXEnabled())
+						Audio::PlayAudio(8);
+				}
+			}
+			else
+			{
+				Audio::StopAudio(7);
+				Audio::StopAudio(8);
+				Audio::StopAudio(9);
+			}
 			Velocity = VelocityOffset * Math::cMatrix_transformation(Orientation, Math::cVector(0.0f, 0.0f, 0.0f));
 		}
 

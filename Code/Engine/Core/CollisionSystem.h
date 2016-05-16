@@ -16,6 +16,7 @@ namespace eae6320
 			};
 			void Initialize(const char * collisionDataFileName);
 			void ShutDown();
+			void DrawTree(Math::cVector point, Math::cVector point2);
 
 			CollidedPoint CheckCollision(Math::cVector& startPoint, Math::cVector& endPoint);
 		}

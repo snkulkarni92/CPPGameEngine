@@ -47,7 +47,12 @@ int WINAPI WinMain(
 	{
 		eae6320::Game::SetClient();
 	}
-
+	bool m = false, f = false;
+	if (i_commandLineArguments[1] == 'm')
+		m = true;
+	if (i_commandLineArguments[2] == 'f')
+		f = true;
+	eae6320::Game::SetAudio(m, f);
 	const int exitCode = CreateMainWindowAndReturnExitCodeWhenItCloses(i_thisInstanceOfTheProgram, i_initialWindowDisplayState);
 	// Unlike standard C/C++ programs there is no standardized return value
 	// to indicate that the program "succeeded".

@@ -27,17 +27,23 @@ namespace eae6320
 
 			ID3DXMesh *baseBoxMesh, *baseSphereMesh, *baseCylinderMesh;
 			ID3DXMesh **DebugShapeList;
-			uint8_t DebugShapeCount;
+			uint32_t DebugShapeCount;
 			Effect *DebugEffect;
 			IDirect3DVertexBuffer9* s_vertexBuffer = NULL;
 			sVertex1 *DebugLineList;
-			uint8_t DebugLineCount;
+			uint32_t DebugLineCount;
 			IDirect3DVertexDeclaration9* vertexDeclaration = NULL;
-
+			
+			void ShutDown()
+			{
+				for (uint32_t i = 0; i < DebugShapeCount; i++)
+				{
+					DebugShapeList[i]->Release();
+				}
+			}
 			void Initialize()
 			{
-				D3DXCreateCylinder(s_direct3dDevice, 1, 1, 1, 10, 10, &baseCylinderMesh, 0);
-				DebugShapeList = new ID3DXMesh *[255];
+				DebugShapeList = new ID3DXMesh *[3000];
 				DebugShapeCount = 0;
 
 				DebugEffect = new Effect();
@@ -85,7 +91,6 @@ namespace eae6320
 				DebugLineList = new sVertex1[256];
 				DebugLineCount = 0;
 			}
-
 			void AddLine(Math::cVector startPoint, Math::cVector endPoint, Math::cVector color)
 			{
 				sVertex1 startVertex, endVertex;
@@ -108,6 +113,7 @@ namespace eae6320
 
 			void AddBox(Math::cVector center, Math::cVector extents, Math::cVector color)
 			{
+				ID3DXMesh * m = DebugShapeList[DebugShapeCount];
 				D3DXCreateBox(s_direct3dDevice, extents.x, extents.y, extents.z, &baseBoxMesh, 0);
 				baseBoxMesh->CloneMeshFVF(0, D3DFVF_XYZ | D3DFVF_DIFFUSE, s_direct3dDevice, DebugShapeList + DebugShapeCount);
 				baseBoxMesh->Release();
@@ -131,7 +137,7 @@ namespace eae6320
 				AlterMesh(center, color, DebugShapeCount);
 				DebugShapeCount++;
 			}
-			void AlterMesh(Math::cVector translation, Math::cVector color, uint8_t index)
+			void AlterMesh(Math::cVector translation, Math::cVector color, uint32_t index)
 			{
 				sVertex1* vertexData;
 				DebugShapeList[index]->LockVertexBuffer(0, reinterpret_cast<void **>(&vertexData));
@@ -152,7 +158,7 @@ namespace eae6320
 				s_direct3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 				s_direct3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-				for (uint8_t i = 0; i < DebugShapeCount; i++)
+				for (uint32_t i = 0; i < DebugShapeCount; i++)
 				{
 					IDirect3DVertexBuffer9 *vertexBuffer;
 					DebugShapeList[i]->GetVertexBuffer(&vertexBuffer);
@@ -170,7 +176,7 @@ namespace eae6320
 				s_direct3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 				sVertex1* vertexData;
 				s_vertexBuffer->Lock(0, 0, reinterpret_cast<void**>(&vertexData), 0);
-				for (uint8_t i = 0; i < DebugLineCount; i++)
+				for (uint32_t i = 0; i < DebugLineCount; i++)
 				{
 					vertexData[i] = DebugLineList[i];
 				}
